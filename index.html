@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>امروز</title>
+  <!-- فونت طرح IRANYekanX FaNum است. اگر فایلش را دارید با @font-face اضافه کنید؛ Vazirmatn جایگزین موقت است. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* توکن‌های فیگما */
+      --font-family: "IRANYekanX FaNum", "IRANYekanXFaNum", "Vazirmatn", Tahoma, sans-serif;
+      --text-heading: #475569;
+      --text-body: #64748b;
+      --text-description: #94a3b8;
+      --surface: #ffffff;
+      --surface-tint: #f6efff;
+      --border-tint: #e4d6fb;
+      --primary: #8946e9;
+      --danger: #ef4444;
+      --danger-surface: #fef2f2;
+      --neutral-surface: #f1f5f9;
+      --radius-xs: 8px;
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --font-01: 10px/14px var(--font-family);
+      --font-02: 12px/16px var(--font-family);
+      --font-04: 14px/20px var(--font-family);
+      --font-05: 16px/24px var(--font-family);
+      --font-07: 20px/24px var(--font-family);
+      --icon-strong: #292d32;
+      --icon: #64748b;
+      color-scheme: light;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --text-heading: #e2e8f0; --text-body: #cbd5e1; --text-description: #94a3b8;
+        --surface: #15121c; --surface-tint: #241c33; --border-tint: #3d3152;
+        --primary: #9b5ff0; --danger: #f87171; --danger-surface: #3a1e24; --neutral-surface: #1f2937;
+        --icon-strong: #e2e8f0; --icon: #a5b4c8;
+        color-scheme: dark;
+      }
+    }
+    :root[data-theme="dark"] {
+      --text-heading: #e2e8f0; --text-body: #cbd5e1; --text-description: #94a3b8;
+      --surface: #15121c; --surface-tint: #241c33; --border-tint: #3d3152;
+      --primary: #9b5ff0; --danger: #f87171; --danger-surface: #3a1e24; --neutral-surface: #1f2937;
+      --icon-strong: #e2e8f0; --icon: #a5b4c8;
+      color-scheme: dark;
+    }
+    html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+    * { box-sizing: border-box; margin: 0; }
+    html, body { height: 100%; }
+    body { background: var(--surface); font: var(--font-05); color: var(--text-heading); }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { border: 0; cursor: pointer; background: none; padding: 0; }
+    :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    svg { display: block; flex-shrink: 0; }
+    [hidden] { display: none !important; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+    .screen {
+      max-width: 440px;
+      min-height: 100%;
+      margin-inline: auto;
+      padding: 24px 24px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- هدر ---------- */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; }
+    .icon-button { color: var(--icon-strong); background: var(--surface-tint); border-radius: var(--radius-sm); padding: 10px; display: flex; }
+    .greeting { font: var(--font-07); margin-top: 16px; }
+
+    /* ---------- انتخاب روز ---------- */
+    .day-picker { display: flex; gap: 12px; margin-top: 24px; }
+    .date-field { flex: 1; position: relative; }
+    .date-selector {
+      width: 100%; display: flex; align-items: center; gap: 8px; color: var(--text-heading);
+      background: var(--surface-tint); border-radius: var(--radius-sm); padding: 15px 16px; text-align: right;
+    }
+    .date-selector span { flex: 1; }
+    .date-selector svg { color: var(--icon); transition: transform .2s; }
+    .date-selector[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .tomorrow {
+      width: 54px; height: 54px; flex-shrink: 0; background: var(--surface-tint);
+      border-radius: var(--radius-sm); font: var(--font-04); color: var(--text-description);
+    }
+    .tomorrow[aria-pressed="true"] { color: var(--primary); }
+    .date-menu {
+      position: absolute; inset-inline: 0; top: calc(100% + 8px); z-index: 20;
+      list-style: none; padding: 8px; background: var(--surface);
+      border-radius: var(--radius-sm); box-shadow: 0 0 8px rgba(0,0,0,.1);
+    }
+    .date-menu li { padding: 10px 12px; border-radius: var(--radius-xs); cursor: pointer; }
+    .date-menu li[aria-selected="true"] { color: var(--primary); }
+    .date-menu li:hover, .date-menu li.is-active { background: var(--surface-tint); }
+
+    /* ---------- خلاصه، فیلترها و جستجو ---------- */
+    .summary { font: var(--font-02); color: var(--text-description); margin-top: 8px; }
+    .toolbar { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+    .filters { display: flex; gap: 16px; flex: 1; }
+    .chip {
+      width: 94px; height: 32px; border-radius: var(--radius-xs); font: var(--font-04);
+      color: var(--text-description); border: 1px solid var(--border-tint);
+    }
+    .chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .search-field {
+      flex: 1; height: 32px; padding: 0 12px; border-radius: var(--radius-xs);
+      border: 1px solid var(--border-tint); background: var(--surface); font: var(--font-04);
+    }
+    .search-field:focus { outline: none; border-color: var(--primary); }
+    .search-button {
+      width: 32px; height: 32px; flex-shrink: 0; margin-inline-start: auto;
+      display: grid; place-items: center; color: var(--icon); background: var(--surface-tint); border-radius: var(--radius-xs);
+    }
+    .search-button[aria-pressed="true"] { background: var(--primary); color: #fff; }
+
+    /* ---------- کارت کارها ---------- */
+    .tasks { list-style: none; padding: 24px 0 0; display: flex; flex-direction: column; gap: 16px; }
+    .task { position: relative; border-radius: var(--radius-sm); overflow: hidden; background: var(--surface-tint); }
+    .task-actions { position: absolute; inset-block: 4px; inset-inline-start: 4px; display: flex; gap: 5px; }
+    .task-action { width: 58px; display: grid; place-items: center; border-radius: var(--radius-xs); }
+    .task-action--edit { background: var(--neutral-surface); color: var(--text-heading); }
+    .task-action--delete { background: var(--danger-surface); }
+    .task-body {
+      position: relative; min-height: 70px; padding: 12px 16px 12px 16px;
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface-tint); border: 1px solid transparent; border-radius: var(--radius-sm);
+      transition: transform .25s ease; touch-action: pan-y;
+    }
+    .task.is-open .task-body { transform: translateX(-136px); }
+    .task.is-done .task-body { border-color: var(--border-tint); }
+    .task.is-dragging .task-body { transition: none; }
+    .kebab { color: var(--icon); width: 24px; height: 24px; display: grid; place-items: center; border-radius: 6px; margin-inline-start: -4px; }
+    .check {
+      appearance: none; color: inherit; width: 24px; height: 24px; flex-shrink: 0; margin: 0; cursor: pointer;
+      border: 2px solid var(--border-tint); border-radius: 4px; background: var(--surface);
+      display: grid; place-items: center;
+    }
+    .check::after {
+      content: ""; width: 6px; height: 11px; margin-top: -3px;
+      border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); opacity: 0;
+    }
+    .check:checked { background: var(--primary); border-color: var(--primary); }
+    .check:checked::after { opacity: 1; }
+    .task-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .task-title { color: var(--text-heading); overflow-wrap: anywhere; }
+    .task-desc { font: var(--font-02); color: var(--text-description); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .task-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .task-time { color: var(--text-description); direction: ltr; unicode-bidi: isolate; }
+    .badge { font: var(--font-01); color: var(--text-description); background: var(--surface); border-radius: var(--radius-lg); padding: 3px 9px; }
+    .no-results { text-align: center; color: var(--text-description); font: var(--font-04); padding-top: 40px; }
+
+    /* ---------- حالت خالی ---------- */
+    .empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      gap: 4px; padding-bottom: 98px; text-align: center; color: var(--text-body);
+    }
+    .empty p + p { margin-top: 6px; }
+
+    /* ---------- ناوبری پایین ---------- */
+    .list-end { flex: 1; min-height: 24px; }
+    .nav-wrap {
+      position: sticky; bottom: 0; z-index: 10;
+      padding: 24px 0 calc(13px + env(safe-area-inset-bottom, 0px));
+      margin-top: -24px;
+      background: linear-gradient(to bottom, transparent, var(--surface) 40%);
+    }
+    .bottom-nav {
+      display: flex; justify-content: space-between; align-items: center; padding: 18px 22px;
+      background: var(--surface); border-radius: var(--radius-lg); box-shadow: 0 0 8px rgba(0,0,0,.1);
+    }
+    .nav-tab { color: var(--icon); width: 90px; height: 46px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); }
+    .nav-tab--add { background: var(--primary); }
+
+    /* ---------- برگه‌ی افزودن / ویرایش ---------- */
+    .sheet {
+      border: 0; width: 100%; max-width: 440px; max-height: 92vh; margin: auto auto 0;
+      padding: 24px 48px calc(24px + env(safe-area-inset-bottom, 0px));
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 0 8px rgba(0,0,0,.1);
+      color: var(--text-heading); background: var(--surface);
+    }
+    .sheet::backdrop { background: rgba(71,85,105,.35); }
+    .sheet form { display: flex; flex-direction: column; gap: 16px; }
+    .field {
+      width: 100%; border: 1px solid transparent; border-radius: var(--radius-xs);
+      background: var(--surface-tint); color: var(--text-heading);
+    }
+    .field:focus, .field:focus-within { outline: none; border-color: var(--primary); }
+    .field::placeholder { color: var(--text-description); }
+    .field--text { height: 46px; padding: 0 16px; }
+    .field--area { height: 104px; padding: 12px 16px; resize: none; }
+    .field-row { display: flex; gap: 8px; }
+    .field--icon { color: var(--icon); flex: 1; height: 46px; display: flex; align-items: center; gap: 8px; padding-inline: 9px 12px; position: relative; }
+    .field--icon input, .field--icon select {
+      flex: 1; min-width: 0; height: 100%; border: 0; background: none; outline: none;
+      font: var(--font-04); color: var(--text-heading); appearance: none; cursor: pointer;
+    }
+    .field--icon input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
+    .time-placeholder { position: absolute; inset-inline-start: 37px; font: var(--font-04); color: var(--text-description); pointer-events: none; }
+    .field--icon:has(input:valid) .time-placeholder { display: none; }
+    .field--icon input[type="time"]:invalid { color: transparent; }
+    .field--icon:focus-within input[type="time"] { color: var(--text-heading); }
+    .field--icon:focus-within .time-placeholder { display: none; }
+    .repeat { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .sheet-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .btn { width: 116px; height: 46px; border-radius: var(--radius-xs); }
+    .btn--primary { background: var(--primary); color: #fff; }
+    .btn--primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn--outline { border: 1px solid var(--border-tint); color: var(--text-body); }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="screen">
+    <header class="top-bar">
+      <button class="icon-button" type="button" aria-label="منو"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 12H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 17H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <button class="icon-button" type="button" aria-label="اعلان‌ها"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.02 20.53C9.69 20.53 7.36 20.16 5.15 19.42C4.31 19.13 3.67 18.54 3.39 17.77C3.1 17 3.2 16.15 3.66 15.39L4.81 13.48C5.05 13.08 5.27 12.28 5.27 11.81V8.92C5.27 5.2 8.3 2.17 12.02 2.17C15.74 2.17 18.77 5.2 18.77 8.92V11.81C18.77 12.27 18.99 13.08 19.23 13.49L20.37 15.39C20.8 16.11 20.88 16.98 20.59 17.77C20.3 18.56 19.67 19.16 18.88 19.42C16.68 20.16 14.35 20.53 12.02 20.53ZM12.02 3.67C9.13 3.67 6.77 6.02 6.77 8.92V11.81C6.77 12.54 6.47 13.62 6.1 14.25L4.95 16.16C4.73 16.53 4.67 16.92 4.8 17.25C4.92 17.59 5.22 17.85 5.63 17.99C9.81 19.39 14.24 19.39 18.42 17.99C18.78 17.87 19.06 17.6 19.19 17.24C19.32 16.88 19.29 16.49 19.09 16.16L17.94 14.25C17.56 13.6 17.27 12.53 17.27 11.8V8.92C17.27 6.02 14.92 3.67 12.02 3.67Z" fill="currentColor"/><path d="M13.88 3.94C13.81 3.94 13.74 3.93 13.67 3.91C13.38 3.83 13.1 3.77 12.83 3.73C11.98 3.62 11.16 3.68 10.39 3.91C10.11 4 9.81 3.91 9.62 3.7C9.43 3.49 9.37 3.19 9.48 2.92C9.89 1.87 10.89 1.18 12.03 1.18C13.17 1.18 14.17 1.86 14.58 2.92C14.68 3.19 14.63 3.49 14.44 3.7C14.29 3.86 14.08 3.94 13.88 3.94Z" fill="currentColor"/><path d="M12.02 22.81C11.03 22.81 10.07 22.41 9.37 21.71C8.67 21.01 8.27 20.05 8.27 19.06H9.77C9.77 19.65 10.01 20.23 10.43 20.65C10.85 21.07 11.43 21.31 12.02 21.31C13.26 21.31 14.27 20.3 14.27 19.06H15.77C15.77 21.13 14.09 22.81 12.02 22.81Z" fill="currentColor"/></svg></button>
+    </header>
+
+    <h1 class="greeting">سلام نسترن عزیز !</h1>
+
+    <div class="day-picker">
+      <div class="date-field">
+        <button class="date-selector" id="date-selector" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="date-menu">
+          <span id="date-label"></span>
+          <svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.2L16.6 8.6L18 10L12 16L6 10L7.4 8.6L12 13.2Z" fill="currentColor"/></svg>
+        </button>
+        <ul class="date-menu" id="date-menu" role="listbox" aria-label="انتخاب روز" tabindex="-1" hidden></ul>
+      </div>
+      <button class="tomorrow" id="tomorrow" type="button" aria-pressed="false">فردا</button>
+    </div>
+
+    <!-- صفحه‌ی Main: وقتی برای روز انتخاب‌شده کاری وجود دارد -->
+    <section id="main-view" aria-label="کارهای روز" hidden>
+      <p class="summary" id="summary" aria-live="polite"></p>
+      <div class="toolbar">
+        <div class="filters" id="filters" role="group" aria-label="فیلتر کارها">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">همه</button>
+          <button class="chip" type="button" data-filter="done" aria-pressed="false">انجام شده</button>
+          <button class="chip" type="button" data-filter="undated" aria-pressed="false">بدون تاریخ</button>
+        </div>
+        <label class="visually-hidden" for="search-input">جستجو در کارها</label>
+        <input class="search-field" id="search-input" type="search" placeholder="جستجو در کارها" hidden />
+        <button class="search-button" id="search-button" type="button" aria-pressed="false" aria-label="جستجو"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 20.75c-5.38 0-9.75-4.37-9.75-9.75S5.62 1.25 11 1.25s9.75 4.37 9.75 9.75-4.37 9.75-9.75 9.75Zm0-18c-4.55 0-8.25 3.7-8.25 8.25s3.7 8.25 8.25 8.25 8.25-3.7 8.25-8.25-3.7-8.25-8.25-8.25ZM20.16 22.79c-.08 0-.16-.01-.23-.02-.47-.06-1.32-.38-1.8-1.81-.25-.75-.16-1.5.25-2.07.41-.57 1.1-.89 1.89-.89 1.02 0 1.82.39 2.18 1.08.36.69.26 1.57-.31 2.42-.71 1.07-1.48 1.29-1.98 1.29Zm-.6-2.3c.17.52.41.78.57.8.16.02.46-.17.77-.62.29-.43.31-.74.24-.88s-.35-.29-.87-.29c-.31 0-.54.1-.67.27-.12.17-.14.43-.04.72Z" fill="currentColor"/></svg></button>
+      </div>
+      <ul class="tasks" id="tasks"></ul>
+      <p class="no-results" id="no-results" hidden>موردی پیدا نشد.</p>
+    </section>
+
+    <!-- حالت خالی -->
+    <section class="empty" id="empty" aria-live="polite">
+      <svg aria-hidden="true" focusable="false" width="117" height="96" viewBox="0 0 117 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M58.2329 88.5333C79.4769 88.5333 96.6986 86.8618 96.6986 84.8C96.6986 82.7381 79.4769 81.0667 58.2329 81.0667C36.9888 81.0667 19.7671 82.7381 19.7671 84.8C19.7671 86.8618 36.9888 88.5333 58.2329 88.5333Z" fill="#E8EDF3"/><path d="M58.2329 82.6667C78.2967 82.6667 94.5616 66.4296 94.5616 46.4C94.5616 26.3705 78.2967 10.1334 58.2329 10.1334C38.1691 10.1334 21.9041 26.3705 21.9041 46.4C21.9041 66.4296 38.1691 82.6667 58.2329 82.6667Z" fill="#F3F6FA"/><path d="M17.6301 29.8666C18.8104 29.8666 19.7671 28.9115 19.7671 27.7333C19.7671 26.5551 18.8104 25.6 17.6301 25.6C16.4499 25.6 15.4931 26.5551 15.4931 27.7333C15.4931 28.9115 16.4499 29.8666 17.6301 29.8666Z" fill="#D9E2ED"/><path d="M97.7671 65.0666C98.6523 65.0666 99.3698 64.3503 99.3698 63.4666C99.3698 62.583 98.6523 61.8666 97.7671 61.8666C96.8819 61.8666 96.1644 62.583 96.1644 63.4666C96.1644 64.3503 96.8819 65.0666 97.7671 65.0666Z" fill="#D9E2ED"/><path d="M92.9589 19.7333V26.1333M89.7534 22.9333H96.1644" stroke="#BCCADA" stroke-width="2.5" stroke-linecap="round"/><path d="M27.7808 22.9333C27.7808 19.3778 29.5616 17.6 33.1233 17.6H80.6712C84.2329 17.6 86.0137 19.3778 86.0137 22.9333V75.2C86.0137 78.7555 84.2329 80.5333 80.6712 80.5333H33.1233C29.5616 80.5333 27.7808 78.7555 27.7808 75.2V22.9333Z" fill="#DCE4EE"/><path d="M76.9315 14.9333H31.5205C27.9799 14.9333 25.1096 17.7987 25.1096 21.3334V71.4667C25.1096 75.0013 27.9799 77.8667 31.5205 77.8667H76.9315C80.4722 77.8667 83.3425 75.0013 83.3425 71.4667V21.3334C83.3425 17.7987 80.4722 14.9333 76.9315 14.9333Z" fill="white" stroke="#91A3BA" stroke-width="2"/><path d="M25.6438 31.4667H82.8082Z" fill="black"/><path d="M25.6438 31.4667H82.8082" stroke="#CBD5E1" stroke-width="2"/><path d="M25.6438 21.3333C25.6438 17.4222 27.6027 15.4667 31.5205 15.4667H76.9315C80.8493 15.4667 82.8082 17.4222 82.8082 21.3333V30.9333H25.6438V21.3333Z" fill="#E7EDF5"/><path d="M39.5342 11.2V20.8M68.9178 11.2V20.8" stroke="#8946E9" stroke-width="5" stroke-linecap="round"/><path d="M40.0685 40.5333H36.3288C35.1485 40.5333 34.1918 41.4885 34.1918 42.6667V46.4C34.1918 47.5782 35.1485 48.5333 36.3288 48.5333H40.0685C41.2487 48.5333 42.2055 47.5782 42.2055 46.4V42.6667C42.2055 41.4885 41.2487 40.5333 40.0685 40.5333Z" fill="#E7EDF5"/><path d="M48.6164 44.2667H72.6575Z" fill="black"/><path d="M48.6164 44.2667H72.6575" stroke="#D4DEEA" stroke-width="4" stroke-linecap="round"/><path d="M40.0685 54.9333H36.3288C35.1485 54.9333 34.1918 55.8885 34.1918 57.0667V60.8C34.1918 61.9782 35.1485 62.9333 36.3288 62.9333H40.0685C41.2487 62.9333 42.2055 61.9782 42.2055 60.8V57.0667C42.2055 55.8885 41.2487 54.9333 40.0685 54.9333Z" fill="#EFF3F8"/><path d="M48.6164 58.6667H64.1096Z" fill="black"/><path d="M48.6164 58.6667H64.1096" stroke="#E3EAF2" stroke-width="4" stroke-linecap="round"/><path d="M80.6712 84.8C88.3427 84.8 94.5616 78.5917 94.5616 70.9333C94.5616 63.275 88.3427 57.0667 80.6712 57.0667C72.9998 57.0667 66.7808 63.275 66.7808 70.9333C66.7808 78.5917 72.9998 84.8 80.6712 84.8Z" fill="white"/><path d="M80.6712 82.6667C87.1625 82.6667 92.4247 77.4135 92.4247 70.9333C92.4247 64.4532 87.1625 59.2 80.6712 59.2C74.18 59.2 68.9178 64.4532 68.9178 70.9333C68.9178 77.4135 74.18 82.6667 80.6712 82.6667Z" fill="#8946E9"/><path d="M80.6712 66.1333V75.7333ZM75.863 70.9333H85.4794Z" fill="black"/><path d="M80.6712 66.1333V75.7333M75.863 70.9333H85.4794" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M14.9589 64L16.5616 60.8L18.1644 64L21.3699 65.6L18.1644 67.2L16.5616 70.4L14.9589 67.2L11.7534 65.6L14.9589 64Z" fill="#D7E1ED"/></svg>
+      <div>
+        <p id="empty-message"></p>
+        <p>اضافه کنید.</p>
+      </div>
+    </section>
+
+    <div class="list-end" id="list-end" hidden></div>
+
+    <div class="nav-wrap">
+      <nav class="bottom-nav" aria-label="ناوبری اصلی">
+        <button class="nav-tab" type="button" aria-label="خانه"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.79 22.75H6.21C3.47 22.75 1.25 20.52 1.25 17.78V10.37C1.25 9.00997 2.09 7.29997 3.17 6.45997L8.56 2.25997C10.18 0.999974 12.77 0.939974 14.45 2.11997L20.63 6.44997C21.82 7.27997 22.75 9.05997 22.75 10.51V17.79C22.75 20.52 20.53 22.75 17.79 22.75ZM9.48 3.43997L4.09 7.63997C3.38 8.19997 2.75 9.46997 2.75 10.37V17.78C2.75 19.69 4.3 21.25 6.21 21.25H17.79C19.7 21.25 21.25 19.7 21.25 17.79V10.51C21.25 9.54997 20.56 8.21997 19.77 7.67997L13.59 3.34997C12.45 2.54997 10.57 2.58997 9.48 3.43997Z" fill="currentColor"/><path d="M12 18.75C11.59 18.75 11.25 18.41 11.25 18V15C11.25 14.59 11.59 14.25 12 14.25C12.41 14.25 12.75 14.59 12.75 15V18C12.75 18.41 12.41 18.75 12 18.75Z" fill="currentColor"/></svg></button>
+        <button class="nav-tab nav-tab--add" id="add-button" type="button" aria-label="افزودن کار"><svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.2 7.60002C17.2 6.93728 16.6627 6.40002 16 6.40002C15.3373 6.40002 14.8 6.93728 14.8 7.60002V14.8H7.59999C6.93725 14.8 6.39999 15.3373 6.39999 16C6.39999 16.6628 6.93725 17.2 7.59999 17.2L14.8 17.2V24.4C14.8 25.0628 15.3373 25.6 16 25.6C16.6627 25.6 17.2 25.0628 17.2 24.4V17.2L24.4 17.2C25.0627 17.2 25.6 16.6628 25.6 16C25.6 15.3373 25.0627 14.8 24.4 14.8H17.2V7.60002Z" fill="#F8FAFC"/></svg></button>
+        <button class="nav-tab" type="button" aria-label="پروفایل"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.14 21.62C17.26 21.88 16.22 22 15 22H9C7.78 22 6.74 21.88 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.58 10.58C15.58 12.56 13.98 14.17 12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </nav>
+    </div>
+  </main>
+
+  <dialog class="sheet" id="task-sheet" aria-labelledby="sheet-title">
+    <form method="dialog" id="task-form">
+      <h2 class="visually-hidden" id="sheet-title">کار جدید</h2>
+      <label class="visually-hidden" for="task-title">عنوان کار</label>
+      <input class="field field--text" id="task-title" type="text" autocomplete="off" maxlength="120" placeholder="کارت رو اضافه کن .." />
+      <div class="field-row">
+        <label class="field field--icon">
+          <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="m15.71 15.18-3.1-1.85c-.54-.32-.98-1.09-.98-1.72v-4.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="visually-hidden">ساعت</span>
+          <input id="task-time" type="time" required />
+          <span class="time-placeholder" aria-hidden="true">ساعت (اختیاری)</span>
+        </label>
+        <label class="field field--icon">
+          <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2v3M16 2v3M3.5 9.09h17M21 8.5V17c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V8.5c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5Z" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.695 13.7h.009M15.695 16.7h.009M11.995 13.7h.01M11.995 16.7h.01M8.294 13.7h.01M8.294 16.7h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="visually-hidden">تاریخ</span>
+          <select id="task-date"></select>
+        </label>
+      </div>
+      <label class="visually-hidden" for="task-desc">توضیحات</label>
+      <textarea class="field field--area" id="task-desc" maxlength="300" placeholder="توضیحات .."></textarea>
+      <label class="repeat">
+        <input class="check" id="task-repeat" type="checkbox" />
+        <span>هر روز</span>
+      </label>
+      <div class="sheet-actions">
+        <button class="btn btn--outline" type="submit" value="cancel" formnovalidate>انصراف</button>
+        <button class="btn btn--primary" id="save-task" type="submit" value="save" formnovalidate disabled>افزودن</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="task-template">
+    <li class="task">
+      <div class="task-actions">
+        <button class="task-action task-action--edit" type="button" data-action="edit" tabindex="-1"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m13.26 3.6-8.21 8.69c-.31.33-.61.98-.67 1.43l-.37 3.24c-.13 1.17.71 1.97 1.87 1.77l3.22-.55c.45-.08 1.08-.41 1.39-.75l8.21-8.69c1.42-1.5 2.06-3.21-.15-5.3-2.2-2.07-3.87-1.34-5.29.16Z" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.89 5.05a6.126 6.126 0 0 0 5.45 5.15M3 22h18" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="task-action task-action--delete" type="button" data-action="delete" tabindex="-1"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 5.98c-3.33-.33-6.68-.5-10.02-.5-1.98 0-3.96.1-5.94.3L3 5.98M8.5 4.97l.22-1.31C8.88 2.71 9 2 10.69 2h2.62c1.69 0 1.82.75 1.97 1.67l.22 1.3M18.85 9.14l-.65 10.07C18.09 20.78 18 22 15.21 22H8.79C6 22 5.91 20.78 5.8 19.21L5.15 9.14M10.33 16.5h3.33M9.5 12.5h5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <div class="task-body">
+        <button class="kebab" type="button" data-action="more" aria-expanded="false"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="18" r="1.5" fill="currentColor"/></svg></button>
+        <input class="check" type="checkbox" />
+        <label class="task-text">
+          <span class="task-title"></span>
+          <span class="task-desc"></span>
+        </label>
+        <div class="task-meta">
+          <span class="task-time"></span>
+          <span class="badge"></span>
+        </div>
+      </div>
+    </li>
+  </template>
+
+  <script>
+  (() => {
+    const STORAGE_KEY = "today-tasks-v2";
+    const LEGACY_KEY = "today-tasks";
+    const DAYS_IN_MENU = 7;
+    const DAYS_IN_SHEET = 30;
+    const SWIPE_WIDTH = 136;
+    const $ = (id) => document.getElementById(id);
+
+    const el = {
+      dateSelector: $("date-selector"), dateLabel: $("date-label"), dateMenu: $("date-menu"), tomorrow: $("tomorrow"),
+      mainView: $("main-view"), summary: $("summary"), filters: $("filters"),
+      searchInput: $("search-input"), searchButton: $("search-button"),
+      tasks: $("tasks"), noResults: $("no-results"), listEnd: $("list-end"),
+      empty: $("empty"), emptyMessage: $("empty-message"), addButton: $("add-button"),
+      sheet: $("task-sheet"), form: $("task-form"), sheetTitle: $("sheet-title"), save: $("save-task"),
+      fTitle: $("task-title"), fTime: $("task-time"), fDate: $("task-date"), fDesc: $("task-desc"), fRepeat: $("task-repeat"),
+      template: $("task-template"),
+    };
+
+    // ---------- تاریخ (تقویم شمسی) ----------
+    const startOfDay = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+    const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+    const pad = (n) => String(n).padStart(2, "0");
+    const keyOf = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const dateOf = (key) => { const [y, m, d] = key.split("-").map(Number); return new Date(y, m - 1, d); };
+    const fmt = new Intl.DateTimeFormat("fa-IR-u-ca-persian", { weekday: "long", day: "numeric", month: "long" });
+    const faDigits = (s) => String(s).replace(/\d/g, (n) => "۰۱۲۳۴۵۶۷۸۹"[n]);
+
+    function persianDate(d) {
+      const p = Object.fromEntries(fmt.formatToParts(d).map((x) => [x.type, x.value]));
+      return `${p.weekday} ${p.day} ${p.month}`;
+    }
+    function relativeName(d) {
+      const diff = Math.round((startOfDay(d) - startOfDay(new Date())) / 864e5);
+      return diff === 0 ? "امروز" : diff === 1 ? "فردا" : "";
+    }
+    const dayLabel = (d) => { const r = relativeName(d); return r ? `${r} - ${persianDate(d)}` : persianDate(d); };
+
+    // ---------- ذخیره‌سازی ----------
+    // هر کار: { id, title, description, time: "HH:MM"|"", date: "YYYY-MM-DD"|null, repeat, done, doneDates: [] }
+    function load() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (Array.isArray(saved)) return saved;
+        const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY)) || {};
+        return Object.entries(legacy).flatMap(([k, list]) => {
+          const [y, m, d] = k.split("-").map(Number);
+          const date = `${y}-${pad(m)}-${pad(d)}`;
+          return list.map((t) => ({ id: t.id, title: t.title, description: "", time: "", date, repeat: false, done: !!t.done, doneDates: [] }));
+        });
+      } catch { return []; }
+    }
+    function persist() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tasks)); } catch { /* حالت خصوصی مرورگر */ }
+    }
+
+    const state = {
+      tasks: load(),
+      selected: startOfDay(new Date()),
+      filter: "all",
+      query: "",
+      openId: null,
+      editingId: null,
+    };
+
+    const selectedKey = () => keyOf(state.selected);
+    const isDone = (t, key) => (t.repeat ? t.doneDates.includes(key) : t.done);
+    function tasksForDay(key) {
+      return state.tasks
+        .filter((t) => t.date === null || t.date === key || (t.repeat && t.date <= key))
+        .sort((a, b) => (a.time || "99") .localeCompare(b.time || "99"));
+    }
+
+    // ---------- رندر ----------
+    function render() {
+      const d = state.selected, key = selectedKey(), rel = relativeName(d);
+      el.dateLabel.textContent = dayLabel(d);
+      el.tomorrow.setAttribute("aria-pressed", String(rel === "فردا"));
+      el.emptyMessage.textContent = `هیچ کاری ندارید برای ${rel || "این روز"}!`;
+
+      const dayTasks = tasksForDay(key);
+      const hasTasks = dayTasks.length > 0;
+      el.mainView.hidden = el.listEnd.hidden = !hasTasks;
+      el.empty.hidden = hasTasks;
+      if (!hasTasks) return;
+
+      const doneCount = dayTasks.filter((t) => isDone(t, key)).length;
+      el.summary.textContent = `${faDigits(doneCount)} از ${faDigits(dayTasks.length)} مورد`;
+
+      const q = state.query.trim();
+      const visible = dayTasks.filter((t) => {
+        if (state.filter === "done" && !isDone(t, key)) return false;
+        if (state.filter === "undated" && t.date !== null) return false;
+        return !q || t.title.includes(q) || t.description.includes(q);
+      });
+      el.tasks.replaceChildren(...visible.map((t) => taskItem(t, key)));
+      el.noResults.hidden = visible.length > 0;
+    }
+
+    function taskItem(t, key) {
+      const li = el.template.content.firstElementChild.cloneNode(true);
+      const done = isDone(t, key);
+      const open = state.openId === t.id;
+      li.dataset.id = t.id;
+      li.classList.toggle("is-done", done);
+      li.classList.toggle("is-open", open);
+
+      const check = li.querySelector(".check");
+      check.id = `check-${t.id}`;
+      check.checked = done;
+      li.querySelector(".task-text").htmlFor = check.id;
+      li.querySelector(".task-title").textContent = t.title;
+
+      const desc = li.querySelector(".task-desc");
+      desc.textContent = t.description;
+      desc.hidden = !t.description;
+
+      const time = li.querySelector(".task-time");
+      time.textContent = t.time ? faDigits(t.time) : "";
+      time.hidden = !t.time;
+
+      const badge = li.querySelector(".badge");
+      badge.textContent = t.date === null ? "بدون تاریخ" : t.repeat ? "هر روز" : "";
+      badge.hidden = !badge.textContent;
+
+      const more = li.querySelector('[data-action="more"]');
+      more.setAttribute("aria-label", `گزینه‌های ${t.title}`);
+      more.setAttribute("aria-expanded", String(open));
+      li.querySelectorAll(".task-action").forEach((b) => (b.tabIndex = open ? 0 : -1));
+      li.querySelector('[data-action="edit"]').setAttribute("aria-label", `ویرایش ${t.title}`);
+      li.querySelector('[data-action="delete"]').setAttribute("aria-label", `حذف ${t.title}`);
+      return li;
+    }
+
+    // ---------- رویدادهای لیست ----------
+    const findTask = (id) => state.tasks.find((t) => t.id === id);
+
+    el.tasks.addEventListener("change", (e) => {
+      if (!e.target.matches(".check")) return;
+      const t = findTask(e.target.closest(".task").dataset.id), key = selectedKey();
+      if (t.repeat) t.doneDates = e.target.checked ? [...new Set([...t.doneDates, key])] : t.doneDates.filter((k) => k !== key);
+      else t.done = e.target.checked;
+      persist(); render();
+    });
+
+    el.tasks.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-action]");
+      if (!btn) return;
+      const id = btn.closest(".task").dataset.id;
+      if (btn.dataset.action === "more") { state.openId = state.openId === id ? null : id; render(); focusAction(id); }
+      if (btn.dataset.action === "edit") { state.openId = null; openSheet(findTask(id)); }
+      if (btn.dataset.action === "delete") {
+        state.tasks = state.tasks.filter((t) => t.id !== id);
+        state.openId = null; persist(); render();
+      }
+    });
+    function focusAction(id) {
+      if (state.openId !== id) return;
+      el.tasks.querySelector(`[data-id="${id}"] [data-action="edit"]`)?.focus();
+    }
+
+    // کشیدن کارت به چپ برای نمایش ویرایش و حذف
+    let drag = null;
+    el.tasks.addEventListener("pointerdown", (e) => {
+      const body = e.target.closest(".task-body");
+      if (!body || e.button !== 0) return;
+      const li = body.closest(".task");
+      drag = { li, body, x: e.clientX, base: li.classList.contains("is-open") ? -SWIPE_WIDTH : 0, moved: false };
+    });
+    el.tasks.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) < 8) return;
+      if (!drag.moved) { drag.moved = true; drag.li.classList.add("is-dragging"); drag.body.setPointerCapture(e.pointerId); }
+      const x = Math.min(0, Math.max(-SWIPE_WIDTH, drag.base + dx));
+      drag.body.style.transform = `translateX(${x}px)`;
+      drag.x2 = x;
+    });
+    function endDrag() {
+      if (!drag) return;
+      const { li, body, moved, x2 } = drag;
+      drag = null;
+      if (!moved) return;
+      li.classList.remove("is-dragging");
+      body.style.transform = "";
+      state.openId = x2 < -SWIPE_WIDTH / 2 ? li.dataset.id : null;
+      render();
+      // جلوگیری از تیک خوردن ناخواسته بعد از کشیدن
+      window.addEventListener("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }, { capture: true, once: true });
+    }
+    el.tasks.addEventListener("pointerup", endDrag);
+    el.tasks.addEventListener("pointercancel", endDrag);
+
+    document.addEventListener("click", (e) => {
+      // هدف کلیک ممکن است بعد از رندر از صفحه حذف شده باشد
+      if (!e.target.isConnected) return;
+      if (state.openId && !e.target.closest(".task.is-open")) { state.openId = null; render(); }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && state.openId) {
+        const id = state.openId; state.openId = null; render();
+        el.tasks.querySelector(`[data-id="${id}"] .kebab`)?.focus();
+      }
+    });
+
+    // ---------- فیلترها و جستجو ----------
+    el.filters.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      state.filter = chip.dataset.filter;
+      el.filters.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+      render();
+    });
+    function setSearch(on) {
+      el.searchButton.setAttribute("aria-pressed", String(on));
+      el.searchInput.hidden = !on;
+      el.filters.hidden = on;
+      if (on) el.searchInput.focus();
+      else { el.searchInput.value = ""; state.query = ""; render(); }
+    }
+    el.searchButton.addEventListener("click", () => setSearch(el.searchInput.hidden));
+    el.searchInput.addEventListener("input", () => { state.query = el.searchInput.value; render(); });
+    el.searchInput.addEventListener("keydown", (e) => { if (e.key === "Escape") { setSearch(false); el.searchButton.focus(); } });
+
+    // ---------- انتخاب روز ----------
+    function selectDay(d) { state.selected = startOfDay(d); state.openId = null; render(); }
+    el.tomorrow.addEventListener("click", () => {
+      const isTomorrow = el.tomorrow.getAttribute("aria-pressed") === "true";
+      selectDay(addDays(new Date(), isTomorrow ? 0 : 1));
+    });
+
+    let activeIndex = 0;
+    function openMenu() {
+      const today = startOfDay(new Date());
+      const days = Array.from({ length: DAYS_IN_MENU }, (_, i) => addDays(today, i));
+      el.dateMenu.replaceChildren(...days.map((d, i) => {
+        const li = document.createElement("li");
+        li.role = "option"; li.id = `day-${i}`; li.textContent = dayLabel(d);
+        const selected = keyOf(d) === selectedKey();
+        li.setAttribute("aria-selected", String(selected));
+        if (selected) activeIndex = i;
+        li.addEventListener("click", () => { selectDay(d); closeMenu(); });
+        return li;
+      }));
+      el.dateMenu.hidden = false;
+      el.dateSelector.setAttribute("aria-expanded", "true");
+      highlight(activeIndex);
+      el.dateMenu.focus();
+    }
+    function closeMenu(returnFocus = true) {
+      el.dateMenu.hidden = true;
+      el.dateSelector.setAttribute("aria-expanded", "false");
+      if (returnFocus) el.dateSelector.focus();
+    }
+    function highlight(i) {
+      const items = el.dateMenu.children;
+      activeIndex = (i + items.length) % items.length;
+      [...items].forEach((li, n) => li.classList.toggle("is-active", n === activeIndex));
+      el.dateMenu.setAttribute("aria-activedescendant", `day-${activeIndex}`);
+    }
+    el.dateSelector.addEventListener("click", () => (el.dateMenu.hidden ? openMenu() : closeMenu()));
+    el.dateMenu.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") { e.preventDefault(); highlight(activeIndex + 1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); highlight(activeIndex - 1); }
+      else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); el.dateMenu.children[activeIndex].click(); }
+      else if (e.key === "Escape" || e.key === "Tab") closeMenu(e.key === "Escape");
+    });
+    document.addEventListener("click", (e) => {
+      if (!el.dateMenu.hidden && !e.target.closest(".date-field")) closeMenu(false);
+    });
+
+    // ---------- برگه‌ی افزودن / ویرایش ----------
+    function fillDateOptions(currentKey) {
+      const today = startOfDay(new Date());
+      const keys = Array.from({ length: DAYS_IN_SHEET }, (_, i) => keyOf(addDays(today, i)));
+      if (currentKey && !keys.includes(currentKey)) keys.unshift(currentKey);
+      const none = new Option("بدون تاریخ", "");
+      el.fDate.replaceChildren(none, ...keys.map((k) => new Option(dayLabel(dateOf(k)), k)));
+    }
+    function openSheet(task = null) {
+      state.editingId = task?.id ?? null;
+      el.form.reset();
+      el.sheet.returnValue = "";
+      fillDateOptions(task ? task.date : selectedKey());
+      el.fTitle.value = task?.title ?? "";
+      el.fTime.value = task?.time ?? "";
+      el.fDate.value = task ? task.date ?? "" : selectedKey();
+      el.fDesc.value = task?.description ?? "";
+      el.fRepeat.checked = !!task?.repeat;
+      el.sheetTitle.textContent = task ? "ویرایش کار" : "کار جدید";
+      el.save.textContent = task ? "ذخیره" : "افزودن";
+      el.save.disabled = !el.fTitle.value.trim();
+      el.sheet.showModal();
+      el.fTitle.focus();
+    }
+    el.addButton.addEventListener("click", () => openSheet());
+    el.fTitle.addEventListener("input", () => { el.save.disabled = !el.fTitle.value.trim(); });
+    el.fRepeat.addEventListener("change", () => {
+      // کار تکراری به تاریخ شروع نیاز دارد
+      if (el.fRepeat.checked && !el.fDate.value) el.fDate.value = selectedKey();
+    });
+    el.fDate.addEventListener("change", () => { if (!el.fDate.value) el.fRepeat.checked = false; });
+
+    el.sheet.addEventListener("close", () => {
+      const title = el.fTitle.value.trim();
+      if (el.sheet.returnValue !== "save" || !title) return;
+      const fields = {
+        title,
+        description: el.fDesc.value.trim(),
+        time: el.fTime.value,
+        date: el.fDate.value || null,
+        repeat: el.fRepeat.checked && !!el.fDate.value,
+      };
+      const existing = state.editingId && findTask(state.editingId);
+      if (existing) Object.assign(existing, fields);
+      else state.tasks.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), done: false, doneDates: [], ...fields });
+      persist(); render();
+    });
+    el.sheet.addEventListener("click", (e) => { if (e.target === el.sheet) el.sheet.close(); });
+
+    render();
+  })();
+  </script>
+</body>
+</html>
