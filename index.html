@@ -66,6 +66,8 @@
       --color-primary-subtle: var(--purple-100);
       --color-primary-subtle-text: var(--purple-700);
       --color-progress: var(--purple-200);
+      --color-liquid: var(--purple-300);
+      --color-liquid-surface: var(--purple-100);
       --color-danger: var(--red-600);
       --color-danger-subtle: var(--red-100);
       --color-toast: var(--mauve-900);
@@ -126,7 +128,13 @@
     .greeting { font: var(--font-09); font-weight: var(--font-weight-medium); margin-top: var(--space-md); }
 
     /* ---------- انتخاب روز + نوار پیشرفت ---------- */
-    .day-picker { display: flex; gap: var(--space-sm); margin-top: var(--space-xl); }
+    /* کادر تاریخ و پیشرفت هنگام اسکرول بالای صفحه می‌ماند تا پر شدنش همیشه دیده شود */
+    .day-picker {
+      display: flex; gap: var(--space-sm); margin-top: var(--space-md);
+      position: sticky; top: env(safe-area-inset-top, 0px); z-index: 15;
+      padding-block: var(--space-xs); background: var(--color-page);
+    }
+    body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 16; background: var(--color-page); }
     .date-field { flex: 1; position: relative; min-width: 0; }
     .date-selector {
       position: relative; overflow: hidden; isolation: isolate;
@@ -137,7 +145,7 @@
     .date-selector .progress-fill {
       position: absolute; inset-block: 0; inset-inline-start: 0; z-index: -1;
       width: var(--progress, 0%); background: var(--color-progress);
-      transition: width .4s ease;
+      transition: width .55s cubic-bezier(.34, 1.4, .64, 1); /* کمی بیش‌پر شدن، مثل موج مایع */
     }
     .date-selector .label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .date-selector svg { color: var(--color-icon); transition: transform .2s; }
@@ -222,6 +230,18 @@
     }
 
     /* انجام شده: بدون پس‌زمینه، خط‌خورده و کم‌رنگ — کاملاً متفاوت از کار باز */
+    /* انیمیشن مایع: کارت هنگام تیک خالی می‌شود و مایع به کادر تاریخ می‌ریزد */
+    .task-body { isolation: isolate; }
+    .liquid { position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; }
+    .task.is-refilling .task-body { background: var(--color-page); border: 1px dashed var(--color-border-strong); }
+    .droplet {
+      position: fixed; z-index: 40; pointer-events: none; border-radius: 50%;
+      background: var(--color-liquid); will-change: transform, opacity;
+    }
+    .splash {
+      position: fixed; z-index: 40; pointer-events: none; border-radius: 50%;
+      border: 2px solid var(--color-liquid); will-change: transform, opacity;
+    }
     .task.is-done .task-body { background: var(--color-page); border: 1px dashed var(--color-border-strong); }
     .task.is-done .task-title { color: var(--color-text-muted); font-weight: var(--font-weight-regular); text-decoration: line-through; text-decoration-color: var(--color-text-muted); }
     .task.is-done .task-desc, .task.is-done .task-time { color: var(--color-text-muted); }
@@ -670,7 +690,7 @@
       el.empty.hidden = has;
 
       const done = dayTasks.filter((t) => isDone(t, key)).length;
-      el.dateSelector.style.setProperty("--progress", has ? `${(done / dayTasks.length) * 100}%` : "0%");
+      updateProgress();
       if (!has) return;
       el.summary.textContent = `${faDigits(done)} از ${faDigits(dayTasks.length)} مورد انجام شده`;
 
@@ -733,11 +753,122 @@
     // ---------- رویدادهای لیست ----------
     el.tasks.addEventListener("change", (e) => {
       if (!e.target.matches(".check")) return;
-      const t = findTask(e.target.closest(".task").dataset.id), key = selectedKey();
-      if (t.repeat) t.doneDates = e.target.checked ? [...new Set([...t.doneDates, key])] : t.doneDates.filter((k) => k !== key);
-      else t.done = e.target.checked;
-      persist(); render();
+      const id = e.target.closest(".task").dataset.id;
+      const t = findTask(id), key = selectedKey(), checked = e.target.checked;
+      const checkRect = e.target.getBoundingClientRect();
+      const fromPct = progressPercent();
+      if (t.repeat) t.doneDates = checked ? [...new Set([...t.doneDates, key])] : t.doneDates.filter((k) => k !== key);
+      else t.done = checked;
+      persist();
+      if (reduceMotion.matches) { render(); return; }
+      if (checked) { inFlight++; render(); pourIntoBox(id, checkRect); }
+      else { render(); pourIntoCard(id, fromPct); }
     });
+
+    // ---------- انیمیشن مایع ----------
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let inFlight = 0; // قطره‌هایی که هنوز به کادر تاریخ نرسیده‌اند
+    const token = (name) => getComputedStyle(root).getPropertyValue(name).trim();
+    const center = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+
+    function progressPercent() {
+      const key = selectedKey(), list = tasksForDay(key);
+      if (!list.length) return 0;
+      const done = list.filter((t) => isDone(t, key)).length;
+      return (Math.max(0, done - inFlight) / list.length) * 100;
+    }
+    function updateProgress() { el.dateSelector.style.setProperty("--progress", `${progressPercent()}%`); }
+
+    // نقطه‌ی لبه‌ی مایع در کادر تاریخ (پر شدن از سمت راست)
+    function fillEdge(pct) {
+      const r = el.dateSelector.getBoundingClientRect();
+      const x = r.right - (r.width * pct) / 100;
+      return { x: Math.min(r.right - 16, Math.max(r.left + 16, x)), y: r.top + r.height / 2 };
+    }
+
+    // سطح مایع داخل کارت پایین می‌رود (تخلیه) یا بالا می‌آید (پر شدن)
+    function liquidLevel(body, direction) {
+      const layer = document.createElement("span");
+      layer.className = "liquid";
+      body.prepend(layer);
+      const raised = token("--color-surface-raised"), tint = token("--color-liquid-surface");
+      const frames = direction === "drain"
+        ? [{ clipPath: "inset(0 0 0 0)", backgroundColor: raised },
+           { clipPath: "inset(0 0 0 0)", backgroundColor: tint, offset: .25 },
+           { clipPath: "inset(100% 0 0 0)", backgroundColor: tint }]
+        : [{ clipPath: "inset(100% 0 0 0)", backgroundColor: tint },
+           { clipPath: "inset(0 0 0 0)", backgroundColor: tint, offset: .75 },
+           { clipPath: "inset(0 0 0 0)", backgroundColor: raised }];
+      const anim = layer.animate(frames, { duration: 520, easing: "cubic-bezier(.45, 0, .55, 1)", fill: "forwards" });
+      return anim.finished.then(() => layer.remove(), () => layer.remove());
+    }
+
+    // جریان چند قطره روی یک قوس؛ اولین قطره که برسد onLand صدا زده می‌شود
+    function stream(from, to, onLand) {
+      const lift = 20 + Math.abs(to.y - from.y) * 0.08; // قوس ملایم، نزدیک به کادر تاریخ
+      const peakY = Math.min(from.y, to.y) - lift;
+      const sizes = [16, 11, 7];
+      let landed = false;
+      sizes.forEach((size, i) => {
+        const d = document.createElement("span");
+        d.className = "droplet";
+        d.style.width = d.style.height = `${size}px`;
+        d.style.left = `${from.x - size / 2}px`; d.style.top = `${from.y - size / 2}px`;
+        document.body.append(d);
+        const dx = to.x - from.x, dy = to.y - from.y;
+        const anim = d.animate([
+          { transform: "translate(0, 0) scale(.3)", opacity: 0 },
+          { transform: "translate(0, 0) scale(1)", opacity: 1, offset: .12 },
+          { transform: `translate(${dx * .5}px, ${peakY - from.y}px) scale(1, 1.15)`, offset: .55 },
+          { transform: `translate(${dx}px, ${dy}px) scale(.7, .5)`, opacity: .9 },
+        ], { duration: 620, delay: 120 + i * 70, easing: "cubic-bezier(.4, 0, .6, 1)", fill: "forwards" });
+        const finish = () => {
+          d.remove();
+          if (!landed) { landed = true; onLand(); }
+        };
+        anim.finished.then(finish, finish);
+      });
+    }
+
+    function splash(at) {
+      const s = document.createElement("span");
+      s.className = "splash";
+      s.style.width = s.style.height = "12px";
+      s.style.left = `${at.x - 6}px`; s.style.top = `${at.y - 6}px`;
+      document.body.append(s);
+      s.animate([{ transform: "scale(.5)", opacity: .9 }, { transform: "scale(3.2)", opacity: 0 }], { duration: 420, easing: "ease-out" })
+        .finished.then(() => s.remove(), () => s.remove());
+    }
+
+    // تیک خوردن: کارت خالی می‌شود → قطره‌ها به کادر تاریخ می‌ریزند → کادر پر می‌شود
+    function pourIntoBox(id, checkRect) {
+      const body = el.tasks.querySelector(`[data-id="${id}"] .task-body`);
+      if (body) liquidLevel(body, "drain");
+      const from = center(checkRect);
+      const key = selectedKey(), total = tasksForDay(key).length || 1;
+      const afterPct = Math.min(100, progressPercent() + 100 / total);
+      stream(from, fillEdge(afterPct), () => {
+        inFlight = Math.max(0, inFlight - 1);
+        updateProgress();
+        splash(fillEdge(progressPercent()));
+      });
+    }
+
+    // برداشتن تیک: کادر تاریخ خالی‌تر می‌شود → قطره‌ها برمی‌گردند → کارت دوباره پر می‌شود
+    function pourIntoCard(id, fromPct) {
+      const li = el.tasks.querySelector(`[data-id="${id}"]`);
+      const from = fillEdge(fromPct);
+      splash(from);
+      if (!li) return;
+      li.classList.add("is-refilling");
+      const to = center(li.querySelector(".check").getBoundingClientRect());
+      stream(from, to, () => {
+        const current = el.tasks.querySelector(`[data-id="${id}"]`);
+        if (!current) return;
+        const body = current.querySelector(".task-body");
+        liquidLevel(body, "fill").then(() => current.classList.remove("is-refilling"));
+      });
+    }
 
     el.tasks.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-action]");
