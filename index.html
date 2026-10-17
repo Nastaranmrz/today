@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <title>امروز</title>
   <!-- فونت طرح IRANYekanX FaNum است. اگر فایلش را دارید با @font-face اضافه کنید؛ Vazirmatn جایگزین موقت است. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -184,8 +184,10 @@
 
     /* ---------- برگه‌ی افزودن / ویرایش ---------- */
     .sheet {
-      border: 0; width: 100%; max-width: 440px; max-height: 92vh; margin: auto auto 0;
-      padding: 24px 48px calc(24px + env(safe-area-inset-bottom, 0px));
+      border: 0; width: 100%; max-width: 440px; margin: auto auto var(--keyboard, 0px);
+      max-height: calc(92vh - var(--keyboard, 0px)); max-height: calc(92dvh - var(--keyboard, 0px));
+      overflow-y: auto; overscroll-behavior: contain;
+      padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0px));
       border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 0 8px rgba(0,0,0,.1);
       color: var(--text-heading); background: var(--surface);
     }
@@ -200,20 +202,34 @@
     .field--text { height: 46px; padding: 0 16px; }
     .field--area { height: 104px; padding: 12px 16px; resize: none; }
     .field-row { display: flex; gap: 8px; }
-    .field--icon { color: var(--icon); flex: 1; height: 46px; display: flex; align-items: center; gap: 8px; padding-inline: 9px 12px; position: relative; }
+    .field-row { flex-wrap: wrap; }
+    .field-row > .field--icon:last-child { flex: 1.25 1 180px; }
+    .field--icon { color: var(--icon); flex: 1 1 140px; min-width: 0; height: 46px; display: flex; align-items: center; gap: 8px; padding-inline: 9px 12px; position: relative; }
     .field--icon input, .field--icon select {
       flex: 1; min-width: 0; height: 100%; border: 0; background: none; outline: none;
       font: var(--font-04); color: var(--text-heading); appearance: none; cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .field--icon input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
-    .time-placeholder { position: absolute; inset-inline-start: 37px; font: var(--font-04); color: var(--text-description); pointer-events: none; }
+    .time-placeholder {
+      position: absolute; inset-inline: 37px 12px; font: var(--font-04); color: var(--text-description); pointer-events: none;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .field--icon:has(input:valid) .time-placeholder { display: none; }
     .field--icon input[type="time"]:invalid { color: transparent; }
     .field--icon:focus-within input[type="time"] { color: var(--text-heading); }
     .field--icon:focus-within .time-placeholder { display: none; }
     .repeat { display: flex; align-items: center; gap: 8px; cursor: pointer; }
     .sheet-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
-    .btn { width: 116px; height: 46px; border-radius: var(--radius-xs); }
+    .btn { flex: 0 1 116px; min-width: 0; height: 46px; border-radius: var(--radius-xs); }
+    @media (min-width: 420px) { .sheet { padding-inline: 48px; } }
+    /* در گوشی، فونت کمتر از ۱۶ پیکسل باعث زوم خودکار iOS روی فیلدها می‌شود */
+    @media (hover: none) and (pointer: coarse) {
+      .field--icon input, .field--icon select { font-size: 16px; }
+      /* با فونت بزرگ‌تر، اگر جا نباشد ساعت و تاریخ زیر هم می‌روند تا متن بریده نشود */
+      .field--icon { flex-basis: 150px; }
+      .field-row > .field--icon:last-child { flex-basis: 200px; }
+    }
     .btn--primary { background: var(--primary); color: #fff; }
     .btn--primary:disabled { opacity: .5; cursor: not-allowed; }
     .btn--outline { border: 1px solid var(--border-tint); color: var(--text-body); }
@@ -650,6 +666,20 @@
       persist(); render();
     });
     el.sheet.addEventListener("click", (e) => { if (e.target === el.sheet) el.sheet.close(); });
+
+    // بالا آمدن برگه همراه کیبورد گوشی (iOS ارتفاع صفحه را با باز شدن کیبورد کم نمی‌کند)
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+      const syncKeyboard = () => {
+        const keyboard = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        document.documentElement.style.setProperty("--keyboard", `${Math.round(keyboard)}px`);
+      };
+      vv.addEventListener("resize", syncKeyboard);
+      vv.addEventListener("scroll", syncKeyboard);
+    }
+    el.sheet.addEventListener("focusin", (e) => {
+      setTimeout(() => e.target.scrollIntoView({ block: "nearest" }), 300);
+    });
 
     render();
   })();
