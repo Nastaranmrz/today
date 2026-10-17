@@ -49,12 +49,19 @@
       --color-surface-strong: var(--mauve-200);
       --color-border: var(--mauve-200);
       --color-border-strong: var(--mauve-300);
-      --color-text: var(--mauve-900);
+      --color-text: var(--mauve-800);
       --color-text-secondary: var(--mauve-600);
       --color-text-muted: var(--mauve-500);
       --color-icon: var(--mauve-600);
       --color-primary: var(--purple-600);
       --color-primary-hover: var(--purple-700);
+      --color-primary-active: var(--purple-800);
+      --color-primary-subtle-hover: var(--purple-200);
+      --color-surface-hover: var(--mauve-200);
+      --color-surface-active: var(--mauve-300);
+      --color-danger-hover: var(--red-100);
+      --color-danger-active: var(--red-200);
+      --opacity-disabled: .4;
       --color-on-primary: var(--purple-50);
       --color-primary-subtle: var(--purple-100);
       --color-primary-subtle-text: var(--purple-700);
@@ -147,8 +154,8 @@
       border-radius: var(--radius-sm); box-shadow: var(--shadow-raised);
     }
     .date-menu li { padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-xs); cursor: pointer; }
+    .date-menu li.is-active { background: var(--color-surface-hover); }
     .date-menu li[aria-selected="true"] { color: var(--color-primary); font-weight: var(--font-weight-medium); }
-    .date-menu li:hover, .date-menu li.is-active { background: var(--color-surface-raised); }
     .summary { font: var(--font-04); color: var(--color-text-muted); margin-top: var(--space-xs); }
 
     /* ---------- فیلترها و جستجو ---------- */
@@ -208,7 +215,7 @@
     .task-title { font: var(--font-07); font-weight: var(--font-weight-medium); overflow-wrap: anywhere; }
     .task-desc { font: var(--font-04); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .task-meta { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2xs); flex-shrink: 0; }
-    .task-time { font: var(--font-06); color: var(--color-text-secondary); direction: ltr; unicode-bidi: isolate; }
+    .task-time { font: var(--font-06); color: var(--color-text-secondary); white-space: nowrap; }
     .badge {
       font: var(--font-02); color: var(--color-text-secondary); background: var(--color-surface);
       border-radius: var(--radius-full); padding: 0 var(--space-xs);
@@ -259,7 +266,6 @@
       color: var(--color-icon); border-radius: var(--radius-md);
     }
     .nav-tab--add { background: var(--color-primary); color: var(--color-on-primary); }
-    .nav-tab--add:hover { background: var(--color-primary-hover); }
 
     /* ---------- برگه‌ی افزودن / ویرایش (یکسان) ---------- */
     .sheet {
@@ -271,7 +277,9 @@
       background: var(--color-surface); color: var(--color-text);
     }
     .sheet::backdrop { background: var(--color-overlay); }
-    .sheet-title { font: var(--font-07); font-weight: var(--font-weight-demibold); margin-bottom: var(--space-md); }
+    .sheet-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); margin-bottom: var(--space-md); }
+    .sheet-title { font: var(--font-07); font-weight: var(--font-weight-demibold); }
+    .sheet-close { width: var(--height-3xl); height: var(--height-3xl); display: grid; place-items: center; border-radius: var(--radius-xs); color: var(--color-icon); margin-inline-end: calc(-1 * var(--space-xs)); }
     .sheet form { display: flex; flex-direction: column; gap: var(--space-md); }
     .field {
       width: 100%; border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm);
@@ -296,64 +304,59 @@
     }
     /* حالت انتخاب: فقط همان فیلد و انتخابگرش دیده می‌شوند */
     .sheet.is-picking form > :not(.field-row):not(.picker) { display: none; }
-    .sheet.is-picking .picker-trigger[aria-expanded="false"] { display: none; }
+    .sheet.is-picking .field-row { display: none; }
+    .picker-value { font: var(--font-10); font-weight: var(--font-weight-medium); color: var(--color-text); text-align: center; padding-block: var(--space-2xs); }
+    .picker-value.is-empty { color: var(--color-text-muted); }
     .sheet.is-picking .picker { animation: picker-in .2s ease; }
     @keyframes picker-in { from { opacity: 0; transform: translateY(var(--space-xs)); } }
-    .picker-actions { display: flex; justify-content: space-between; gap: var(--space-xs); }
+    .picker-actions { display: flex; gap: var(--space-xs); }
     .text-button {
       height: var(--height-2xl); padding-inline: var(--space-sm); border-radius: var(--radius-xs);
       font: var(--font-06); font-weight: var(--font-weight-medium); color: var(--color-primary);
     }
-    .text-button:hover { background: var(--color-primary-subtle); }
     .text-button--muted { color: var(--color-text-secondary); }
-    .text-button--muted:hover { background: var(--color-surface-raised); }
 
     /* ساعت: یک زمان یا بازه */
     .segmented { display: flex; gap: var(--space-2xs); padding: var(--space-2xs); background: var(--color-surface-raised); border-radius: var(--radius-sm); }
     .segment { flex: 1; height: var(--height-3xl); border-radius: var(--radius-xs); font: var(--font-06); color: var(--color-text-secondary); }
     .segment[aria-checked="true"] { background: var(--color-surface); color: var(--color-text); font-weight: var(--font-weight-medium); box-shadow: var(--shadow-raised); }
-    .time-group { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
-    .time-group-label { font: var(--font-06); color: var(--color-text-secondary); }
+    .time-row { display: flex; align-items: flex-end; justify-content: center; gap: var(--space-sm); }
+    .time-group { display: flex; flex-direction: column; align-items: center; gap: var(--space-2xs); min-width: 0; }
+    .time-group-label { font: var(--font-04); color: var(--color-text-secondary); }
     .time-input { display: flex; align-items: center; gap: var(--space-2xs); }
     .time-part {
-      width: var(--space-6xl); height: var(--height-5xl); text-align: center; font: var(--font-10); font-weight: var(--font-weight-medium);
+      width: var(--space-5xl); min-width: 0; height: var(--height-5xl); text-align: center; font: var(--font-10); font-weight: var(--font-weight-medium);
       border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm); background: var(--color-surface-raised); color: var(--color-text);
+      transition: background-color .15s, border-color .15s;
     }
     .time-part::placeholder { color: var(--color-text-muted); }
     .time-part:focus { outline: none; border-color: var(--color-primary); background: var(--color-surface); }
     .time-part[aria-invalid="true"] { border-color: var(--color-danger); }
     .time-sep { font: var(--font-10); color: var(--color-text-muted); }
-    .time-chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
-    .time-chip {
-      flex-shrink: 0; height: var(--height-2xl); padding-inline: var(--space-sm); border-radius: var(--radius-full);
-      border: 1px solid var(--color-border); font: var(--font-06); color: var(--color-text-secondary);
-    }
-    .time-chip[aria-pressed="true"] { background: var(--color-primary-subtle); border-color: var(--color-primary-subtle); color: var(--color-primary-subtle-text); font-weight: var(--font-weight-medium); }
-    .time-chip:disabled { opacity: .4; cursor: not-allowed; }
-    .end-section { display: flex; flex-direction: column; gap: var(--space-sm); }
-    .time-meta { font: var(--font-04); color: var(--color-text-muted); }
-    .time-error { font: var(--font-04); color: var(--color-danger); }
-    .btn--compact { flex: 0 0 auto; height: var(--height-3xl); padding-inline: var(--space-xl); font: var(--font-06); font-weight: var(--font-weight-medium); }
+    .time-range-sep { font: var(--font-06); color: var(--color-text-secondary); height: var(--height-5xl); display: flex; align-items: center; }
+    /* در حالت «یک زمان» جای بخش پایان خالی می‌ماند تا ارتفاع و چیدمان نپرد */
+    .time-picker[data-mode="single"] .is-range-only { visibility: hidden; }
+    .time-meta, .time-error { font: var(--font-04); min-height: 20px; text-align: center; }
+    .time-meta { color: var(--color-text-muted); }
+    .time-error { color: var(--color-danger); }
 
     /* تاریخ */
-    .quick-dates { display: flex; gap: var(--space-xs); }
     .quick-date {
-      flex: 1; height: var(--height-2xl); border-radius: var(--radius-xs); border: 1px solid var(--color-border);
+      width: 100%; height: var(--height-3xl); border-radius: var(--radius-xs); border: 1px solid var(--color-border);
       font: var(--font-06); color: var(--color-text-secondary);
     }
     .quick-date[aria-pressed="true"] { background: var(--color-primary-subtle); border-color: var(--color-primary-subtle); color: var(--color-primary-subtle-text); font-weight: var(--font-weight-medium); }
     .cal-head { display: flex; align-items: center; justify-content: space-between; }
     .cal-title { font: var(--font-06); font-weight: var(--font-weight-demibold); }
     .cal-nav { width: var(--height-2xl); height: var(--height-2xl); display: grid; place-items: center; border-radius: var(--radius-xs); color: var(--color-icon); }
-    .cal-nav:hover { background: var(--color-surface-raised); }
     .cal-nav--prev svg { transform: rotate(-90deg); }
     .cal-nav--next svg { transform: rotate(90deg); }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-3xs); text-align: center; }
     .cal-weekday { font: var(--font-04); color: var(--color-text-muted); padding-block: var(--space-2xs); }
+    .cal-empty { height: var(--height-3xl); }
     .cal-day {
       height: var(--height-3xl); border-radius: var(--radius-xs); font: var(--font-06); color: var(--color-text);
     }
-    .cal-day:hover { background: var(--color-surface-raised); }
     .cal-day.is-past { color: var(--color-text-muted); }
     .cal-day.is-today { box-shadow: inset 0 0 0 1px var(--color-primary); color: var(--color-primary); font-weight: var(--font-weight-medium); }
     .cal-day[aria-pressed="true"] { background: var(--color-primary); color: var(--color-on-primary); font-weight: var(--font-weight-medium); box-shadow: none; }
@@ -366,8 +369,6 @@
       font: var(--font-07); font-weight: var(--font-weight-medium);
     }
     .btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
-    .btn--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
-    .btn--primary:disabled { opacity: .45; cursor: not-allowed; }
     .btn--secondary { background: var(--color-surface-raised); color: var(--color-text-secondary); }
 
     /* ---------- توست ---------- */
@@ -388,8 +389,40 @@
       height: var(--height-3xl); padding-inline: var(--space-sm); border-radius: var(--radius-xs);
       color: var(--purple-300); font-weight: var(--font-weight-demibold);
     }
-    .toast-undo:hover { background: color-mix(in srgb, var(--color-on-toast) 12%, transparent); }
     @keyframes toast-in { from { opacity: 0; transform: translateY(var(--space-xs)); } }
+
+    /* =====================================================================
+       حالت‌های تعاملی — پیش‌فرض، hover، active (فشرده)، focus، disabled
+       hover فقط روی دستگاه‌های دارای اشاره‌گر، تا روی لمس «گیر» نکند
+       ===================================================================== */
+    button, .time-part { transition: background-color .15s, border-color .15s, color .15s, transform .1s; }
+    button:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+    button:active:not(:disabled) { transform: scale(.97); }
+    .date-selector:active, .task-action:active, .cal-day:active, .time-part:active { transform: none; }
+    @media (hover: hover) {
+      .icon-button:hover, .search-button:not([aria-pressed="true"]):hover, .kebab:hover, .cal-nav:hover, .sheet-close:hover,
+      .nav-tab:not(.nav-tab--add):hover, .tomorrow:not([aria-pressed="true"]):hover, .date-selector:hover,
+      .btn--secondary:hover:not(:disabled), .text-button--muted:hover, .segment:not([aria-checked="true"]):hover,
+      .cal-day:not([aria-pressed="true"]):hover, .date-menu li:hover { background: var(--color-surface-hover); }
+      .chip:not([aria-pressed="true"]):hover, .quick-date:not([aria-pressed="true"]):hover { background: var(--color-surface-hover); border-color: var(--color-surface-hover); }
+      .btn--primary:hover:not(:disabled), .nav-tab--add:hover, .chip[aria-pressed="true"]:hover,
+      .search-button[aria-pressed="true"]:hover, .cal-day[aria-pressed="true"]:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+      .text-button:not(.text-button--muted):hover, .tomorrow[aria-pressed="true"]:hover, .quick-date[aria-pressed="true"]:hover { background: var(--color-primary-subtle-hover); }
+      .task-action--edit:hover { background: var(--purple-100); }
+      .task-action--delete:hover { background: var(--color-danger-hover); }
+      .time-part:not(:focus):hover { border-color: var(--color-border-strong); }
+      .toast-undo:hover { background: color-mix(in srgb, var(--color-on-toast) 12%, transparent); }
+    }
+    .icon-button:active, .search-button:not([aria-pressed="true"]):active, .kebab:active, .cal-nav:active, .sheet-close:active,
+    .nav-tab:not(.nav-tab--add):active, .tomorrow:not([aria-pressed="true"]):active, .date-selector:active,
+    .btn--secondary:active:not(:disabled), .text-button--muted:active, .segment:not([aria-checked="true"]):active,
+    .cal-day:not([aria-pressed="true"]):active, .date-menu li:active,
+    .chip:not([aria-pressed="true"]):active, .quick-date:not([aria-pressed="true"]):active { background: var(--color-surface-active); }
+    .btn--primary:active:not(:disabled), .nav-tab--add:active, .chip[aria-pressed="true"]:active,
+    .search-button[aria-pressed="true"]:active, .cal-day[aria-pressed="true"]:active { background: var(--color-primary-active); border-color: var(--color-primary-active); }
+    .text-button:not(.text-button--muted):active, .task-action--edit:active { background: var(--purple-200); }
+    .task-action--delete:active { background: var(--color-danger-active); }
+    .toast-undo:active { background: color-mix(in srgb, var(--color-on-toast) 20%, transparent); }
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
   </style>
@@ -454,7 +487,10 @@
 
   <!-- برگه‌ی افزودن و ویرایش — یک فرم مشترک -->
   <dialog class="sheet" id="task-sheet" aria-labelledby="sheet-title">
-    <h2 class="sheet-title" id="sheet-title">کار جدید</h2>
+    <div class="sheet-header">
+      <h2 class="sheet-title" id="sheet-title">کار جدید</h2>
+      <button class="sheet-close" type="button" id="sheet-close" aria-label="بستن"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
     <form method="dialog" id="task-form">
       <label class="visually-hidden" for="task-title">عنوان کار</label>
       <input class="field field--text" id="task-title" type="text" autocomplete="off" maxlength="120" placeholder="کارت رو اضافه کن .." />
@@ -468,24 +504,24 @@
         </button>
       </div>
 
-      <div class="picker" id="time-picker" hidden>
+      <div class="picker time-picker" id="time-picker" data-mode="single" hidden>
+        <p class="picker-value" id="time-display" aria-live="polite"></p>
         <div class="segmented" role="radiogroup" aria-label="نوع زمان">
           <button class="segment" type="button" role="radio" data-mode="single" aria-checked="true">یک زمان</button>
           <button class="segment" type="button" role="radio" data-mode="range" aria-checked="false">بازه‌ی زمانی</button>
         </div>
 
-        <div class="time-group" role="group" aria-labelledby="start-label">
-          <p class="time-group-label" id="start-label">ساعت</p>
-          <div class="time-input" dir="ltr">
-            <input class="time-part" id="start-h" data-part="h" data-which="start" inputmode="numeric" autocomplete="off" placeholder="--" aria-label="ساعت" aria-describedby="time-error" />
-            <span class="time-sep" aria-hidden="true">:</span>
-            <input class="time-part" id="start-m" data-part="m" data-which="start" inputmode="numeric" autocomplete="off" placeholder="--" aria-label="دقیقه" aria-describedby="time-error" />
+        <div class="time-row">
+          <div class="time-group" role="group" aria-labelledby="start-label">
+            <p class="time-group-label" id="start-label">ساعت</p>
+            <div class="time-input" dir="ltr">
+              <input class="time-part" id="start-h" data-part="h" data-which="start" inputmode="numeric" autocomplete="off" placeholder="--" aria-label="ساعت" aria-describedby="time-error" />
+              <span class="time-sep" aria-hidden="true">:</span>
+              <input class="time-part" id="start-m" data-part="m" data-which="start" inputmode="numeric" autocomplete="off" placeholder="--" aria-label="دقیقه" aria-describedby="time-error" />
+            </div>
           </div>
-        </div>
-        <div class="time-chips" id="start-chips" role="group" aria-label="ساعت‌های پیشنهادی"></div>
-
-        <div class="end-section" id="end-section" hidden>
-          <div class="time-group" role="group" aria-labelledby="end-label">
+          <span class="time-range-sep is-range-only" aria-hidden="true">الی</span>
+          <div class="time-group is-range-only" id="end-section" role="group" aria-labelledby="end-label">
             <p class="time-group-label" id="end-label">پایان</p>
             <div class="time-input" dir="ltr">
               <input class="time-part" id="end-h" data-part="h" data-which="end" inputmode="numeric" autocomplete="off" placeholder="--" aria-label="ساعت پایان" aria-describedby="time-error duration-text" />
@@ -493,29 +529,19 @@
               <input class="time-part" id="end-m" data-part="m" data-which="end" inputmode="numeric" autocomplete="off" placeholder="--" aria-label="دقیقه پایان" aria-describedby="time-error duration-text" />
             </div>
           </div>
-          <div class="time-chips" id="duration-chips" role="group" aria-label="مدت">
-            <button class="time-chip" type="button" data-duration="30">۳۰ دقیقه</button>
-            <button class="time-chip" type="button" data-duration="60">۱ ساعت</button>
-            <button class="time-chip" type="button" data-duration="90">۱:۳۰ ساعت</button>
-            <button class="time-chip" type="button" data-duration="120">۲ ساعت</button>
-            <button class="time-chip" type="button" data-duration="180">۳ ساعت</button>
-          </div>
-          <p class="time-meta" id="duration-text" aria-live="polite"></p>
         </div>
 
-        <p class="time-error" id="time-error" role="alert" hidden></p>
+        <p class="time-meta is-range-only" id="duration-text" aria-live="polite"></p>
+        <p class="time-error" id="time-error" role="alert"></p>
         <div class="picker-actions">
-          <button class="text-button text-button--muted" type="button" id="time-clear">بدون ساعت</button>
-          <button class="btn btn--primary btn--compact" type="button" id="time-done">تأیید</button>
+          <button class="btn btn--primary" type="button" id="time-done">تأیید</button>
+          <button class="btn btn--secondary" type="button" id="time-cancel">انصراف</button>
         </div>
       </div>
 
       <div class="picker" id="date-picker" hidden>
-        <div class="quick-dates" role="group" aria-label="انتخاب سریع">
-          <button class="quick-date" type="button" data-quick="0">امروز</button>
-          <button class="quick-date" type="button" data-quick="1">فردا</button>
-          <button class="quick-date" type="button" data-quick="none">بدون تاریخ</button>
-        </div>
+        <p class="picker-value" id="date-display" aria-live="polite"></p>
+        <button class="quick-date" type="button" id="no-date" aria-pressed="false">بدون تاریخ</button>
         <div class="cal-head">
           <button class="cal-nav cal-nav--prev" type="button" id="cal-prev" aria-label="ماه قبل"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.2L16.6 8.6L18 10L12 16L6 10L7.4 8.6L12 13.2Z" fill="currentColor"/></svg></button>
           <p class="cal-title" id="cal-title" aria-live="polite"></p>
@@ -580,7 +606,7 @@
       sheet: $("task-sheet"), form: $("task-form"), sheetTitle: $("sheet-title"), save: $("save-task"),
       fTitle: $("task-title"), fDesc: $("task-desc"), fRepeat: $("task-repeat"),
       timeTrigger: $("time-trigger"), timeValue: $("time-value"), timePicker: $("time-picker"),
-      timeClear: $("time-clear"), timeDone: $("time-done"),
+      timeCancel: $("time-cancel"), timeDone: $("time-done"), timeDisplay: $("time-display"), dateDisplay: $("date-display"), noDate: $("no-date"), sheetClose: $("sheet-close"),
       dateTrigger: $("date-trigger"), dateValue: $("date-value"), datePicker: $("date-picker"),
       calTitle: $("cal-title"), calGrid: $("cal-grid"), calPrev: $("cal-prev"), calNext: $("cal-next"),
       template: $("task-template"),
@@ -844,11 +870,11 @@
     // تغییرات روی پیش‌نویس انجام می‌شود و فقط با «تأیید» ثبت می‌شود؛ Esc یا بیرون زدن یعنی انصراف
     const form = { time: "", endTime: "", date: null, calMonth: null };
     const DAY_MIN = 24 * 60;
-    const PRESETS = ["09:00", "12:00", "15:00", "18:00", "21:00"];
     const toLatin = (s) => String(s).replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
     const toMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
     const fromMin = (n) => `${pad(Math.floor(n / 60))}:${pad(n % 60)}`;
-    const timeLabel = (start, end) => (start ? (end ? `${faDigits(start)} – ${faDigits(end)}` : faDigits(start)) : "");
+    const iso = (t) => `\u2066${faDigits(t)}\u2069`; // هر ساعت جدا و چپ‌به‌راست، کل عبارت راست‌به‌چپ
+    const timeLabel = (start, end, sep = "–") => (start ? (end ? `${iso(start)} ${sep} ${iso(end)}` : iso(start)) : "");
     const formatDuration = (n) => {
       const h = Math.floor(n / 60), m = n % 60;
       return [h ? `${faDigits(h)} ساعت` : "", m ? `${faDigits(m)} دقیقه` : ""].filter(Boolean).join(" و ");
@@ -858,7 +884,6 @@
       start: { h: $("start-h"), m: $("start-m") },
       end: { h: $("end-h"), m: $("end-m") },
       segments: el.timePicker.querySelector(".segmented"),
-      startChips: $("start-chips"), durationChips: $("duration-chips"),
       endSection: $("end-section"), startLabel: $("start-label"),
       durationText: $("duration-text"), error: $("time-error"),
     };
@@ -891,29 +916,19 @@
     function renderTimePicker({ rewrite = true } = {}) {
       const range = draft.mode === "range";
       tp.segments.querySelectorAll(".segment").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.mode === draft.mode)));
-      tp.endSection.hidden = !range;
       tp.startLabel.textContent = range ? "شروع" : "ساعت";
       tp.start.h.setAttribute("aria-label", range ? "ساعت شروع" : "ساعت");
       tp.start.m.setAttribute("aria-label", range ? "دقیقه شروع" : "دقیقه");
       if (rewrite) { writeTime("start", draft.start); writeTime("end", draft.end); }
 
-      const chips = [...new Set([suggestedStart(), ...PRESETS])].sort();
-      tp.startChips.replaceChildren(...chips.map((t) => {
-        const b = document.createElement("button");
-        b.type = "button"; b.className = "time-chip"; b.dataset.time = t; b.textContent = faDigits(t);
-        b.setAttribute("aria-pressed", String(draft.start === t));
-        return b;
-      }));
+      el.timePicker.dataset.mode = draft.mode;
       const dur = draft.start && draft.end ? toMin(draft.end) - toMin(draft.start) : null;
-      tp.durationChips.querySelectorAll(".time-chip").forEach((b) => {
-        const d = Number(b.dataset.duration);
-        b.setAttribute("aria-pressed", String(dur === d));
-        b.disabled = !draft.start || toMin(draft.start) + d >= DAY_MIN;
-      });
+      el.timeDisplay.textContent = draft.start ? timeLabel(draft.start, range ? draft.end : "", "الی") : "بدون ساعت";
+      el.timeDisplay.classList.toggle("is-empty", !draft.start);
       tp.durationText.textContent = range && dur > 0 ? `مدت: ${formatDuration(dur)}` : "";
 
       const err = draft.showErrors ? validate() : "";
-      tp.error.textContent = err; tp.error.hidden = !err;
+      tp.error.textContent = err;
       const endBad = err && draft.mode === "range" && (!draft.end || (draft.start && draft.end && toMin(draft.end) <= toMin(draft.start)));
       const startBad = err && !draft.start;
       [tp.start.h, tp.start.m].forEach((i) => i.setAttribute("aria-invalid", String(!!startBad)));
@@ -945,7 +960,13 @@
       renderTimePicker({ rewrite: false });
       if (input.dataset.part === "h" && (raw.length === 2 || Number(raw) > 2)) { tp[which].m.focus(); selectAll(tp[which].m); }
     });
-    const selectAll = (input) => requestAnimationFrame(() => { try { input.setSelectionRange(0, input.value.length); } catch {} });
+    const selectAll = (input) => {
+      const sel = () => { try { input.setSelectionRange(0, input.value.length); } catch {} };
+      sel();
+      // بعضی مرورگرهای موبایل انتخاب را بعد از فوکوس پاک می‌کنند؛ فقط اگر کاربر هنوز چیزی تایپ نکرده دوباره انتخاب کن
+      const before = input.value;
+      requestAnimationFrame(() => { if (document.activeElement === input && input.value === before) sel(); });
+    };
     el.timePicker.addEventListener("focusin", (e) => { if (e.target.matches(".time-part")) selectAll(e.target); });
     el.timePicker.addEventListener("focusout", (e) => {
       const input = e.target.closest(".time-part"); if (!input) return;
@@ -972,19 +993,6 @@
       draft.showErrors = false;
       renderTimePicker();
     });
-    tp.startChips.addEventListener("click", (e) => {
-      const b = e.target.closest("[data-time]"); if (!b) return;
-      const d = draft.start && draft.end ? toMin(draft.end) - toMin(draft.start) : 60;
-      draft.start = b.dataset.time;
-      draft.end = plus(draft.start, d > 0 ? d : 60);
-      renderTimePicker();
-    });
-    tp.durationChips.addEventListener("click", (e) => {
-      const b = e.target.closest("[data-duration]"); if (!b || b.disabled) return;
-      draft.end = plus(draft.start, Number(b.dataset.duration));
-      renderTimePicker();
-    });
-
     function renderTime() {
       el.timeValue.textContent = form.time ? timeLabel(form.time, form.endTime) : "ساعت (اختیاری)";
       el.timeValue.classList.toggle("is-empty", !form.time);
@@ -1003,7 +1011,7 @@
       renderTime(); togglePicker(null);
     }
     el.timeDone.addEventListener("click", confirmTime);
-    el.timeClear.addEventListener("click", () => { form.time = ""; form.endTime = ""; renderTime(); togglePicker(null); });
+    el.timeCancel.addEventListener("click", () => togglePicker(null));
 
     // ---------- برگه: انتخابگر تاریخ اختصاصی (ماه شمسی) ----------
     const WEEKDAYS = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
@@ -1011,12 +1019,9 @@
     function renderDateValue() {
       el.dateValue.textContent = form.date ? shortLabel(dateOf(form.date)) : "بدون تاریخ";
       el.dateValue.classList.toggle("is-empty", !form.date);
-      const today = keyOf(startOfDay(new Date())), tomorrow = keyOf(addDays(startOfDay(new Date()), 1));
-      el.datePicker.querySelectorAll(".quick-date").forEach((b) => {
-        const q = b.dataset.quick;
-        const on = q === "none" ? form.date === null : form.date === (q === "0" ? today : tomorrow);
-        b.setAttribute("aria-pressed", String(on));
-      });
+      el.dateDisplay.textContent = el.dateValue.textContent;
+      el.dateDisplay.classList.toggle("is-empty", !form.date);
+      el.noDate.setAttribute("aria-pressed", String(form.date === null));
     }
     function renderCalendar() {
       const start = form.calMonth;
@@ -1024,7 +1029,7 @@
       el.calTitle.textContent = fmtMonth.format(start);
       const cells = WEEKDAYS.map((w) => { const s = document.createElement("span"); s.className = "cal-weekday"; s.textContent = w; s.setAttribute("aria-hidden", "true"); return s; });
       const lead = (start.getDay() + 1) % 7; // شنبه اولین ستون
-      for (let i = 0; i < lead; i++) cells.push(document.createElement("span"));
+      for (let i = 0; i < lead; i++) { const s = document.createElement("span"); s.className = "cal-empty"; cells.push(s); }
       const todayKey = keyOf(startOfDay(new Date()));
       for (let d = new Date(start); persianParts(d).month === month; d = addDays(d, 1)) {
         const k = keyOf(d), b = document.createElement("button");
@@ -1036,6 +1041,8 @@
         else if (k < todayKey) b.classList.add("is-past");
         cells.push(b);
       }
+      // همیشه ۶ ردیف هفته، تا ارتفاع برگه با عوض شدن ماه تغییر نکند
+      while (cells.length < 7 + 42) { const s = document.createElement("span"); s.className = "cal-empty"; cells.push(s); }
       el.calGrid.replaceChildren(...cells);
     }
     el.calPrev.addEventListener("click", () => { form.calMonth = monthStart(addDays(form.calMonth, -1)); renderCalendar(); });
@@ -1046,11 +1053,7 @@
       renderDateValue(); renderCalendar(); togglePicker(null);
     }
     el.calGrid.addEventListener("click", (e) => { const b = e.target.closest("[data-date]"); if (b) setFormDate(b.dataset.date); });
-    el.datePicker.querySelector(".quick-dates").addEventListener("click", (e) => {
-      const b = e.target.closest("[data-quick]"); if (!b) return;
-      const q = b.dataset.quick;
-      setFormDate(q === "none" ? null : keyOf(addDays(startOfDay(new Date()), Number(q))));
-    });
+    el.noDate.addEventListener("click", () => setFormDate(null));
 
     // با باز شدن هر انتخابگر، بقیه‌ی فرم پنهان می‌شود و فوکوس مستقیم روی گزینه‌ی انتخاب‌شده می‌رود
     let sheetTitleText = "";
@@ -1066,9 +1069,11 @@
       el.sheet.classList.toggle("is-picking", picking);
       if (picking) {
         el.sheetTitle.textContent = timeOn ? "انتخاب ساعت" : "انتخاب تاریخ";
+        el.sheetClose.setAttribute("aria-label", timeOn ? "بستن انتخاب ساعت" : "بستن انتخاب تاریخ");
         el.sheet.scrollTop = 0;
       } else if (wasOpen) {
         el.sheetTitle.textContent = sheetTitleText;
+        el.sheetClose.setAttribute("aria-label", "بستن");
       }
       if (timeOn) { startTimeDraft(); tp.start.h.focus({ preventScroll: true }); selectAll(tp.start.h); }
       if (dateOn) {
@@ -1115,6 +1120,9 @@
     // بیرون زدن یا Esc وقتی انتخابگر باز است، اول فقط انتخابگر را می‌بندد
     el.sheet.addEventListener("click", (e) => {
       if (e.target !== el.sheet) return;
+      if (el.sheet.classList.contains("is-picking")) togglePicker(null); else el.sheet.close();
+    });
+    el.sheetClose.addEventListener("click", () => {
       if (el.sheet.classList.contains("is-picking")) togglePicker(null); else el.sheet.close();
     });
     el.sheet.addEventListener("cancel", (e) => {
