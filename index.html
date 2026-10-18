@@ -52,6 +52,7 @@
       --color-text: var(--mauve-800);
       --color-text-secondary: var(--mauve-600);
       --color-text-muted: var(--mauve-500);
+      --color-placeholder: var(--mauve-400); /* یک رنگ برای همه‌ی placeholderها */
       --color-icon: var(--mauve-600);
       --color-primary: var(--purple-600);
       --color-primary-hover: var(--purple-700);
@@ -68,6 +69,7 @@
       --color-progress: var(--purple-200);
       --color-liquid: var(--purple-300);
       --color-liquid-surface: var(--purple-100);
+      --color-star: var(--purple-50);
       --color-danger: var(--red-600);
       --color-danger-subtle: var(--red-100);
       --color-toast: var(--mauve-900);
@@ -89,6 +91,7 @@
         --purple-50: #3b0764; --purple-100: #581c87; --purple-200: #6b21a8; --purple-300: #7e22ce; --purple-400: #9333ea; --purple-500: #a855f7; --purple-600: #c084fc; --purple-700: #d8b4fe; --purple-800: #e9d5ff; --purple-900: #f3e8ff; --purple-950: #faf5ff;
         --red-50: #450a0a; --red-100: #7f1d1d; --red-200: #991b1b; --red-300: #b91c1c; --red-400: #dc2626; --red-500: #ef4444; --red-600: #f87171; --red-700: #fca5a5; --red-800: #fecaca; --red-900: #fee2e2; --red-950: #fef2f2;
         --emerald-50: #022c22; --emerald-100: #064e3b; --emerald-200: #065f46; --emerald-300: #047857; --emerald-400: #059669; --emerald-500: #10b981; --emerald-600: #34d399; --emerald-700: #6ee7b7; --emerald-800: #a7f3d0; --emerald-900: #d1fae5; --emerald-950: #ecfdf5;
+        --color-star: var(--purple-950);
         color-scheme: dark;
       }
     }
@@ -99,6 +102,7 @@
       --purple-50: #3b0764; --purple-100: #581c87; --purple-200: #6b21a8; --purple-300: #7e22ce; --purple-400: #9333ea; --purple-500: #a855f7; --purple-600: #c084fc; --purple-700: #d8b4fe; --purple-800: #e9d5ff; --purple-900: #f3e8ff; --purple-950: #faf5ff;
       --red-50: #450a0a; --red-100: #7f1d1d; --red-200: #991b1b; --red-300: #b91c1c; --red-400: #dc2626; --red-500: #ef4444; --red-600: #f87171; --red-700: #fca5a5; --red-800: #fecaca; --red-900: #fee2e2; --red-950: #fef2f2;
       --emerald-50: #022c22; --emerald-100: #064e3b; --emerald-200: #065f46; --emerald-300: #047857; --emerald-400: #059669; --emerald-500: #10b981; --emerald-600: #34d399; --emerald-700: #6ee7b7; --emerald-800: #a7f3d0; --emerald-900: #d1fae5; --emerald-950: #ecfdf5;
+      --color-star: var(--purple-950);
       color-scheme: dark;
     }
     html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -144,9 +148,32 @@
     }
     .date-selector .progress-fill {
       position: absolute; inset-block: 0; inset-inline-start: 0; z-index: -1;
-      width: var(--progress, 0%); background: var(--color-progress);
+      width: var(--progress, 0%); overflow: hidden;
+      /* مایع کهکشانی: گرادیان بنفش برند که آرام جابه‌جا می‌شود + ابرهای سحابی */
+      background:
+        radial-gradient(60% 120% at 25% 20%, color-mix(in srgb, var(--purple-400) 55%, transparent), transparent 70%),
+        radial-gradient(50% 100% at 80% 90%, color-mix(in srgb, var(--purple-100) 70%, transparent), transparent 70%),
+        linear-gradient(to left, var(--purple-200), var(--purple-300) 35%, var(--purple-400) 65%, var(--purple-200));
+      background-size: 100% 100%, 100% 100%, 300% 100%;
+      animation: nebula-drift 9s ease-in-out infinite alternate;
       transition: width .55s cubic-bezier(.34, 1.4, .64, 1); /* کمی بیش‌پر شدن، مثل موج مایع */
     }
+    /* ستاره‌های ریز چشمک‌زن داخل مایع */
+    .date-selector .progress-fill::before, .date-selector .progress-fill::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        radial-gradient(1.5px 1.5px at 12% 30%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(1px 1px at 28% 72%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(1.5px 1.5px at 47% 22%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(1px 1px at 63% 64%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(2px 2px at 81% 38%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(1px 1px at 92% 78%, var(--color-star) 50%, transparent 60%);
+      background-size: 160px 100%; background-repeat: repeat-x;
+      animation: twinkle 3.2s ease-in-out infinite;
+    }
+    .date-selector .progress-fill::after { background-position: 80px 0; animation-delay: -1.6s; opacity: .6; }
+    @keyframes nebula-drift { from { background-position: 0 0, 0 0, 0% 0; } to { background-position: 0 0, 0 0, 100% 0; } }
+    @keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .9; } }
     .date-selector .label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .date-selector svg { color: var(--color-icon); transition: transform .2s; }
     .date-selector[aria-expanded="true"] svg { transform: rotate(180deg); }
@@ -181,6 +208,7 @@
       background: var(--color-surface); font: var(--font-06);
     }
     .search-field:focus { outline: none; border-color: var(--color-primary); }
+    .search-field::placeholder { color: var(--color-placeholder); opacity: 1; }
     .search-button {
       width: var(--height-2xl); height: var(--height-2xl); flex-shrink: 0; margin-inline-start: auto;
       display: grid; place-items: center; color: var(--color-icon);
@@ -234,9 +262,18 @@
     .task-body { isolation: isolate; }
     .liquid { position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; }
     .task.is-refilling .task-body { background: var(--color-page); border: 1px dashed var(--color-border-strong); }
+    /* قطره‌های جادویی: گوی نورانی با هاله و دنباله‌ی ستاره */
     .droplet {
       position: fixed; z-index: 40; pointer-events: none; border-radius: 50%;
-      background: var(--color-liquid); will-change: transform, opacity;
+      background: radial-gradient(circle at 35% 30%, var(--color-star), var(--purple-300) 40%, var(--purple-500) 100%);
+      box-shadow: 0 0 8px 2px color-mix(in srgb, var(--purple-400) 65%, transparent), 0 0 18px 4px color-mix(in srgb, var(--purple-300) 35%, transparent);
+      will-change: transform, opacity;
+    }
+    .sparkle {
+      position: fixed; z-index: 41; pointer-events: none; width: 10px; height: 10px;
+      background: radial-gradient(circle, var(--color-star) 0 18%, var(--purple-300) 45%, var(--purple-500) 70%);
+      clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+      will-change: transform, opacity;
     }
     .splash {
       position: fixed; z-index: 40; pointer-events: none; border-radius: 50%;
@@ -261,7 +298,12 @@
     .check:checked { background: var(--color-primary); border-color: var(--color-primary); }
     .check:checked::after { transform: rotate(45deg) scale(1); }
 
-    .no-results { text-align: center; color: var(--color-text-muted); font: var(--font-06); padding-top: var(--space-3xl); }
+    .no-results {
+      display: flex; flex-direction: column; align-items: center; gap: var(--space-2xs);
+      padding-top: var(--space-3xl); text-align: center; font: var(--font-06); color: var(--color-text-secondary);
+    }
+    .no-results .nr-hint { font: var(--font-04); color: var(--color-text-muted); }
+    .no-results[data-variant="done"] .nr-badge--search, .no-results[data-variant="search"] .nr-badge--done { display: none; }
 
     /* ---------- حالت خالی ---------- */
     .empty {
@@ -306,7 +348,7 @@
       background: var(--color-surface-raised); color: var(--color-text); font: var(--font-07);
     }
     .field:focus, .field[aria-expanded="true"] { outline: none; border-color: var(--color-primary); }
-    .field::placeholder { color: var(--color-text-muted); }
+    .field::placeholder { color: var(--color-placeholder); opacity: 1; }
     .field--text { height: var(--height-4xl); padding-inline: var(--space-md); }
     .field--area { height: var(--space-8xl); padding: var(--space-sm) var(--space-md); resize: none; }
     .field-row { display: flex; gap: var(--space-xs); }
@@ -316,7 +358,7 @@
     }
     .picker-trigger svg { color: var(--color-icon); width: var(--size-lg); height: var(--size-lg); }
     .picker-trigger .value { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .picker-trigger .value.is-empty { color: var(--color-text-muted); }
+    .picker-trigger .value.is-empty { color: var(--color-placeholder); }
 
     .picker {
       border: 1px solid var(--color-border); border-radius: var(--radius-sm);
@@ -349,7 +391,7 @@
       border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm); background: var(--color-surface-raised); color: var(--color-text);
       transition: background-color .15s, border-color .15s;
     }
-    .time-part::placeholder { color: var(--color-text-muted); }
+    .time-part::placeholder { color: var(--color-placeholder); opacity: 1; }
     .time-part:focus { outline: none; border-color: var(--color-primary); background: var(--color-surface); }
     .time-part[aria-invalid="true"] { border-color: var(--color-danger); }
     .time-sep { font: var(--font-10); color: var(--color-text-muted); }
@@ -481,7 +523,13 @@
         <button class="search-button" id="search-button" type="button" aria-pressed="false" aria-label="جستجو"><svg class="icon-search" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 20.75c-5.38 0-9.75-4.37-9.75-9.75S5.62 1.25 11 1.25s9.75 4.37 9.75 9.75-4.37 9.75-9.75 9.75Zm0-18c-4.55 0-8.25 3.7-8.25 8.25s3.7 8.25 8.25 8.25 8.25-3.7 8.25-8.25-3.7-8.25-8.25-8.25ZM20.16 22.79c-.08 0-.16-.01-.23-.02-.47-.06-1.32-.38-1.8-1.81-.25-.75-.16-1.5.25-2.07.41-.57 1.1-.89 1.89-.89 1.02 0 1.82.39 2.18 1.08.36.69.26 1.57-.31 2.42-.71 1.07-1.48 1.29-1.98 1.29Zm-.6-2.3c.17.52.41.78.57.8.16.02.46-.17.77-.62.29-.43.31-.74.24-.88s-.35-.29-.87-.29c-.31 0-.54.1-.67.27-.12.17-.14.43-.04.72Z" fill="currentColor"/></svg><svg class="icon-close" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
       <ul class="tasks" id="tasks"></ul>
-      <p class="no-results" id="no-results" hidden>موردی پیدا نشد.</p>
+      <div class="no-results" id="no-results" data-variant="search" aria-live="polite" hidden>
+        <svg aria-hidden="true" focusable="false" width="117" height="96" viewBox="0 0 117 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M58.2329 88.5333C79.4769 88.5333 96.6986 86.8618 96.6986 84.8C96.6986 82.7381 79.4769 81.0667 58.2329 81.0667C36.9888 81.0667 19.7671 82.7381 19.7671 84.8C19.7671 86.8618 36.9888 88.5333 58.2329 88.5333Z" fill="var(--mauve-200)"/><path d="M58.2329 82.6667C78.2967 82.6667 94.5616 66.4296 94.5616 46.4C94.5616 26.3705 78.2967 10.1334 58.2329 10.1334C38.1691 10.1334 21.9041 26.3705 21.9041 46.4C21.9041 66.4296 38.1691 82.6667 58.2329 82.6667Z" fill="var(--mauve-100)"/><path d="M17.6301 29.8666C18.8104 29.8666 19.7671 28.9115 19.7671 27.7333C19.7671 26.5551 18.8104 25.6 17.6301 25.6C16.4499 25.6 15.4931 26.5551 15.4931 27.7333C15.4931 28.9115 16.4499 29.8666 17.6301 29.8666Z" fill="var(--mauve-300)"/><path d="M97.7671 65.0666C98.6523 65.0666 99.3698 64.3503 99.3698 63.4666C99.3698 62.583 98.6523 61.8666 97.7671 61.8666C96.8819 61.8666 96.1644 62.583 96.1644 63.4666C96.1644 64.3503 96.8819 65.0666 97.7671 65.0666Z" fill="var(--mauve-300)"/><path d="M92.9589 19.7333V26.1333M89.7534 22.9333H96.1644" stroke="var(--mauve-300)" stroke-width="2.5" stroke-linecap="round"/><path d="M27.7808 22.9333C27.7808 19.3778 29.5616 17.6 33.1233 17.6H80.6712C84.2329 17.6 86.0137 19.3778 86.0137 22.9333V75.2C86.0137 78.7555 84.2329 80.5333 80.6712 80.5333H33.1233C29.5616 80.5333 27.7808 78.7555 27.7808 75.2V22.9333Z" fill="var(--mauve-200)"/><path d="M76.9315 14.9333H31.5205C27.9799 14.9333 25.1096 17.7987 25.1096 21.3334V71.4667C25.1096 75.0013 27.9799 77.8667 31.5205 77.8667H76.9315C80.4722 77.8667 83.3425 75.0013 83.3425 71.4667V21.3334C83.3425 17.7987 80.4722 14.9333 76.9315 14.9333Z" fill="var(--color-surface)" stroke="var(--mauve-400)" stroke-width="2"/><path d="M25.6438 31.4667H82.8082" stroke="var(--mauve-300)" stroke-width="2"/><path d="M25.6438 21.3333C25.6438 17.4222 27.6027 15.4667 31.5205 15.4667H76.9315C80.8493 15.4667 82.8082 17.4222 82.8082 21.3333V30.9333H25.6438V21.3333Z" fill="var(--mauve-100)"/><path d="M40.0685 40.5333H36.3288C35.1485 40.5333 34.1918 41.4885 34.1918 42.6667V46.4C34.1918 47.5782 35.1485 48.5333 36.3288 48.5333H40.0685C41.2487 48.5333 42.2055 47.5782 42.2055 46.4V42.6667C42.2055 41.4885 41.2487 40.5333 40.0685 40.5333Z" fill="var(--color-surface)" stroke="var(--mauve-300)" stroke-width="1.5"/><path d="M48.6164 44.2667H72.6575" stroke="var(--mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M40.0685 54.9333H36.3288C35.1485 54.9333 34.1918 55.8885 34.1918 57.0667V60.8C34.1918 61.9782 35.1485 62.9333 36.3288 62.9333H40.0685C41.2487 62.9333 42.2055 61.9782 42.2055 60.8V57.0667C42.2055 55.8885 41.2487 54.9333 40.0685 54.9333Z" fill="var(--color-surface)" stroke="var(--mauve-300)" stroke-width="1.5"/><path d="M48.6164 58.6667H64.1096" stroke="var(--mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M14.9589 64L16.5616 60.8L18.1644 64L21.3699 65.6L18.1644 67.2L16.5616 70.4L14.9589 67.2L11.7534 65.6L14.9589 64Z" fill="var(--mauve-300)"/><rect x="44.2" y="10.5" width="20" height="9" rx="4.5" fill="var(--purple-600)"/><path d="M80.6712 84.8C88.3427 84.8 94.5616 78.5917 94.5616 70.9333C94.5616 63.275 88.3427 57.0667 80.6712 57.0667C72.9998 57.0667 66.7808 63.275 66.7808 70.9333C66.7808 78.5917 72.9998 84.8 80.6712 84.8Z" fill="var(--color-surface)"/><path d="M80.6712 82.6667C87.1625 82.6667 92.4247 77.4135 92.4247 70.9333C92.4247 64.4532 87.1625 59.2 80.6712 59.2C74.18 59.2 68.9178 64.4532 68.9178 70.9333C68.9178 77.4135 74.18 82.6667 80.6712 82.6667Z" fill="var(--purple-600)"/><g class="nr-badge nr-badge--done"><path d="M75.6 71.2l3.6 3.6 7.1-7.4" stroke="var(--color-surface)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g><g class="nr-badge nr-badge--search"><circle cx="79.4" cy="69.6" r="4.6" stroke="var(--color-surface)" stroke-width="2.5" fill="none"/><path d="M82.9 73.2l3.3 3.3" stroke="var(--color-surface)" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+        <div>
+          <p class="nr-title" id="no-results-title"></p>
+          <p class="nr-hint" id="no-results-hint"></p>
+        </div>
+      </div>
     </section>
 
     <section class="empty" id="empty" aria-live="polite">
@@ -554,8 +602,8 @@
         <p class="time-meta is-range-only" id="duration-text" aria-live="polite"></p>
         <p class="time-error" id="time-error" role="alert"></p>
         <div class="picker-actions">
-          <button class="btn btn--primary" type="button" id="time-done">تأیید</button>
           <button class="btn btn--secondary" type="button" id="time-cancel">انصراف</button>
+          <button class="btn btn--primary" type="button" id="time-done">تأیید</button>
         </div>
       </div>
 
@@ -579,8 +627,8 @@
       </label>
 
       <div class="sheet-actions">
+        <button class="btn btn--secondary" type="button" id="sheet-cancel">انصراف</button>
         <button class="btn btn--primary" id="save-task" type="submit" value="save" formnovalidate disabled>افزودن</button>
-        <button class="btn btn--secondary" type="submit" value="cancel" formnovalidate>انصراف</button>
       </div>
     </form>
   </dialog>
@@ -702,6 +750,17 @@
       });
       el.tasks.replaceChildren(...visible.map((t) => taskItem(t, key)));
       el.noResults.hidden = visible.length > 0;
+      if (!visible.length) {
+        // پیام و تصویر بر اساس اینکه چرا لیست خالی است
+        const [variant, title, hint] = q
+          ? ["search", "موردی پیدا نشد.", "عبارت دیگری را جستجو کنید."]
+          : state.filter === "done"
+            ? ["done", "هنوز کاری انجام نشده!", "کارهایی که تیک بزنید اینجا نمایش داده می‌شوند."]
+            : ["search", "کار بدون تاریخی ندارید.", "کارهایی که تاریخ ندارند اینجا نمایش داده می‌شوند."];
+        el.noResults.dataset.variant = variant;
+        $("no-results-title").textContent = title;
+        $("no-results-hint").textContent = hint;
+      }
     }
 
     function taskItem(t, key) {
@@ -756,17 +815,20 @@
       const id = e.target.closest(".task").dataset.id;
       const t = findTask(id), key = selectedKey(), checked = e.target.checked;
       const checkRect = e.target.getBoundingClientRect();
-      const fromPct = progressPercent();
       if (t.repeat) t.doneDates = checked ? [...new Set([...t.doneDates, key])] : t.doneDates.filter((k) => k !== key);
       else t.done = checked;
       persist();
       if (reduceMotion.matches) { render(); return; }
       if (checked) { inFlight++; render(); pourIntoBox(id, checkRect); }
-      else { render(); pourIntoCard(id, fromPct); }
+      else { render(); pourIntoCard(id); }
     });
 
     // ---------- انیمیشن مایع ----------
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // همان مدت و منحنی transition نوار پیشرفت کادر تاریخ
+    const FILL_MS = 550;
+    const FILL_EASING = "cubic-bezier(.34, 1.4, .64, 1)";
+    const FILL_EASING_REVERSED = "cubic-bezier(.36, -.4, .66, 0)"; // منحنی بالا، زمان‌معکوس
     let inFlight = 0; // قطره‌هایی که هنوز به کادر تاریخ نرسیده‌اند
     const token = (name) => getComputedStyle(root).getPropertyValue(name).trim();
     const center = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
@@ -779,12 +841,8 @@
     }
     function updateProgress() { el.dateSelector.style.setProperty("--progress", `${progressPercent()}%`); }
 
-    // نقطه‌ی لبه‌ی مایع در کادر تاریخ (پر شدن از سمت راست)
-    function fillEdge(pct) {
-      const r = el.dateSelector.getBoundingClientRect();
-      const x = r.right - (r.width * pct) / 100;
-      return { x: Math.min(r.right - 16, Math.max(r.left + 16, x)), y: r.top + r.height / 2 };
-    }
+    // مایع همیشه در یک نقطه‌ی ثابت ریخته می‌شود: وسط کادر تاریخ
+    const pourPoint = () => center(el.dateSelector.getBoundingClientRect());
 
     // سطح مایع داخل کارت پایین می‌رود (تخلیه) یا بالا می‌آید (پر شدن)
     function liquidLevel(body, direction) {
@@ -792,14 +850,14 @@
       layer.className = "liquid";
       body.prepend(layer);
       const raised = token("--color-surface-raised"), tint = token("--color-liquid-surface");
+      // کادر تاریخ از راست به چپ پر می‌شود؛ کارت دقیقاً برعکس آن، از چپ به راست خالی می‌شود
+      // (و هنگام برگشت، مثل کادر تاریخ از راست به چپ پر می‌شود) با همان مدت و منحنی، معکوس‌شده
+      const full = "inset(0 0 0 0)", empty = "inset(0 0 0 100%)";
       const frames = direction === "drain"
-        ? [{ clipPath: "inset(0 0 0 0)", backgroundColor: raised },
-           { clipPath: "inset(0 0 0 0)", backgroundColor: tint, offset: .25 },
-           { clipPath: "inset(100% 0 0 0)", backgroundColor: tint }]
-        : [{ clipPath: "inset(100% 0 0 0)", backgroundColor: tint },
-           { clipPath: "inset(0 0 0 0)", backgroundColor: tint, offset: .75 },
-           { clipPath: "inset(0 0 0 0)", backgroundColor: raised }];
-      const anim = layer.animate(frames, { duration: 520, easing: "cubic-bezier(.45, 0, .55, 1)", fill: "forwards" });
+        ? [{ clipPath: full, backgroundColor: tint }, { clipPath: empty, backgroundColor: tint }]
+        : [{ clipPath: empty, backgroundColor: tint }, { clipPath: full, backgroundColor: raised }];
+      const easing = direction === "drain" ? FILL_EASING_REVERSED : FILL_EASING;
+      const anim = layer.animate(frames, { duration: FILL_MS, easing, fill: "forwards" });
       return anim.finished.then(() => layer.remove(), () => layer.remove());
     }
 
@@ -822,7 +880,20 @@
           { transform: `translate(${dx * .5}px, ${peakY - from.y}px) scale(1, 1.15)`, offset: .55 },
           { transform: `translate(${dx}px, ${dy}px) scale(.7, .5)`, opacity: .9 },
         ], { duration: 620, delay: 120 + i * 70, easing: "cubic-bezier(.4, 0, .6, 1)", fill: "forwards" });
+        // قطره‌ی اصلی پشت سرش ستاره‌های ریز جا می‌گذارد
+        let trail = 0, lastSpark = 0;
+        if (i === 0) {
+          const tick = (now) => {
+            if (now - lastSpark > 45 && anim.playState === "running") {
+              const r = d.getBoundingClientRect();
+              if (r.width) { sparkle({ x: r.left + r.width / 2, y: r.top + r.height / 2 }); lastSpark = now; }
+            }
+            trail = requestAnimationFrame(tick);
+          };
+          trail = requestAnimationFrame(tick);
+        }
         const finish = () => {
+          cancelAnimationFrame(trail);
           d.remove();
           if (!landed) { landed = true; onLand(); }
         };
@@ -830,7 +901,32 @@
       });
     }
 
+    // یک ستاره‌ی کوچک که می‌چرخد، بزرگ و بعد محو می‌شود
+    function sparkle(at, burst = null) {
+      const s = document.createElement("span");
+      s.className = "sparkle";
+      const size = 6 + Math.random() * 6;
+      s.style.width = s.style.height = `${size}px`;
+      s.style.left = `${at.x - size / 2}px`; s.style.top = `${at.y - size / 2}px`;
+      document.body.append(s);
+      const jitterX = burst ? burst.x : (Math.random() - .5) * 14;
+      const jitterY = burst ? burst.y : 6 + Math.random() * 10;
+      s.animate([
+        { transform: "translate(0, 0) scale(0) rotate(0deg)", opacity: 1 },
+        { transform: `translate(${jitterX * .5}px, ${jitterY * .5}px) scale(1) rotate(45deg)`, opacity: 1, offset: .35 },
+        { transform: `translate(${jitterX}px, ${jitterY}px) scale(0) rotate(120deg)`, opacity: 0 },
+      ], { duration: burst ? 520 : 600, easing: "ease-out" }).finished.then(() => s.remove(), () => s.remove());
+    }
+    function sparkleBurst(at) {
+      for (let k = 0; k < 7; k++) {
+        const angle = (Math.PI * 2 * k) / 7 + Math.random() * .4;
+        const dist = 16 + Math.random() * 12;
+        sparkle(at, { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist });
+      }
+    }
+
     function splash(at) {
+      sparkleBurst(at);
       const s = document.createElement("span");
       s.className = "splash";
       s.style.width = s.style.height = "12px";
@@ -844,20 +940,18 @@
     function pourIntoBox(id, checkRect) {
       const body = el.tasks.querySelector(`[data-id="${id}"] .task-body`);
       if (body) liquidLevel(body, "drain");
-      const from = center(checkRect);
-      const key = selectedKey(), total = tasksForDay(key).length || 1;
-      const afterPct = Math.min(100, progressPercent() + 100 / total);
-      stream(from, fillEdge(afterPct), () => {
+      const to = pourPoint();
+      stream(center(checkRect), to, () => {
         inFlight = Math.max(0, inFlight - 1);
         updateProgress();
-        splash(fillEdge(progressPercent()));
+        splash(to);
       });
     }
 
     // برداشتن تیک: کادر تاریخ خالی‌تر می‌شود → قطره‌ها برمی‌گردند → کارت دوباره پر می‌شود
-    function pourIntoCard(id, fromPct) {
+    function pourIntoCard(id) {
       const li = el.tasks.querySelector(`[data-id="${id}"]`);
-      const from = fillEdge(fromPct);
+      const from = pourPoint();
       splash(from);
       if (!li) return;
       li.classList.add("is-refilling");
@@ -1253,6 +1347,8 @@
       if (e.target !== el.sheet) return;
       if (el.sheet.classList.contains("is-picking")) togglePicker(null); else el.sheet.close();
     });
+    // انصراف دکمه‌ی معمولی است تا Enter در فرم همیشه «افزودن/ذخیره» را بزند
+    $("sheet-cancel").addEventListener("click", () => el.sheet.close());
     el.sheetClose.addEventListener("click", () => {
       if (el.sheet.classList.contains("is-picking")) togglePicker(null); else el.sheet.close();
     });
