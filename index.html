@@ -20,6 +20,7 @@
       --purple-50: #faf5ff; --purple-100: #f3e8ff; --purple-200: #e9d5ff; --purple-300: #d8b4fe; --purple-400: #c084fc; --purple-500: #a855f7; --purple-600: #9333ea; --purple-700: #7e22ce; --purple-800: #6b21a8; --purple-900: #581c87; --purple-950: #3b0764;
       --red-50: #fef2f2; --red-100: #fee2e2; --red-200: #fecaca; --red-300: #fca5a5; --red-400: #f87171; --red-500: #ef4444; --red-600: #dc2626; --red-700: #b91c1c; --red-800: #991b1b; --red-900: #7f1d1d; --red-950: #450a0a;
       --emerald-50: #ecfdf5; --emerald-100: #d1fae5; --emerald-200: #a7f3d0; --emerald-300: #6ee7b7; --emerald-400: #34d399; --emerald-500: #10b981; --emerald-600: #059669; --emerald-700: #047857; --emerald-800: #065f46; --emerald-900: #064e3b; --emerald-950: #022c22;
+      --amber-50: #fffbeb; --amber-100: #fef3c7; --amber-200: #fde68a; --amber-300: #fcd34d; --amber-400: #fbbf24; --amber-500: #f59e0b; --amber-600: #d97706; --amber-700: #b45309; --amber-800: #92400e; --amber-900: #78350f; --amber-950: #451a03;
 
       /* Size & Spacing — padding / gap */
       --space-none: 0px; --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px;
@@ -33,6 +34,7 @@
       --radius-lg: 20px; --radius-xl: 24px; --radius-full: 9999px;
       /* ارتفاع ثابت محتوای برگه‌های ساعت و تاریخ (همان فریم‌های ۱ تا ۳ فیگما) */
       --picker-area-height: 440px;
+      --height-date: 44px; /* کادر تاریخ بالای صفحه؛ بین height/3xl و 4xl */
       /* حرکت: یک منحنی و سه مدت ثابت برای کل اپ */
       --ease-out: cubic-bezier(.22, 1, .36, 1);       /* ورود: سریع شروع، نرم توقف */
       --ease-in: cubic-bezier(.55, 0, 1, .45);        /* خروج */
@@ -46,6 +48,7 @@
       --font-04: 12px/20px var(--font-family);
       --font-06: 14px/24px var(--font-family);
       --font-07: 16px/28px var(--font-family);
+      --font-08: 18px/28px var(--font-family);
       --font-09: 20px/32px var(--font-family);
       --font-10: 24px/36px var(--font-family);
 
@@ -77,6 +80,9 @@
       --color-liquid: var(--purple-300);
       --color-liquid-surface: var(--purple-100);
       --color-star: var(--purple-50);
+      /* رنگ‌های صحنه‌ی تبریک؛ در حالت تاریک هم همین عمق و طلایی بودن را نگه می‌دارند */
+      --hero-deep: var(--purple-900); --hero-mid: var(--purple-700); --hero-glow: var(--purple-500);
+      --gold-1: var(--amber-200); --gold-2: var(--amber-400); --gold-3: var(--amber-600);
       --color-danger: var(--red-600);
       --color-danger-subtle: var(--red-100);
       --color-toast: var(--mauve-900);
@@ -98,7 +104,10 @@
         --purple-50: #3b0764; --purple-100: #581c87; --purple-200: #6b21a8; --purple-300: #7e22ce; --purple-400: #9333ea; --purple-500: #a855f7; --purple-600: #c084fc; --purple-700: #d8b4fe; --purple-800: #e9d5ff; --purple-900: #f3e8ff; --purple-950: #faf5ff;
         --red-50: #450a0a; --red-100: #7f1d1d; --red-200: #991b1b; --red-300: #b91c1c; --red-400: #dc2626; --red-500: #ef4444; --red-600: #f87171; --red-700: #fca5a5; --red-800: #fecaca; --red-900: #fee2e2; --red-950: #fef2f2;
         --emerald-50: #022c22; --emerald-100: #064e3b; --emerald-200: #065f46; --emerald-300: #047857; --emerald-400: #059669; --emerald-500: #10b981; --emerald-600: #34d399; --emerald-700: #6ee7b7; --emerald-800: #a7f3d0; --emerald-900: #d1fae5; --emerald-950: #ecfdf5;
+        --amber-50: #451a03; --amber-100: #78350f; --amber-200: #92400e; --amber-300: #b45309; --amber-400: #d97706; --amber-500: #f59e0b; --amber-600: #fbbf24; --amber-700: #fcd34d; --amber-800: #fde68a; --amber-900: #fef3c7; --amber-950: #fffbeb;
         --color-star: var(--purple-950);
+        --hero-deep: var(--purple-100); --hero-mid: var(--purple-300); --hero-glow: var(--purple-500);
+        --gold-1: var(--amber-800); --gold-2: var(--amber-600); --gold-3: var(--amber-400);
         color-scheme: dark;
       }
     }
@@ -109,7 +118,10 @@
       --purple-50: #3b0764; --purple-100: #581c87; --purple-200: #6b21a8; --purple-300: #7e22ce; --purple-400: #9333ea; --purple-500: #a855f7; --purple-600: #c084fc; --purple-700: #d8b4fe; --purple-800: #e9d5ff; --purple-900: #f3e8ff; --purple-950: #faf5ff;
       --red-50: #450a0a; --red-100: #7f1d1d; --red-200: #991b1b; --red-300: #b91c1c; --red-400: #dc2626; --red-500: #ef4444; --red-600: #f87171; --red-700: #fca5a5; --red-800: #fecaca; --red-900: #fee2e2; --red-950: #fef2f2;
       --emerald-50: #022c22; --emerald-100: #064e3b; --emerald-200: #065f46; --emerald-300: #047857; --emerald-400: #059669; --emerald-500: #10b981; --emerald-600: #34d399; --emerald-700: #6ee7b7; --emerald-800: #a7f3d0; --emerald-900: #d1fae5; --emerald-950: #ecfdf5;
+      --amber-50: #451a03; --amber-100: #78350f; --amber-200: #92400e; --amber-300: #b45309; --amber-400: #d97706; --amber-500: #f59e0b; --amber-600: #fbbf24; --amber-700: #fcd34d; --amber-800: #fde68a; --amber-900: #fef3c7; --amber-950: #fffbeb;
       --color-star: var(--purple-950);
+        --hero-deep: var(--purple-100); --hero-mid: var(--purple-300); --hero-glow: var(--purple-500);
+        --gold-1: var(--amber-800); --gold-2: var(--amber-600); --gold-3: var(--amber-400);
       color-scheme: dark;
     }
     html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -126,22 +138,22 @@
 
     .screen {
       max-width: 440px; min-height: 100vh; min-height: 100dvh; margin-inline: auto;
-      padding: var(--space-xl) var(--space-xl) 0;
+      padding: var(--space-md) var(--space-xl) 0;
       display: flex; flex-direction: column;
     }
 
     /* ---------- هدر ---------- */
     .top-bar { display: flex; justify-content: space-between; align-items: center; }
     .icon-button {
-      width: var(--height-4xl); height: var(--height-4xl); display: grid; place-items: center;
+      width: var(--height-3xl); height: var(--height-3xl); display: grid; place-items: center;
       color: var(--color-icon); background: var(--color-surface-raised); border-radius: var(--radius-sm);
     }
-    .greeting { font: var(--font-09); font-weight: var(--font-weight-medium); margin-top: var(--space-md); }
+    .greeting { font: var(--font-08); font-weight: var(--font-weight-medium); margin-top: var(--space-sm); }
 
     /* ---------- انتخاب روز + نوار پیشرفت ---------- */
     /* کادر تاریخ و پیشرفت هنگام اسکرول بالای صفحه می‌ماند تا پر شدنش همیشه دیده شود */
     .day-picker {
-      display: flex; gap: var(--space-sm); margin-top: var(--space-md);
+      display: flex; gap: var(--space-sm); margin-top: var(--space-xs);
       position: sticky; top: env(safe-area-inset-top, 0px); z-index: 15;
       padding-block: var(--space-xs); background: var(--color-page);
     }
@@ -149,7 +161,7 @@
     .date-field { flex: 1; position: relative; min-width: 0; }
     .date-selector {
       position: relative; overflow: hidden; isolation: isolate;
-      width: 100%; height: var(--height-5xl); display: flex; align-items: center; gap: var(--space-xs);
+      width: 100%; height: var(--height-date); display: flex; align-items: center; gap: var(--space-xs);
       padding-inline: var(--space-md); text-align: right;
       background: var(--color-surface-raised); border-radius: var(--radius-sm);
     }
@@ -194,19 +206,30 @@
       position: absolute; inset-inline: 0; top: calc(100% + var(--space-xs)); z-index: 20;
       list-style: none; padding: var(--space-xs); background: var(--color-surface);
       border-radius: var(--radius-sm); box-shadow: var(--shadow-raised);
+      display: flex; flex-direction: column; gap: var(--space-2xs);
     }
     .date-menu li { padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-xs); cursor: pointer; }
+    .date-menu li.menu-calendar {
+      position: relative; display: flex; align-items: center; gap: var(--space-xs); margin-top: var(--space-xs);
+      color: var(--color-primary); font-weight: var(--font-weight-medium);
+    }
+    /* خط جداکننده‌ی ظریف بالای «انتخاب از تقویم» */
+    .date-menu li.menu-calendar::before {
+      content: ""; position: absolute; inset-inline: var(--space-xs); top: calc(-1 * var(--space-xs) / 2 - var(--space-2xs) / 2);
+      height: 1px; background: var(--color-border);
+    }
+    .date-menu li.menu-calendar svg { width: var(--size-lg); height: var(--size-lg); }
     .date-menu li.is-active { background: var(--color-surface-hover); }
     .date-menu li[aria-selected="true"] { color: var(--color-primary); font-weight: var(--font-weight-medium); }
     .summary { font: var(--font-04); color: var(--color-text-muted); margin-top: var(--space-xs); }
 
     /* ---------- فیلترها و جستجو ---------- */
-    .toolbar { display: flex; align-items: center; gap: var(--space-xs); margin-top: var(--space-md); }
+    .toolbar { display: flex; align-items: center; gap: var(--space-xs); margin-top: var(--space-sm); }
     .filters { display: flex; gap: var(--space-xs); flex: 1; min-width: 0; }
     .chip {
       flex: 1; max-width: var(--space-8xl); height: var(--height-2xl); padding-inline: var(--space-sm);
-      border-radius: var(--radius-xs); border: 1px solid var(--color-border);
-      font: var(--font-06); color: var(--color-text-secondary); white-space: nowrap;
+      border-radius: var(--radius-xs); border: 1px solid var(--color-border-strong);
+      font: var(--font-06); color: var(--color-text-muted); white-space: nowrap;
     }
     .chip[aria-pressed="true"] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); font-weight: var(--font-weight-medium); }
     .search-field {
@@ -226,7 +249,7 @@
     .search-button[aria-pressed="true"] .icon-close { display: block; }
 
     /* ---------- کارت کار ---------- */
-    .tasks { list-style: none; padding: var(--space-xl) 0 0; display: flex; flex-direction: column; gap: var(--space-sm); }
+    .tasks { list-style: none; padding: var(--space-md) 0 0; display: flex; flex-direction: column; gap: var(--space-sm); }
     .task { position: relative; border-radius: var(--radius-sm); overflow: hidden; }
     .task-actions {
       position: absolute; inset-block: 0; inset-inline-start: 0;
@@ -275,6 +298,39 @@
     .badge[data-kind="undated"] { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text-secondary); }
     .badge[data-kind="repeat"] .badge-icon--undated, .badge[data-kind="undated"] .badge-icon--repeat { display: none; }
 
+    /* ---------- کاری که الان وقتش است: حاشیه‌ی گرادیانی چرخان، هاله و ستاره‌ی ریز ---------- */
+    @property --now-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+    .task.is-now { box-shadow: 0 0 0 0 transparent; animation: now-glow 2.6s ease-in-out infinite; }
+    .task.is-now::after {
+      content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; padding: 1px; /* ضخامت حاشیه‌ی گرادیانی */
+      background: conic-gradient(from var(--now-angle), var(--purple-300), var(--purple-600), var(--purple-400), var(--purple-200), var(--purple-500), var(--purple-300));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+      animation: now-spin 3.2s linear infinite;
+    }
+    .task.is-now::before {
+      content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit;
+      background-image:
+        radial-gradient(1.5px 1.5px at 8% 22%, var(--purple-400) 50%, transparent 60%),
+        radial-gradient(1px 1px at 92% 30%, var(--purple-500) 50%, transparent 60%),
+        radial-gradient(1.5px 1.5px at 70% 85%, var(--purple-400) 50%, transparent 60%),
+        radial-gradient(1px 1px at 30% 80%, var(--purple-300) 50%, transparent 60%);
+      animation: twinkle 2.4s ease-in-out infinite;
+    }
+    .task.is-now .task-body { background: color-mix(in srgb, var(--color-primary-subtle) 55%, var(--color-surface-raised)); border-color: transparent; }
+    @keyframes now-spin { to { --now-angle: 360deg; } }
+    @keyframes now-glow {
+      0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--purple-400) 0%, transparent), 0 4px 14px color-mix(in srgb, var(--purple-500) 14%, transparent); }
+      50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--purple-400) 14%, transparent), 0 6px 20px color-mix(in srgb, var(--purple-500) 24%, transparent); }
+    }
+    .now-chip {
+      display: inline-flex; align-items: center; gap: var(--space-2xs); flex-shrink: 0;
+      height: var(--size-lg); padding-inline: var(--space-xs); border-radius: var(--radius-full);
+      background: var(--color-primary); color: var(--color-on-primary); font: var(--font-02); font-weight: var(--font-weight-demibold);
+    }
+    .now-dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: currentColor; animation: now-pulse 1.4s ease-in-out infinite; }
+    @keyframes now-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+
     /* انجام شده: بدون پس‌زمینه، خط‌خورده و کم‌رنگ — کاملاً متفاوت از کار باز */
     /* انیمیشن مایع: کارت هنگام تیک خالی می‌شود و مایع به کادر تاریخ می‌ریزد */
     .task-body { isolation: isolate; }
@@ -300,21 +356,30 @@
     .task.is-done .task-body { background: var(--color-page); border: 1px dashed var(--color-border-strong); }
     .task.is-done .task-title { color: var(--color-text-muted); font-weight: var(--font-weight-regular); text-decoration: line-through; text-decoration-color: var(--color-text-muted); }
     .task.is-done .task-desc, .task.is-done .task-time { color: var(--color-text-muted); }
-    .task.is-done .task-time { text-decoration: line-through; }
     .task.is-done .badge { background: transparent; border-color: var(--color-border); color: var(--color-text-muted); }
 
     /* چک‌باکس */
+    /* چک‌باکس: گوشه‌ی گردتر و همه‌ی حالت‌ها — پیش‌فرض، hover، فشرده، فوکوس، انتخاب‌شده، غیرفعال */
     .check {
       appearance: none; width: var(--size-xl); height: var(--size-xl); flex-shrink: 0; margin: 0; cursor: pointer;
-      border: 2px solid var(--color-border-strong); border-radius: var(--radius-2xs); background: var(--color-surface);
-      display: grid; place-items: center; transition: background-color var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out);
+      border: 1.5px solid var(--color-border-strong); border-radius: var(--radius-xs); background: var(--color-surface);
+      display: grid; place-items: center;
+      transition: background-color var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out), box-shadow var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out);
     }
     .check::after {
-      content: ""; width: 6px; height: 11px; margin-top: -3px;
-      border: solid var(--color-on-primary); border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform var(--dur-2) var(--ease-spring);
+      content: ""; width: 5px; height: 10px; margin-top: -2px;
+      border: solid var(--color-on-primary); border-width: 0 2px 2px 0; border-radius: 1px;
+      transform: rotate(45deg) scale(0); transition: transform var(--dur-2) var(--ease-spring);
     }
-    .check:checked { background: var(--color-primary); border-color: var(--color-primary); }
+    .check:checked { background: var(--color-primary); border-color: var(--color-primary); box-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 35%, transparent); }
     .check:checked::after { transform: rotate(45deg) scale(1); }
+    .check:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--purple-200); border-color: var(--color-primary); }
+    .check:active:not(:disabled) { transform: scale(.9); }
+    .check:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+    @media (hover: hover) {
+      .check:not(:checked):not(:disabled):hover { border-color: var(--purple-400); background: var(--purple-50); }
+      .check:checked:not(:disabled):hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+    }
 
     .no-results {
       display: flex; flex-direction: column; align-items: center; gap: var(--space-2xs);
@@ -562,11 +627,80 @@
     }
     .confirm[open] { display: flex; flex-direction: column; gap: var(--space-sm); animation: confirm-in var(--dur-2) var(--ease-out); }
     @keyframes confirm-in { from { opacity: 0; transform: scale(.94); } }
+    .day-sheet-actions { margin-top: var(--space-md); }
     .confirm::backdrop { background: var(--color-overlay); }
     .confirm-title { font: var(--font-07); font-weight: var(--font-weight-demibold); }
     .confirm-desc { font: var(--font-06); color: var(--color-text-secondary); }
     .confirm .sheet-actions { margin-top: var(--space-xs); }
     .btn--danger { background: var(--color-danger); color: var(--red-50); }
+
+    /* ---------- تبریک تمام شدن کارهای روز ---------- */
+    .celebrate { padding: 0; overflow: hidden; width: min(340px, calc(100vw - var(--space-2xl))); }
+    .celebrate[open] { display: flex; flex-direction: column; gap: 0; animation: celebrate-in 620ms var(--ease-spring); }
+    @keyframes celebrate-in { from { opacity: 0; transform: translateY(var(--space-2xl)) scale(.86); } }
+    /* صحنه‌ی کهکشانی بالای کارت */
+    .celebrate-hero {
+      position: relative; height: 176px; display: grid; place-items: center; overflow: hidden; isolation: isolate;
+      background:
+        radial-gradient(60% 70% at 50% 58%, color-mix(in srgb, var(--hero-glow) 70%, transparent), transparent 70%),
+        radial-gradient(40% 50% at 15% 20%, color-mix(in srgb, var(--hero-mid) 80%, transparent), transparent 70%),
+        linear-gradient(160deg, var(--hero-mid), var(--hero-deep));
+    }
+    .hero-rays {
+      position: absolute; width: 360px; height: 360px; z-index: -1;
+      background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--gold-1) 22%, transparent) 0deg 7deg, transparent 7deg 22deg);
+      -webkit-mask: radial-gradient(circle, #000 15%, transparent 62%); mask: radial-gradient(circle, #000 15%, transparent 62%);
+      animation: rays-spin 18s linear infinite;
+    }
+    @keyframes rays-spin { to { transform: rotate(360deg); } }
+    .hero-stars {
+      position: absolute; inset: 0; z-index: -1;
+      background-image:
+        radial-gradient(1.5px 1.5px at 12% 30%, var(--color-star) 50%, transparent 60%), radial-gradient(1px 1px at 22% 72%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(1.5px 1.5px at 38% 16%, var(--color-star) 50%, transparent 60%), radial-gradient(1px 1px at 64% 22%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(2px 2px at 82% 40%, var(--color-star) 50%, transparent 60%), radial-gradient(1px 1px at 90% 78%, var(--color-star) 50%, transparent 60%),
+        radial-gradient(1.5px 1.5px at 72% 86%, var(--color-star) 50%, transparent 60%), radial-gradient(1px 1px at 8% 88%, var(--color-star) 50%, transparent 60%);
+      animation: twinkle 2.8s ease-in-out infinite;
+    }
+    .trophy-wrap { width: 128px; height: 128px; animation: trophy-in 900ms var(--ease-spring) 120ms both, trophy-float 3.2s ease-in-out 1.1s infinite; filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--hero-deep) 60%, transparent)); }
+    .trophy { width: 100%; height: 100%; }
+    @keyframes trophy-in { from { opacity: 0; transform: translateY(40px) scale(.4) rotate(-12deg); } }
+    @keyframes trophy-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    .spark { position: absolute; color: var(--gold-1); width: 14px; height: 14px; animation: spark 2.4s ease-in-out infinite; }
+    .spark svg { width: 100%; height: 100%; display: block; }
+    .spark--1 { top: 26%; left: 24%; animation-delay: .2s; }
+    .spark--2 { top: 18%; right: 22%; width: 10px; height: 10px; animation-delay: .9s; }
+    .spark--3 { bottom: 22%; right: 26%; width: 16px; height: 16px; animation-delay: 1.4s; color: var(--color-star); }
+    .spark--4 { bottom: 30%; left: 18%; width: 9px; height: 9px; animation-delay: .6s; color: var(--color-star); }
+    @keyframes spark { 0%, 100% { transform: scale(.3) rotate(0deg); opacity: 0; } 40% { transform: scale(1) rotate(45deg); opacity: 1; } 70% { opacity: .8; } }
+    /* متن و آمار */
+    .celebrate-content { display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); padding: var(--space-xl); text-align: center; }
+    .celebrate-title {
+      font: var(--font-11, 28px/40px var(--font-family)); font-weight: var(--font-weight-bold);
+      background: linear-gradient(90deg, var(--purple-700), var(--purple-500), var(--purple-700)); background-size: 200% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: title-shine 3s linear infinite, fade-up var(--dur-3) var(--ease-out) 250ms both;
+    }
+    @keyframes title-shine { to { background-position: -200% 0; } }
+    .celebrate-desc { font: var(--font-07); color: var(--color-text-secondary); animation: fade-up var(--dur-3) var(--ease-out) 330ms both; }
+    .celebrate-stats { display: flex; gap: var(--space-xs); width: 100%; margin-block: var(--space-xs) var(--space-sm); animation: fade-up var(--dur-3) var(--ease-out) 410ms both; }
+    .stat {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0; padding: var(--space-sm) var(--space-xs);
+      border-radius: var(--radius-md); background: var(--color-primary-subtle); color: var(--color-primary-subtle-text); font: var(--font-04);
+    }
+    .stat strong { font: var(--font-09); font-weight: var(--font-weight-bold); color: var(--color-primary); }
+    .celebrate .btn { width: 100%; flex: none; animation: fade-up var(--dur-3) var(--ease-out) 490ms both; }
+    /* برق زدن دکمه */
+    .btn--shine { position: relative; overflow: hidden; }
+    .btn--shine::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(105deg, transparent 35%, color-mix(in srgb, var(--color-star) 45%, transparent) 50%, transparent 65%);
+      transform: translateX(-120%); animation: shine 2.6s ease-in-out 1.2s infinite;
+    }
+    @keyframes shine { 0% { transform: translateX(-120%); } 45%, 100% { transform: translateX(120%); } }
+    /* کاغذرنگی‌ها در لایه‌ی بالایی (popover) تا روی پنجره‌ی تبریک و سایه‌ی پشتش دیده شوند */
+    .confetti { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 50; overflow: hidden; }
+    .confetti span { position: absolute; top: -16px; width: 8px; height: 12px; border-radius: 2px; will-change: transform, opacity; }
 
     /* ---------- اعلان‌ها (کشو از سمت چپ) ---------- */
     .drawer--end {
@@ -578,7 +712,7 @@
     @keyframes drawer-in-end { from { transform: translateX(-100%); } }
     .icon-button { position: relative; }
     .bell-dot {
-      position: absolute; top: var(--space-sm); inset-inline-end: var(--space-sm);
+      position: absolute; top: var(--space-xs); inset-inline-end: var(--space-xs);
       width: var(--space-xs); height: var(--space-xs); border-radius: var(--radius-full);
       background: var(--color-danger); box-shadow: 0 0 0 2px var(--color-surface-raised);
     }
@@ -651,6 +785,22 @@
     @keyframes menu-in { from { opacity: 0; transform: translateY(calc(-1 * var(--space-xs))) scale(.98); } }
     .task.is-new { animation: task-in var(--dur-3) var(--ease-out); }
     @keyframes task-in { from { opacity: 0; transform: translateY(var(--space-sm)) scale(.98); } }
+
+    /* تغییر محتوای لیست (روز، فیلتر، جستجو)، جابه‌جایی حالت خالی/لیست و بازگشت از انتخابگر */
+    .tasks.is-switching > .task { animation: list-in var(--dur-3) var(--ease-out) both; }
+    .tasks.is-switching > .task:nth-child(2) { animation-delay: 30ms; }
+    .tasks.is-switching > .task:nth-child(3) { animation-delay: 60ms; }
+    .tasks.is-switching > .task:nth-child(4) { animation-delay: 90ms; }
+    .tasks.is-switching > .task:nth-child(n+5) { animation-delay: 120ms; }
+    @keyframes list-in { from { opacity: 0; transform: translateY(var(--space-xs)); } }
+    .empty:not([hidden]), #main-view:not([hidden]), .no-results:not([hidden]) { animation: fade-up var(--dur-3) var(--ease-out); }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(var(--space-xs)); } }
+    .search-field:not([hidden]), .filters:not([hidden]) { animation: fade-in var(--dur-2) var(--ease-out); }
+    .sheet.is-returning form > :not(.picker):not(.picker-area) { animation: fade-up var(--dur-2) var(--ease-out); }
+    /* تغییر ظاهر: آشکار شدن دایره‌ای از روی دکمه (View Transitions) */
+    ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+    ::view-transition-new(root) { animation: theme-reveal 520ms var(--ease-out); }
+    @keyframes theme-reveal { from { clip-path: circle(0 at var(--reveal-x, 50%) var(--reveal-y, 0)); } to { clip-path: circle(var(--reveal-r, 150%) at var(--reveal-x, 50%) var(--reveal-y, 0)); } }
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
   </style>
@@ -783,6 +933,42 @@
     </div>
   </dialog>
 
+  <!-- تبریک تمام شدن کارهای روز -->
+  <dialog class="confirm celebrate" id="celebrate-dialog" aria-labelledby="celebrate-title" aria-describedby="celebrate-desc">
+    <div class="celebrate-hero" aria-hidden="true">
+      <span class="hero-rays"></span>
+      <span class="hero-stars"></span>
+      <span class="spark spark--1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z" fill="currentColor"/></svg></span><span class="spark spark--2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z" fill="currentColor"/></svg></span><span class="spark spark--3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z" fill="currentColor"/></svg></span><span class="spark spark--4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z" fill="currentColor"/></svg></span>
+      <div class="trophy-wrap">
+        <svg class="trophy" aria-hidden="true" focusable="false" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cup-g" x1="30" y1="20" x2="90" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="var(--gold-1)"/><stop offset=".55" stop-color="var(--gold-2)"/><stop offset="1" stop-color="var(--gold-3)"/></linearGradient>
+            <linearGradient id="base-g" x1="40" y1="88" x2="80" y2="108" gradientUnits="userSpaceOnUse"><stop stop-color="var(--gold-2)"/><stop offset="1" stop-color="var(--gold-3)"/></linearGradient>
+            <radialGradient id="glow-g" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 52) scale(52)"><stop stop-color="var(--gold-1)" stop-opacity=".55"/><stop offset="1" stop-color="var(--gold-1)" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle cx="60" cy="52" r="52" fill="url(#glow-g)"/>
+          <path d="M36 26h-9a9 9 0 0 0-9 9c0 12 9 21 22 22M84 26h9a9 9 0 0 1 9 9c0 12-9 21-22 22" stroke="url(#cup-g)" stroke-width="6" stroke-linecap="round"/>
+          <path d="M34 18h52v22c0 15-11.6 28-26 28S34 55 34 40V18Z" fill="url(#cup-g)"/>
+          <path d="M42 22v16c0 8 4 14 10 17" stroke="var(--gold-1)" stroke-opacity=".8" stroke-width="4" stroke-linecap="round"/>
+          <path d="M60 30l3.3 6.7 7.4 1.1-5.35 5.2 1.26 7.36L60 46.9l-6.6 3.46 1.26-7.36L49.3 37.8l7.4-1.1L60 30Z" fill="var(--hero-deep)" fill-opacity=".85"/>
+          <path d="M54 68h12l3 14H51l3-14Z" fill="url(#base-g)"/>
+          <rect x="40" y="82" width="40" height="10" rx="3" fill="url(#cup-g)"/>
+          <rect x="36" y="92" width="48" height="12" rx="4" fill="url(#base-g)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="celebrate-content">
+      <h2 class="celebrate-title" id="celebrate-title">آفرین!</h2>
+      <p class="celebrate-desc" id="celebrate-desc">همه‌ی کارهای امروزت رو تکمیل کردی.</p>
+      <div class="celebrate-stats">
+        <span class="stat"><strong id="celebrate-count">۰</strong><span>کار انجام شد</span></span>
+        <span class="stat"><strong>۱۰۰٪</strong><span>پیشرفت روز</span></span>
+      </div>
+      <button class="btn btn--primary btn--shine" type="button" id="celebrate-ok">ممنون</button>
+    </div>
+  </dialog>
+  <div class="confetti" id="confetti" popover="manual" aria-hidden="true"></div>
+
   <!-- تأیید خروج -->
   <dialog class="confirm" id="logout-dialog" role="alertdialog" aria-labelledby="logout-title" aria-describedby="logout-desc">
     <h2 class="confirm-title" id="logout-title">از حساب خارج می‌شوید؟</h2>
@@ -792,6 +978,29 @@
       <button class="btn btn--danger" type="button" id="logout-confirm">خروج</button>
     </div>
   </dialog>
+  <template id="menu-calendar-icon"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2v3M16 2v3M3.5 9.09h17M21 8.5V17c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V8.5c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5Z" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.695 13.7h.009M15.695 16.7h.009M11.995 13.7h.01M11.995 16.7h.01M8.294 13.7h.01M8.294 16.7h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></template>
+
+  <!-- انتخاب روز از تقویم -->
+  <dialog class="sheet" id="day-sheet" aria-labelledby="day-sheet-title">
+    <div class="sheet-header">
+      <h2 class="sheet-title" id="day-sheet-title">انتخاب روز</h2>
+      <button class="sheet-close" type="button" id="day-sheet-close" aria-label="بستن"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="picker day-sheet-box">
+      <div class="picker-body">
+        <div class="cal-head">
+          <button class="cal-nav cal-nav--prev" type="button" id="day-prev" aria-label="ماه قبل"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.2L16.6 8.6L18 10L12 16L6 10L7.4 8.6L12 13.2Z" fill="currentColor"/></svg></button>
+          <p class="cal-title" id="day-title" aria-live="polite"></p>
+          <button class="cal-nav cal-nav--next" type="button" id="day-next" aria-label="ماه بعد"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.2L16.6 8.6L18 10L12 16L6 10L7.4 8.6L12 13.2Z" fill="currentColor"/></svg></button>
+        </div>
+        <div class="cal-grid" id="day-grid"></div>
+      </div>
+    </div>
+    <div class="sheet-actions day-sheet-actions">
+      <button class="btn btn--secondary" type="button" id="day-today">برو به امروز</button>
+    </div>
+  </dialog>
+
   <template id="notif-icons"><span data-kind="overdue"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 7.5v5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11.995 16h.009" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span data-kind="clock"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="m15.71 15.18-3.1-1.85c-.54-.32-.98-1.09-.98-1.72v-4.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></template>
 
   <!-- برگه‌ی افزودن و ویرایش — یک فرم مشترک -->
@@ -893,6 +1102,7 @@
         <label class="task-text">
           <span class="task-title-row">
             <span class="task-title"></span>
+            <span class="now-chip" hidden><span class="now-dot" aria-hidden="true"></span>الان</span>
             <span class="badge" data-kind="repeat">
               <svg class="badge-icon badge-icon--repeat" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.375 13.7083C17.4316 17.2292 13.8126 19.3186 10.2917 18.3752C9.12886 18.0636 8.12441 17.4616 7.33274 16.6685L6.9589 16.2947L9.87878 16.2941C10.3758 16.2941 10.7787 15.891 10.7786 15.394C10.7785 14.8969 10.3755 14.4941 9.87845 14.4941L4.78633 14.4951C4.54763 14.4951 4.31873 14.59 4.14998 14.7588C3.98122 14.9276 3.88645 15.1565 3.8865 15.3952L3.88757 20.4854C3.88767 20.9825 4.2907 21.3854 4.78775 21.3853C5.28481 21.3851 5.68767 20.9821 5.68757 20.4851L5.68695 17.5683L6.05878 17.9401C7.06802 18.9512 8.34923 19.7182 9.82581 20.1139C14.3069 21.3146 18.913 18.6553 20.1137 14.1742C20.2423 13.694 19.9574 13.2005 19.4773 13.0719C18.9972 12.9432 18.5036 13.2282 18.375 13.7083ZM19.8497 9.24143C20.0185 9.07261 20.1133 8.84366 20.1133 8.60494L20.1124 3.5146C20.1123 3.01754 19.7093 2.61467 19.2123 2.61475C18.7152 2.61483 18.3123 3.01784 18.3124 3.51489L18.3129 6.43194L17.9411 6.06016C16.9319 5.04926 15.6504 4.28192 14.174 3.88631C9.69286 2.6856 5.08683 5.34489 3.88611 9.826C3.75747 10.3061 4.04239 10.7996 4.52251 10.9283C5.00263 11.0569 5.49613 10.772 5.62478 10.2919C6.5682 6.771 10.1872 4.68156 13.7081 5.62497C14.871 5.93656 15.8755 6.53857 16.6671 7.33175L17.0405 7.70508L14.1221 7.70508C13.625 7.70508 13.2221 8.10803 13.2221 8.60508C13.2221 9.10214 13.625 9.50508 14.1221 9.50508H19.2133C19.452 9.50508 19.6809 9.41024 19.8497 9.24143Z" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"/></svg>
               <svg class="badge-icon badge-icon--undated" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
@@ -1002,6 +1212,9 @@
         if (state.filter === "undated" && t.date !== null) return false;
         return !q || t.title.includes(q) || t.description.includes(q);
       });
+      // کاری که الان وقتش است اول لیست می‌آید
+      visible.sort((a, b) => Number(isNowTask(b, key)) - Number(isNowTask(a, key)));
+      lastNowIds = dayTasks.filter((t) => isNowTask(t, key)).map((t) => t.id).join(",");
       el.tasks.replaceChildren(...visible.map((t) => taskItem(t, key)));
       el.noResults.hidden = visible.length > 0;
       if (!visible.length) {
@@ -1024,6 +1237,9 @@
       li.classList.toggle("is-done", done);
       li.classList.toggle("is-open", open);
       if (state.justAdded === t.id) li.classList.add("is-new");
+      const now = isNowTask(t, key);
+      li.classList.toggle("is-now", now);
+      li.querySelector(".now-chip").hidden = !now;
       li.style.setProperty("--swipe", `${SWIPE()}px`);
       const check = li.querySelector(".check");
       check.id = `check-${t.id}`; check.checked = done;
@@ -1089,7 +1305,50 @@
       if (reduceMotion.matches) { render(); return; }
       if (checked) { inFlight++; render(); pourIntoBox(id, checkRect); }
       else { render(); pourIntoCard(id); }
+      if (checked) maybeCelebrate(key);
     });
+
+    // ---------- تبریک: وقتی آخرین کار روز تیک می‌خورد ----------
+    // هر روز فقط یک بار، بعد از اینکه مایع به کادر تاریخ رسید و کادر پر شد
+    const CELEBRATE_KEY = "today-celebrated";
+    function maybeCelebrate(key) {
+      const list = tasksForDay(key);
+      if (!list.length || !list.every((t) => isDone(t, key))) return;
+      let last = ""; try { last = localStorage.getItem(CELEBRATE_KEY) || ""; } catch {}
+      if (last === key) return;
+      try { localStorage.setItem(CELEBRATE_KEY, key); } catch {}
+      const isToday = key === keyOf(startOfDay(new Date()));
+      $("celebrate-count").textContent = faDigits(list.length);
+      $("celebrate-desc").textContent = isToday ? "همه‌ی کارهای امروزت رو تکمیل کردی." : "همه‌ی کارهای این روز رو تکمیل کردی.";
+      setTimeout(() => { $("celebrate-dialog").showModal(); $("celebrate-ok").focus(); confetti(); }, reduceMotion.matches ? 0 : 1100);
+    }
+    function confetti() {
+      if (reduceMotion.matches) return;
+      const box = $("confetti");
+      if (box.showPopover) { try { if (box.matches(":popover-open")) box.hidePopover(); box.showPopover(); } catch {} }
+      const colors = ["--purple-300", "--purple-400", "--purple-500", "--purple-600", "--purple-200", "--color-star"].map(token);
+      for (let n = 0; n < 70; n++) {
+        const c = document.createElement("span");
+        c.style.left = `${Math.random() * 100}%`;
+        c.style.background = colors[n % colors.length];
+        if (n % 3 === 0) { c.style.borderRadius = "50%"; c.style.width = c.style.height = "8px"; }
+        box.append(c);
+        const drift = (Math.random() - .5) * 160, spin = (Math.random() - .5) * 1080, fall = innerHeight + 40;
+        c.animate([
+          { transform: "translate(0, 0) rotate(0deg)", opacity: 1 },
+          { transform: `translate(${drift * .6}px, ${fall * .55}px) rotate(${spin * .6}deg)`, opacity: 1, offset: .6 },
+          { transform: `translate(${drift}px, ${fall}px) rotate(${spin}deg)`, opacity: 0 },
+        ], { duration: 1800 + Math.random() * 1400, delay: Math.random() * 350, easing: "cubic-bezier(.25, .6, .4, 1)", fill: "forwards" })
+          .finished.then(() => { c.remove(); if (!box.children.length && box.hidePopover) { try { box.hidePopover(); } catch {} } }, () => c.remove());
+      }
+    }
+    $("celebrate-ok").addEventListener("click", () => $("celebrate-dialog").close());
+    {
+      const dlg = $("celebrate-dialog"); let pressOut = false;
+      const out = (e) => { const r = dlg.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
+      dlg.addEventListener("pointerdown", (e) => { pressOut = out(e); });
+      dlg.addEventListener("click", (e) => { if (pressOut && out(e)) dlg.close(); pressOut = false; });
+    }
 
     // ---------- انیمیشن مایع ----------
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -1314,7 +1573,7 @@
       if (!chip) return;
       state.filter = chip.dataset.filter;
       el.filters.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
-      render();
+      render(); animateList();
     });
     function setSearch(on) {
       el.searchButton.setAttribute("aria-pressed", String(on));
@@ -1328,7 +1587,26 @@
     el.searchInput.addEventListener("keydown", (e) => { if (e.key === "Escape") { setSearch(false); el.searchButton.focus(); } });
 
     // ---------- انتخاب روز (بالای صفحه) ----------
-    function selectDay(d) { state.selected = startOfDay(d); state.openId = null; render(); }
+    // ورود نرم کارت‌ها وقتی محتوای لیست عوض می‌شود (نه در هر رندر)
+    // «الان»: کار باز امروز که در بازه‌اش هستیم، یا کار تک‌ساعته از ۱۵ دقیقه قبل تا یک ساعت بعد از ساعتش
+    let lastNowIds = "";
+    function isNowTask(t, key) {
+      if (!t.time || isDone(t, key) || key !== keyOf(startOfDay(new Date()))) return false;
+      const n = new Date(), now = n.getHours() * 60 + n.getMinutes();
+      const [sh, sm] = t.time.split(":").map(Number), start = sh * 60 + sm;
+      if (t.endTime) { const [eh, em] = t.endTime.split(":").map(Number); return start <= now && now < eh * 60 + em; }
+      return now >= start - 15 && now < start + 60;
+    }
+    setInterval(() => {
+      const key = selectedKey();
+      const ids = tasksForDay(key).filter((t) => isNowTask(t, key)).map((t) => t.id).join(",");
+      if (ids !== lastNowIds && !drag && !state.openId) render();
+    }, 30 * 1000);
+    function animateList() {
+      el.tasks.classList.remove("is-switching"); void el.tasks.offsetWidth; el.tasks.classList.add("is-switching");
+      clearTimeout(animateList.t); animateList.t = setTimeout(() => el.tasks.classList.remove("is-switching"), 600);
+    }
+    function selectDay(d) { state.selected = startOfDay(d); state.openId = null; render(); animateList(); }
     let activeIndex = 0;
     function openMenu() {
       const today = startOfDay(new Date());
@@ -1342,6 +1620,12 @@
         li.addEventListener("click", () => { selectDay(d); closeMenu(); });
         return li;
       }));
+      const more = document.createElement("li");
+      more.role = "option"; more.id = `day-${DAYS_IN_MENU}`; more.className = "menu-calendar";
+      more.setAttribute("aria-selected", "false");
+      more.innerHTML = $("menu-calendar-icon").innerHTML + "<span>انتخاب از تقویم…</span>";
+      more.addEventListener("click", () => { closeMenu(false); openDaySheet(); });
+      el.dateMenu.append(more);
       el.dateMenu.hidden = false;
       el.dateSelector.setAttribute("aria-expanded", "true");
       highlight(activeIndex); el.dateMenu.focus();
@@ -1574,6 +1858,7 @@
       } else if (wasOpen) {
         el.sheetTitle.textContent = sheetTitleText;
         el.sheetClose.setAttribute("aria-label", "بستن");
+        el.sheet.classList.add("is-returning"); setTimeout(() => el.sheet.classList.remove("is-returning"), 300);
       }
       if (timeOn) { startTimeDraft(); tp.start.h.focus({ preventScroll: true }); selectAll(tp.start.h); }
       if (dateOn) {
@@ -1689,7 +1974,7 @@
     function renderProfile() {
       const n = profile.name.trim();
       $("greeting").textContent = n ? `سلام ${firstName(n)} عزیز !` : "سلام !";
-      $("profile-name").textContent = n || formatPhone(profile.phone);
+      $("profile-name").textContent = n || `\u2066${formatPhone(profile.phone)}\u2069`; // شماره چپ‌به‌راست خوانده شود
       paintAvatar($("avatar"), n, profile.photo);
     }
     renderProfile();
@@ -1851,10 +2136,15 @@
       dlg.addEventListener("pointerdown", (e) => { pressOut = out(e); });
       dlg.addEventListener("click", (e) => { if (pressOut && out(e)) { dlg.close(); if (dlg === accountSheet) renderProfile(); } pressOut = false; });
     }
-    $("theme-toggle").addEventListener("click", () => {
+    $("theme-toggle").addEventListener("click", (e) => {
       const next = effectiveTheme() === "dark" ? "light" : "dark";
-      applyTheme(next);
-      try { localStorage.setItem(THEME_KEY, next); } catch {}
+      const commit = () => { applyTheme(next); try { localStorage.setItem(THEME_KEY, next); } catch {} };
+      if (!document.startViewTransition || reduceMotion.matches) return commit();
+      // ظاهر تازه مثل یک دایره از روی همین دکمه پخش می‌شود
+      const r = e.currentTarget.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+      root.style.setProperty("--reveal-x", `${x}px`); root.style.setProperty("--reveal-y", `${y}px`);
+      root.style.setProperty("--reveal-r", `${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px`);
+      document.startViewTransition(commit);
     });
     $("menu-button").addEventListener("click", () => drawer.showModal());
     $("menu-close").addEventListener("click", () => drawer.close());
@@ -1917,6 +2207,45 @@
     notifDrawer.addEventListener("click", (e) => { if (notifPressOutside && outsideNotif(e)) notifDrawer.close(); notifPressOutside = false; });
     setInterval(() => { updateBell(); if (notifDrawer.open) renderNotifs(); }, 60 * 1000);
 
+    // ---------- انتخاب روز دلخواه از تقویم ----------
+    const daySheet = $("day-sheet");
+    let dayMonth = null;
+    function renderDaySheet() {
+      const month = persianParts(dayMonth).month;
+      $("day-title").textContent = fmtMonth.format(dayMonth);
+      const cells = WEEKDAYS.map((w) => { const sp = document.createElement("span"); sp.className = "cal-weekday"; sp.textContent = w; sp.setAttribute("aria-hidden", "true"); return sp; });
+      for (let k = 0; k < (dayMonth.getDay() + 1) % 7; k++) { const sp = document.createElement("span"); sp.className = "cal-empty"; cells.push(sp); }
+      const todayKey = keyOf(startOfDay(new Date()));
+      for (let d = new Date(dayMonth); persianParts(d).month === month; d = addDays(d, 1)) {
+        const k = keyOf(d), b = document.createElement("button");
+        b.type = "button"; b.className = "cal-day"; b.dataset.date = k;
+        b.textContent = faDigits(persianParts(d).day);
+        b.setAttribute("aria-label", dayLabel(d));
+        b.setAttribute("aria-pressed", String(k === selectedKey()));
+        if (k === todayKey) b.classList.add("is-today");
+        cells.push(b);
+      }
+      while (cells.length < 7 + 42) { const sp = document.createElement("span"); sp.className = "cal-empty"; cells.push(sp); }
+      $("day-grid").replaceChildren(...cells);
+    }
+    function openDaySheet() {
+      dayMonth = monthStart(state.selected);
+      renderDaySheet();
+      daySheet.showModal();
+      ($("day-grid").querySelector('[aria-pressed="true"]') || $("day-grid").querySelector(".cal-day")).focus();
+    }
+    $("day-prev").addEventListener("click", () => { dayMonth = monthStart(addDays(dayMonth, -1)); renderDaySheet(); });
+    $("day-next").addEventListener("click", () => { dayMonth = monthStart(addDays(dayMonth, 32)); renderDaySheet(); });
+    $("day-grid").addEventListener("click", (e) => { const b = e.target.closest("[data-date]"); if (!b) return; selectDay(dateOf(b.dataset.date)); daySheet.close(); });
+    $("day-today").addEventListener("click", () => { selectDay(new Date()); daySheet.close(); });
+    $("day-sheet-close").addEventListener("click", () => daySheet.close());
+    {
+      let pressOut = false;
+      const out = (e) => { const r = daySheet.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
+      daySheet.addEventListener("pointerdown", (e) => { pressOut = out(e); });
+      daySheet.addEventListener("click", (e) => { if (pressOut && out(e)) daySheet.close(); pressOut = false; });
+    }
+
     // ---------- بسته شدن نرم برگه‌ها، منوها و پنجره‌ها ----------
     // close() هر پنجره اول انیمیشن خروج را اجرا می‌کند و بعد واقعاً می‌بندد؛ Esc هم از همین مسیر می‌رود
     const EXIT_FRAMES = {
@@ -1925,7 +2254,7 @@
       drawerEnd: [{ transform: "translateX(0)" }, { transform: "translateX(-100%)" }],
       confirm: [{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(.96)" }],
     };
-    for (const [dlg, kind] of [[el.sheet, "sheet"], [$("account-sheet"), "sheet"], [$("menu-drawer"), "drawer"], [$("notif-drawer"), "drawerEnd"], [$("logout-dialog"), "confirm"]]) {
+    for (const [dlg, kind] of [[el.sheet, "sheet"], [$("account-sheet"), "sheet"], [daySheet, "sheet"], [$("menu-drawer"), "drawer"], [$("notif-drawer"), "drawerEnd"], [$("logout-dialog"), "confirm"], [$("celebrate-dialog"), "confirm"]]) {
       const nativeClose = HTMLDialogElement.prototype.close.bind(dlg);
       let closing = false;
       dlg.close = (returnValue) => {
