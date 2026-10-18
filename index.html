@@ -33,6 +33,11 @@
       --radius-lg: 20px; --radius-xl: 24px; --radius-full: 9999px;
       /* ارتفاع ثابت محتوای برگه‌های ساعت و تاریخ (همان فریم‌های ۱ تا ۳ فیگما) */
       --picker-area-height: 440px;
+      /* حرکت: یک منحنی و سه مدت ثابت برای کل اپ */
+      --ease-out: cubic-bezier(.22, 1, .36, 1);       /* ورود: سریع شروع، نرم توقف */
+      --ease-in: cubic-bezier(.55, 0, 1, .45);        /* خروج */
+      --ease-spring: cubic-bezier(.34, 1.56, .64, 1); /* کمی جهش برای تیک و آیکون */
+      --dur-1: 150ms; --dur-2: 240ms; --dur-3: 380ms;
 
       /* Typography — Mobile/font-NN (size / line-height) */
       --font-family: "IRANYekanXFaNum", "IRANYekanX FaNum", "Vazirmatn", Tahoma, sans-serif;
@@ -177,7 +182,7 @@
     @keyframes nebula-drift { from { background-position: 0 0, 0 0, 0% 0; } to { background-position: 0 0, 0 0, 100% 0; } }
     @keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .9; } }
     .date-selector .label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .date-selector svg { color: var(--color-icon); transition: transform .2s; }
+    .date-selector svg { color: var(--color-icon); transition: transform var(--dur-2) var(--ease-out); }
     .date-selector[aria-expanded="true"] svg { transform: rotate(180deg); }
     .tomorrow {
       width: var(--height-5xl); height: var(--height-5xl); flex-shrink: 0;
@@ -240,7 +245,7 @@
       padding-inline-start: var(--space-xs);
       display: flex; align-items: center; gap: var(--space-xs);
       background: var(--color-surface-raised); border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm);
-      transition: transform .25s ease, background-color .2s, border-color .2s; touch-action: pan-y;
+      transition: transform var(--dur-3) var(--ease-out), background-color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out); touch-action: pan-y;
     }
     .task.is-open .task-body { transform: translateX(calc(-1 * var(--swipe))); }
     .task.is-dragging .task-body { transition: none; }
@@ -251,12 +256,13 @@
     .kebab[aria-expanded="true"] { background: var(--color-surface-strong); }
     .kebab svg { width: var(--size-lg); height: var(--size-lg); }
     .task-text { flex: 1; min-width: 0; display: flex; flex-direction: column; cursor: pointer; }
-    .task-title { font: var(--font-07); font-weight: var(--font-weight-medium); overflow-wrap: anywhere; }
+    /* عنوان فقط یک خط؛ ادامه‌اش مثل توضیحات با «…» کوتاه می‌شود */
+    .task-title { font: var(--font-07); font-weight: var(--font-weight-medium); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .task-desc-row { display: flex; align-items: center; gap: var(--space-xs); min-width: 0; }
     .task-desc { flex: 1; min-width: 0; font: var(--font-04); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .task-time { margin-inline-start: auto; flex-shrink: 0; font: var(--font-04); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); white-space: nowrap; }
     /* عنوان و بج در یک ردیف؛ بج دقیقاً پشت عنوان می‌آید */
-    .task-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2xs) var(--space-xs); min-width: 0; }
+    .task-title-row { display: flex; align-items: center; flex-wrap: nowrap; gap: var(--space-xs); min-width: 0; }
     /* بج فقط آیکون: دایره‌ی ۲۴ پیکسلی؛ متنش برای صفحه‌خوان و راهنمای ماوس می‌ماند */
     .badge {
       display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-inline-start: auto;
@@ -301,11 +307,11 @@
     .check {
       appearance: none; width: var(--size-xl); height: var(--size-xl); flex-shrink: 0; margin: 0; cursor: pointer;
       border: 2px solid var(--color-border-strong); border-radius: var(--radius-2xs); background: var(--color-surface);
-      display: grid; place-items: center; transition: background-color .15s, border-color .15s;
+      display: grid; place-items: center; transition: background-color var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out);
     }
     .check::after {
       content: ""; width: 6px; height: 11px; margin-top: -3px;
-      border: solid var(--color-on-primary); border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform .15s;
+      border: solid var(--color-on-primary); border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform var(--dur-2) var(--ease-spring);
     }
     .check:checked { background: var(--color-primary); border-color: var(--color-primary); }
     .check:checked::after { transform: rotate(45deg) scale(1); }
@@ -392,8 +398,8 @@
       background: var(--color-surface-raised); font: var(--font-07); font-weight: var(--font-weight-medium); color: var(--color-text-secondary);
     }
     .picker-value.is-empty { color: var(--color-text-muted); }
-    .sheet.is-picking .picker, .sheet.is-picking .picker-area { animation: picker-in .2s ease; }
-    @keyframes picker-in { from { opacity: 0; transform: translateY(var(--space-xs)); } }
+    .sheet.is-picking .picker, .sheet.is-picking .picker-area { animation: picker-in var(--dur-3) var(--ease-out); }
+    @keyframes picker-in { from { opacity: 0; transform: translateY(var(--space-sm)) scale(.985); } }
     .picker-actions { display: flex; gap: var(--space-xs); }
     .text-button {
       height: var(--height-2xl); padding-inline: var(--space-sm); border-radius: var(--radius-xs);
@@ -469,14 +475,14 @@
       padding-inline-start: var(--space-md);
       background: var(--color-toast); color: var(--color-on-toast); border-radius: var(--radius-sm);
       box-shadow: var(--shadow-raised); font: var(--font-06); pointer-events: auto;
-      animation: toast-in .2s ease;
+      animation: toast-in var(--dur-3) var(--ease-out);
     }
     .toast .message { flex: 1; min-height: var(--height-3xl); display: flex; align-items: center; }
     .toast-undo {
       height: var(--height-3xl); padding-inline: var(--space-sm); border-radius: var(--radius-xs);
       color: var(--purple-300); font-weight: var(--font-weight-demibold);
     }
-    @keyframes toast-in { from { opacity: 0; transform: translateY(var(--space-xs)); } }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(var(--space-md)) scale(.96); } }
 
     /* ---------- منوی کناری ---------- */
     .drawer {
@@ -487,7 +493,7 @@
       border-start-end-radius: var(--radius-xl); border-end-end-radius: var(--radius-xl);
       flex-direction: column; gap: var(--space-xl);
     }
-    .drawer[open] { display: flex; animation: drawer-in .25s ease; }
+    .drawer[open] { display: flex; animation: drawer-in var(--dur-3) var(--ease-out); }
     .drawer::backdrop { background: var(--color-overlay); }
     @keyframes drawer-in { from { transform: translateX(100%); } }
     .drawer .sheet-header { margin-bottom: 0; }
@@ -497,7 +503,7 @@
     .theme-toggle .theme-icon { display: grid; }
     .theme-toggle svg { width: var(--size-lg); height: var(--size-lg); }
     .theme-toggle[data-mode="light"] .theme-icon--sun, .theme-toggle[data-mode="dark"] .theme-icon--moon { display: none; }
-    .theme-toggle .theme-icon { animation: icon-spin .3s ease; }
+    .theme-toggle .theme-icon { animation: icon-spin var(--dur-3) var(--ease-spring); }
     @keyframes icon-spin { from { transform: rotate(-90deg) scale(.6); opacity: 0; } }
     .menu-section { display: flex; flex-direction: column; gap: var(--space-xs); }
     .menu-label { font: var(--font-04); color: var(--color-text-muted); }
@@ -554,7 +560,8 @@
       padding: var(--space-xl); border-radius: var(--radius-xl);
       background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-raised);
     }
-    .confirm[open] { display: flex; flex-direction: column; gap: var(--space-sm); animation: picker-in .2s ease; }
+    .confirm[open] { display: flex; flex-direction: column; gap: var(--space-sm); animation: confirm-in var(--dur-2) var(--ease-out); }
+    @keyframes confirm-in { from { opacity: 0; transform: scale(.94); } }
     .confirm::backdrop { background: var(--color-overlay); }
     .confirm-title { font: var(--font-07); font-weight: var(--font-weight-demibold); }
     .confirm-desc { font: var(--font-06); color: var(--color-text-secondary); }
@@ -595,7 +602,7 @@
        حالت‌های تعاملی — پیش‌فرض، hover، active (فشرده)، focus، disabled
        hover فقط روی دستگاه‌های دارای اشاره‌گر، تا روی لمس «گیر» نکند
        ===================================================================== */
-    button, .time-part { transition: background-color .15s, border-color .15s, color .15s, transform .1s; }
+    button, .time-part { transition: background-color var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out); }
     button:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
     button:active:not(:disabled) { transform: scale(.97); }
     .date-selector:active, .task-action:active, .cal-day:active, .time-part:active { transform: none; }
@@ -634,6 +641,16 @@
     .menu-item--quiet:active { background: var(--red-100); }
     .btn--danger:active { background: var(--red-800); }
     .toast-undo:active { background: color-mix(in srgb, var(--color-on-toast) 20%, transparent); }
+
+    /* ورود برگه‌ها از پایین، محو شدن پس‌زمینه، باز شدن منوی تاریخ و ورود کار تازه */
+    .sheet[open] { animation: sheet-in var(--dur-3) var(--ease-out); }
+    @keyframes sheet-in { from { transform: translateY(100%); } }
+    dialog[open]::backdrop { animation: fade-in var(--dur-3) var(--ease-out); }
+    @keyframes fade-in { from { opacity: 0; } }
+    .date-menu:not([hidden]) { animation: menu-in var(--dur-2) var(--ease-out); transform-origin: top center; }
+    @keyframes menu-in { from { opacity: 0; transform: translateY(calc(-1 * var(--space-xs))) scale(.98); } }
+    .task.is-new { animation: task-in var(--dur-3) var(--ease-out); }
+    @keyframes task-in { from { opacity: 0; transform: translateY(var(--space-sm)) scale(.98); } }
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
   </style>
@@ -1006,6 +1023,7 @@
       li.dataset.id = t.id;
       li.classList.toggle("is-done", done);
       li.classList.toggle("is-open", open);
+      if (state.justAdded === t.id) li.classList.add("is-new");
       li.style.setProperty("--swipe", `${SWIPE()}px`);
       const check = li.querySelector(".check");
       check.id = `check-${t.id}`; check.checked = done;
@@ -1036,6 +1054,12 @@
 
     // ---------- توست ----------
     let toastTimer = null;
+    function dismissToast(box) {
+      if (!box.isConnected) return;
+      if (reduceMotion.matches) return box.remove();
+      box.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(8px) scale(.97)" }], { duration: 200, easing: "cubic-bezier(.55, 0, 1, .45)", fill: "forwards" })
+        .finished.then(() => box.remove(), () => box.remove());
+    }
     function toast(message, undo) {
       clearTimeout(toastTimer);
       const box = document.createElement("div");
@@ -1046,11 +1070,11 @@
       if (undo) {
         const b = document.createElement("button");
         b.type = "button"; b.className = "toast-undo"; b.textContent = "بازگردانی";
-        b.addEventListener("click", () => { undo(); el.toasts.replaceChildren(); });
+        b.addEventListener("click", () => { undo(); });
         box.append(b);
       }
       el.toasts.replaceChildren(box);
-      toastTimer = setTimeout(() => el.toasts.replaceChildren(), TOAST_MS);
+      toastTimer = setTimeout(() => dismissToast(box), TOAST_MS);
     }
 
     // ---------- رویدادهای لیست ----------
@@ -1218,10 +1242,21 @@
       } else if (btn.dataset.action === "edit") {
         state.openId = null; render(); openSheet(findTask(id));
       } else if (btn.dataset.action === "delete") {
-        const index = state.tasks.findIndex((t) => t.id === id);
-        const [removed] = state.tasks.splice(index, 1);
-        state.openId = null; persist(); render();
-        toast(`«${removed.title}» حذف شد`, () => { state.tasks.splice(index, 0, removed); persist(); render(); toast("کار برگردانده شد"); });
+        const li = btn.closest(".task");
+        const remove = () => {
+          const index = state.tasks.findIndex((t) => t.id === id);
+          const [removed] = state.tasks.splice(index, 1);
+          state.openId = null; persist(); render();
+          toast(`«${removed.title}» حذف شد`, () => { state.tasks.splice(index, 0, removed); state.justAdded = removed.id; persist(); render(); state.justAdded = null; toast("کار برگردانده شد"); });
+        };
+        if (reduceMotion.matches) return remove();
+        const gapPx = parseFloat(getComputedStyle(el.tasks).rowGap) || 0;
+        li.style.pointerEvents = "none";
+        li.animate([
+          { height: `${li.offsetHeight}px`, opacity: 1, transform: "translateX(0)", marginBottom: "0px" },
+          { height: `${li.offsetHeight}px`, opacity: 0, transform: "translateX(-24px)", marginBottom: "0px", offset: .45 },
+          { height: "0px", opacity: 0, transform: "translateX(-24px)", marginBottom: `-${gapPx}px` },
+        ], { duration: 360, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "forwards" }).finished.then(remove, remove);
       }
     });
 
@@ -1579,8 +1614,8 @@
       const fields = { title, description: el.fDesc.value.trim(), time: form.time, endTime: form.time ? form.endTime : "", date: form.date || null, repeat: el.fRepeat.checked && !!form.date };
       const existing = state.editingId && findTask(state.editingId);
       if (existing) { Object.assign(existing, fields); toast("تغییرات ذخیره شد"); }
-      else { state.tasks.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), done: false, doneDates: [], ...fields }); toast("کار اضافه شد"); }
-      persist(); render();
+      else { const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6); state.tasks.push({ id, done: false, doneDates: [], ...fields }); state.justAdded = id; toast("کار اضافه شد"); }
+      persist(); render(); state.justAdded = null;
     });
     // بیرون زدن یا Esc وقتی انتخابگر باز است، اول فقط انتخابگر را می‌بندد
     // فقط ضربه‌ای که هم شروع و هم پایانش بیرون از کادر برگه باشد آن را می‌بندد؛
@@ -1881,6 +1916,31 @@
     notifDrawer.addEventListener("pointerdown", (e) => { notifPressOutside = outsideNotif(e); });
     notifDrawer.addEventListener("click", (e) => { if (notifPressOutside && outsideNotif(e)) notifDrawer.close(); notifPressOutside = false; });
     setInterval(() => { updateBell(); if (notifDrawer.open) renderNotifs(); }, 60 * 1000);
+
+    // ---------- بسته شدن نرم برگه‌ها، منوها و پنجره‌ها ----------
+    // close() هر پنجره اول انیمیشن خروج را اجرا می‌کند و بعد واقعاً می‌بندد؛ Esc هم از همین مسیر می‌رود
+    const EXIT_FRAMES = {
+      sheet: [{ transform: "translateY(0)" }, { transform: "translateY(100%)" }],
+      drawer: [{ transform: "translateX(0)" }, { transform: "translateX(100%)" }],
+      drawerEnd: [{ transform: "translateX(0)" }, { transform: "translateX(-100%)" }],
+      confirm: [{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(.96)" }],
+    };
+    for (const [dlg, kind] of [[el.sheet, "sheet"], [$("account-sheet"), "sheet"], [$("menu-drawer"), "drawer"], [$("notif-drawer"), "drawerEnd"], [$("logout-dialog"), "confirm"]]) {
+      const nativeClose = HTMLDialogElement.prototype.close.bind(dlg);
+      let closing = false;
+      dlg.close = (returnValue) => {
+        if (!dlg.open || closing) return;
+        if (reduceMotion.matches) return nativeClose(returnValue);
+        closing = true;
+        const opts = { duration: 240, easing: "cubic-bezier(.55, 0, 1, .45)", fill: "forwards" };
+        const anim = dlg.animate(EXIT_FRAMES[kind], opts);
+        let fade = null;
+        try { fade = dlg.animate([{ opacity: 1 }, { opacity: 0 }], { ...opts, pseudoElement: "::backdrop" }); } catch {}
+        const done = () => { nativeClose(returnValue); anim.cancel(); if (fade) fade.cancel(); closing = false; };
+        anim.finished.then(done, done);
+      };
+      dlg.addEventListener("cancel", (e) => { if (e.defaultPrevented) return; e.preventDefault(); dlg.close(); });
+    }
 
     // بالا آمدن برگه همراه کیبورد
     if (window.visualViewport) {
