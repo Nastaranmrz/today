@@ -31,6 +31,8 @@
       /* Size & Spacing — radius */
       --radius-3xs: 2px; --radius-2xs: 4px; --radius-xs: 8px; --radius-sm: 12px; --radius-md: 16px;
       --radius-lg: 20px; --radius-xl: 24px; --radius-full: 9999px;
+      /* ارتفاع ثابت محتوای برگه‌های ساعت و تاریخ (همان فریم‌های ۱ تا ۳ فیگما) */
+      --picker-area-height: 440px;
 
       /* Typography — Mobile/font-NN (size / line-height) */
       --font-family: "IRANYekanXFaNum", "IRANYekanX FaNum", "Vazirmatn", Tahoma, sans-serif;
@@ -223,10 +225,11 @@
     .task { position: relative; border-radius: var(--radius-sm); overflow: hidden; }
     .task-actions {
       position: absolute; inset-block: 0; inset-inline-start: 0;
-      display: flex; gap: var(--space-2xs); padding: var(--space-2xs);
+      display: flex; align-items: center; gap: var(--space-xs); padding-inline: var(--space-xs);
     }
+    /* دکمه‌های ویرایش و حذف: مربع ۴۸×۴۸، وسط ارتفاع کارت */
     .task-action {
-      width: var(--height-5xl); display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: var(--height-4xl); height: var(--height-4xl); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: var(--space-3xs); border-radius: var(--radius-xs); font: var(--font-02); font-weight: var(--font-weight-medium);
     }
     .task-action svg { width: var(--size-lg); height: var(--size-lg); }
@@ -249,13 +252,22 @@
     .kebab svg { width: var(--size-lg); height: var(--size-lg); }
     .task-text { flex: 1; min-width: 0; display: flex; flex-direction: column; cursor: pointer; }
     .task-title { font: var(--font-07); font-weight: var(--font-weight-medium); overflow-wrap: anywhere; }
-    .task-desc { font: var(--font-04); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .task-meta { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2xs); flex-shrink: 0; }
-    .task-time { font: var(--font-06); color: var(--color-text-secondary); white-space: nowrap; }
+    .task-desc-row { display: flex; align-items: center; gap: var(--space-xs); min-width: 0; }
+    .task-desc { flex: 1; min-width: 0; font: var(--font-04); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .task-time { margin-inline-start: auto; flex-shrink: 0; font: var(--font-04); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); white-space: nowrap; }
+    /* عنوان و بج در یک ردیف؛ بج دقیقاً پشت عنوان می‌آید */
+    .task-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2xs) var(--space-xs); min-width: 0; }
+    /* بج فقط آیکون: دایره‌ی ۲۴ پیکسلی؛ متنش برای صفحه‌خوان و راهنمای ماوس می‌ماند */
     .badge {
-      font: var(--font-02); color: var(--color-text-secondary); background: var(--color-surface);
-      border-radius: var(--radius-full); padding: 0 var(--space-xs);
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-inline-start: auto;
+      width: var(--size-xl); height: var(--size-xl); padding: 0;
+      border-radius: var(--radius-full); border: 1px solid transparent;
     }
+    .badge-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .badge-icon { width: 14px; height: 14px; }
+    .badge[data-kind="repeat"] { background: var(--purple-50); border-color: var(--purple-200); color: var(--purple-700); }
+    .badge[data-kind="undated"] { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text-secondary); }
+    .badge[data-kind="repeat"] .badge-icon--undated, .badge[data-kind="undated"] .badge-icon--repeat { display: none; }
 
     /* انجام شده: بدون پس‌زمینه، خط‌خورده و کم‌رنگ — کاملاً متفاوت از کار باز */
     /* انیمیشن مایع: کارت هنگام تیک خالی می‌شود و مایع به کادر تاریخ می‌ریزد */
@@ -283,7 +295,7 @@
     .task.is-done .task-title { color: var(--color-text-muted); font-weight: var(--font-weight-regular); text-decoration: line-through; text-decoration-color: var(--color-text-muted); }
     .task.is-done .task-desc, .task.is-done .task-time { color: var(--color-text-muted); }
     .task.is-done .task-time { text-decoration: line-through; }
-    .task.is-done .badge { background: var(--color-surface-raised); color: var(--color-text-muted); }
+    .task.is-done .badge { background: transparent; border-color: var(--color-border); color: var(--color-text-muted); }
 
     /* چک‌باکس */
     .check {
@@ -360,16 +372,26 @@
     .picker-trigger .value { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .picker-trigger .value.is-empty { color: var(--color-placeholder); }
 
+    /* کادر انتخابگر: نوار بالا (تب‌ها یا مقدار) چسبیده به لبه، بدنه با فاصله‌ی داخلی */
     .picker {
-      border: 1px solid var(--color-border); border-radius: var(--radius-sm);
-      padding: var(--space-sm); display: flex; flex-direction: column; gap: var(--space-sm);
+      border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden;
+      display: flex; flex-direction: column;
     }
+    .picker-body { flex: 1; display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-sm); }
+    .picker-spacer { flex: 1; }
+    /* هر دو برگه هم‌قدند تا جابه‌جایی بین ساعت و تاریخ پرش نداشته باشد */
+    .time-picker, .picker-area { height: var(--picker-area-height); }
+    .picker-area { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .picker-area .date-box { flex: 1; }
     /* حالت انتخاب: فقط همان فیلد و انتخابگرش دیده می‌شوند */
-    .sheet.is-picking form > :not(.field-row):not(.picker) { display: none; }
+    .sheet.is-picking form > :not(.field-row):not(.picker):not(.picker-area) { display: none; }
     .sheet.is-picking .field-row { display: none; }
-    .picker-value { font: var(--font-10); font-weight: var(--font-weight-medium); color: var(--color-text); text-align: center; padding-block: var(--space-2xs); }
+    .picker-value {
+      height: var(--height-4xl); flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      background: var(--color-surface-raised); font: var(--font-07); font-weight: var(--font-weight-medium); color: var(--color-text-secondary);
+    }
     .picker-value.is-empty { color: var(--color-text-muted); }
-    .sheet.is-picking .picker { animation: picker-in .2s ease; }
+    .sheet.is-picking .picker, .sheet.is-picking .picker-area { animation: picker-in .2s ease; }
     @keyframes picker-in { from { opacity: 0; transform: translateY(var(--space-xs)); } }
     .picker-actions { display: flex; gap: var(--space-xs); }
     .text-button {
@@ -379,23 +401,25 @@
     .text-button--muted { color: var(--color-text-secondary); }
 
     /* ساعت: یک زمان یا بازه */
-    .segmented { display: flex; gap: var(--space-2xs); padding: var(--space-2xs); background: var(--color-surface-raised); border-radius: var(--radius-sm); }
+    .segmented { display: flex; gap: var(--space-2xs); padding: var(--space-2xs); background: var(--color-surface-raised); flex-shrink: 0; }
+    .time-picker .picker-body { padding-top: var(--space-2xl); gap: var(--space-xs); }
     .segment { flex: 1; height: var(--height-3xl); border-radius: var(--radius-xs); font: var(--font-06); color: var(--color-text-secondary); }
     .segment[aria-checked="true"] { background: var(--color-surface); color: var(--color-text); font-weight: var(--font-weight-medium); box-shadow: var(--shadow-raised); }
     .time-row { display: flex; align-items: flex-end; justify-content: center; gap: var(--space-sm); }
-    .time-group { display: flex; flex-direction: column; align-items: center; gap: var(--space-2xs); min-width: 0; }
+    .time-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2xs); min-width: 0; }
     .time-group-label { font: var(--font-04); color: var(--color-text-secondary); }
-    .time-input { display: flex; align-items: center; gap: var(--space-2xs); }
+    /* کادر گرد (pill) که ساعت و دقیقه را در بر می‌گیرد */
+    .time-input { display: flex; align-items: center; gap: var(--space-2xs); padding: var(--space-xs); background: var(--color-surface-raised); border-radius: var(--radius-md); }
     .time-part {
       width: var(--space-5xl); min-width: 0; height: var(--height-5xl); text-align: center; font: var(--font-10); font-weight: var(--font-weight-medium);
-      border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm); background: var(--color-surface-raised); color: var(--color-text);
+      border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text);
       transition: background-color .15s, border-color .15s;
     }
     .time-part::placeholder { color: var(--color-placeholder); opacity: 1; }
     .time-part:focus { outline: none; border-color: var(--color-primary); background: var(--color-surface); }
     .time-part[aria-invalid="true"] { border-color: var(--color-danger); }
     .time-sep { font: var(--font-10); color: var(--color-text-muted); }
-    .time-range-sep { font: var(--font-06); color: var(--color-text-secondary); height: var(--height-5xl); display: flex; align-items: center; }
+    .time-range-sep { font: var(--font-06); color: var(--color-text-muted); padding-bottom: var(--space-xl); }
     /* در حالت «یک زمان» جای بخش پایان خالی می‌ماند تا ارتفاع و چیدمان نپرد */
     .time-picker[data-mode="single"] .is-range-only { visibility: hidden; }
     .time-meta, .time-error { font: var(--font-04); min-height: 20px; text-align: center; }
@@ -409,7 +433,7 @@
     }
     .quick-date[aria-pressed="true"] { background: var(--color-primary-subtle); border-color: var(--color-primary-subtle); color: var(--color-primary-subtle-text); font-weight: var(--font-weight-medium); }
     .cal-head { display: flex; align-items: center; justify-content: space-between; }
-    .cal-title { font: var(--font-06); font-weight: var(--font-weight-demibold); }
+    .cal-title { font: var(--font-06); font-weight: var(--font-weight-demibold); color: var(--color-text-secondary); }
     .cal-nav { width: var(--height-2xl); height: var(--height-2xl); display: grid; place-items: center; border-radius: var(--radius-xs); color: var(--color-icon); }
     .cal-nav--prev svg { transform: rotate(-90deg); }
     .cal-nav--next svg { transform: rotate(90deg); }
@@ -423,7 +447,7 @@
     .cal-day.is-today { box-shadow: inset 0 0 0 1px var(--color-primary); color: var(--color-primary); font-weight: var(--font-weight-medium); }
     .cal-day[aria-pressed="true"] { background: var(--color-primary); color: var(--color-on-primary); font-weight: var(--font-weight-medium); box-shadow: none; }
 
-    .repeat { display: flex; align-items: center; gap: var(--space-xs); cursor: pointer; font: var(--font-06); }
+    .repeat { display: flex; align-items: center; gap: var(--space-xs); font: var(--font-06); }
     .repeat-hint { font: var(--font-04); color: var(--color-text-muted); margin-top: calc(-1 * var(--space-xs)); }
     .sheet-actions { display: flex; gap: var(--space-xs); margin-top: var(--space-xs); }
     .btn {
@@ -453,6 +477,117 @@
     }
     @keyframes toast-in { from { opacity: 0; transform: translateY(var(--space-xs)); } }
 
+    /* ---------- منوی کناری ---------- */
+    .drawer {
+      position: fixed; inset-block: 0; inset-inline-start: 0; inset-inline-end: auto; margin: 0;
+      width: min(320px, 85vw); height: 100%; max-height: 100%; max-width: none; border: 0;
+      padding: calc(var(--space-xl) + env(safe-area-inset-top, 0px)) var(--space-xl) calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
+      background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-raised);
+      border-start-end-radius: var(--radius-xl); border-end-end-radius: var(--radius-xl);
+      flex-direction: column; gap: var(--space-xl);
+    }
+    .drawer[open] { display: flex; animation: drawer-in .25s ease; }
+    .drawer::backdrop { background: var(--color-overlay); }
+    @keyframes drawer-in { from { transform: translateX(100%); } }
+    .drawer .sheet-header { margin-bottom: 0; }
+    .segmented--rounded { border-radius: var(--radius-sm); }
+    /* تغییر ظاهر: یک دکمه‌ی آیکونی کنار «بستن» در سرِ منو (آیکون‌های outlined صفحه‌ی Foundation فیگما) */
+    .header-actions { display: flex; align-items: center; gap: var(--space-2xs); }
+    .theme-toggle .theme-icon { display: grid; }
+    .theme-toggle svg { width: var(--size-lg); height: var(--size-lg); }
+    .theme-toggle[data-mode="light"] .theme-icon--sun, .theme-toggle[data-mode="dark"] .theme-icon--moon { display: none; }
+    .theme-toggle .theme-icon { animation: icon-spin .3s ease; }
+    @keyframes icon-spin { from { transform: rotate(-90deg) scale(.6); opacity: 0; } }
+    .menu-section { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .menu-label { font: var(--font-04); color: var(--color-text-muted); }
+    .menu-item {
+      display: flex; align-items: center; gap: var(--space-sm); height: var(--height-4xl);
+      padding-inline: var(--space-sm); border-radius: var(--radius-sm); font: var(--font-06); text-align: right;
+      background: var(--color-surface-raised); color: var(--color-text);
+    }
+    .menu-item svg { width: var(--size-lg); height: var(--size-lg); }
+    .menu-item--danger { color: var(--color-danger); background: var(--color-danger-subtle); }
+    .menu-hint { font: var(--font-04); color: var(--color-text-muted); }
+    .menu-bottom { margin-top: auto; display: flex; flex-direction: column; gap: var(--space-md); }
+    .menu-footer { font: var(--font-04); color: var(--color-text-muted); text-align: center; }
+    .menu-item--quiet { color: var(--color-danger); background: transparent; border: 1px solid var(--color-border); }
+
+    /* کارت حساب کاربری بالای منو */
+    .profile-card {
+      display: flex; align-items: center; gap: var(--space-sm); width: 100%; text-align: right;
+      padding: var(--space-sm); border-radius: var(--radius-md); background: var(--color-surface-raised);
+    }
+    .avatar {
+      width: var(--height-4xl); height: var(--height-4xl); flex-shrink: 0; display: grid; place-items: center;
+      border-radius: var(--radius-full); background: var(--color-primary-subtle); color: var(--color-primary-subtle-text);
+      font: var(--font-09); font-weight: var(--font-weight-demibold);
+    }
+    .avatar { overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .avatar svg { width: 55%; height: 55%; }
+    .avatar--lg { width: var(--space-7xl); height: var(--space-7xl); font: var(--font-10); font-weight: var(--font-weight-demibold); }
+    .photo-picker { display: flex; flex-direction: column; align-items: center; gap: var(--space-2xs); margin-bottom: var(--space-xs); }
+    .avatar-button { position: relative; border-radius: var(--radius-full); }
+    .avatar-badge {
+      position: absolute; bottom: 0; inset-inline-start: 0; width: var(--height-2xl); height: var(--height-2xl);
+      display: grid; place-items: center; border-radius: var(--radius-full);
+      background: var(--color-primary); color: var(--color-on-primary); box-shadow: 0 0 0 3px var(--color-surface);
+    }
+    .photo-error { font: var(--font-04); color: var(--color-danger); min-height: 0; }
+    .photo-error:empty { display: none; }
+    .field--phone { text-align: right; }
+    .field[aria-invalid="true"] { border-color: var(--color-danger); }
+    .profile-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .profile-name { font: var(--font-07); font-weight: var(--font-weight-medium); color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-hint { font: var(--font-04); color: var(--color-text-muted); }
+    .menu-chevron { color: var(--color-icon); transform: rotate(90deg); }
+    .account-body { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .field-label { font: var(--font-04); color: var(--color-text-secondary); }
+    .account-body .sheet-actions { margin-top: var(--space-md); }
+
+    /* پنجره‌ی تأیید */
+    .confirm {
+      border: 0; margin: auto; width: min(340px, calc(100vw - var(--space-2xl)));
+      padding: var(--space-xl); border-radius: var(--radius-xl);
+      background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-raised);
+    }
+    .confirm[open] { display: flex; flex-direction: column; gap: var(--space-sm); animation: picker-in .2s ease; }
+    .confirm::backdrop { background: var(--color-overlay); }
+    .confirm-title { font: var(--font-07); font-weight: var(--font-weight-demibold); }
+    .confirm-desc { font: var(--font-06); color: var(--color-text-secondary); }
+    .confirm .sheet-actions { margin-top: var(--space-xs); }
+    .btn--danger { background: var(--color-danger); color: var(--red-50); }
+
+    /* ---------- اعلان‌ها (کشو از سمت چپ) ---------- */
+    .drawer--end {
+      inset-inline-start: auto; inset-inline-end: 0;
+      border-start-end-radius: 0; border-end-end-radius: 0;
+      border-start-start-radius: var(--radius-xl); border-end-start-radius: var(--radius-xl);
+    }
+    .drawer--end[open] { animation-name: drawer-in-end; }
+    @keyframes drawer-in-end { from { transform: translateX(-100%); } }
+    .icon-button { position: relative; }
+    .bell-dot {
+      position: absolute; top: var(--space-sm); inset-inline-end: var(--space-sm);
+      width: var(--space-xs); height: var(--space-xs); border-radius: var(--radius-full);
+      background: var(--color-danger); box-shadow: 0 0 0 2px var(--color-surface-raised);
+    }
+    .notif-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-xs); overflow-y: auto; }
+    .notif-item {
+      width: 100%; display: flex; align-items: center; gap: var(--space-sm); text-align: right;
+      padding: var(--space-sm); border-radius: var(--radius-sm); background: var(--color-surface-raised);
+    }
+    .notif-icon { width: var(--height-2xl); height: var(--height-2xl); flex-shrink: 0; display: grid; place-items: center; border-radius: var(--radius-full); }
+    .notif-icon svg { width: var(--size-lg); height: var(--size-lg); }
+    .notif-item[data-kind="overdue"] .notif-icon { background: var(--color-danger-subtle); color: var(--color-danger); }
+    .notif-item[data-kind="progress"] .notif-icon { background: var(--color-primary-subtle); color: var(--color-primary); }
+    .notif-item[data-kind="upcoming"] .notif-icon { background: var(--color-surface-strong); color: var(--color-icon); }
+    .notif-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .notif-title { font: var(--font-06); font-weight: var(--font-weight-medium); color: var(--color-text); overflow-wrap: anywhere; }
+    .notif-sub { font: var(--font-04); color: var(--color-text-muted); }
+    .notif-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2xs); text-align: center; font: var(--font-06); color: var(--color-text-secondary); }
+    .notif-empty-icon { width: var(--height-4xl); height: var(--height-4xl); display: grid; place-items: center; border-radius: var(--radius-full); background: var(--color-surface-raised); color: var(--color-icon); margin-bottom: var(--space-xs); }
+
     /* =====================================================================
        حالت‌های تعاملی — پیش‌فرض، hover، active (فشرده)، focus، disabled
        hover فقط روی دستگاه‌های دارای اشاره‌گر، تا روی لمس «گیر» نکند
@@ -472,7 +607,15 @@
       .text-button:not(.text-button--muted):hover, .tomorrow[aria-pressed="true"]:hover, .quick-date[aria-pressed="true"]:hover { background: var(--color-primary-subtle-hover); }
       .task-action--edit:hover { background: var(--purple-100); }
       .task-action--delete:hover { background: var(--color-danger-hover); }
+      .menu-item--danger:hover:not(:disabled) { background: var(--color-danger-active); }
+      .notif-item:hover, .profile-card:hover { background: var(--color-surface-hover); }
+      .menu-item--quiet:hover { background: var(--red-50); border-color: var(--red-200); }
+      .btn--danger:hover { background: var(--red-700); }
       .time-part:not(:focus):hover { border-color: var(--color-border-strong); }
+      /* کارت کار: باز یک پله پررنگ‌تر، انجام‌شده کمی رنگ می‌گیرد و حاشیه‌اش پررنگ‌تر می‌شود */
+      .task:not(.is-done):not(.is-refilling) .task-body:hover { background: var(--color-surface-hover); border-color: var(--color-surface-hover); }
+      .task.is-done .task-body:hover { background: var(--color-surface-raised); border-color: var(--mauve-400); }
+      .task-body:hover .kebab:hover { background: var(--color-surface-active); }
       .toast-undo:hover { background: color-mix(in srgb, var(--color-on-toast) 12%, transparent); }
     }
     .icon-button:active, .search-button:not([aria-pressed="true"]):active, .kebab:active, .cal-nav:active, .sheet-close:active,
@@ -483,7 +626,10 @@
     .btn--primary:active:not(:disabled), .nav-tab--add:active, .chip[aria-pressed="true"]:active,
     .search-button[aria-pressed="true"]:active, .cal-day[aria-pressed="true"]:active { background: var(--color-primary-active); border-color: var(--color-primary-active); }
     .text-button:not(.text-button--muted):active, .task-action--edit:active { background: var(--purple-200); }
-    .task-action--delete:active { background: var(--color-danger-active); }
+    .task-action--delete:active, .menu-item--danger:active:not(:disabled) { background: var(--color-danger-active); }
+    .notif-item:active, .profile-card:active { background: var(--color-surface-active); }
+    .menu-item--quiet:active { background: var(--red-100); }
+    .btn--danger:active { background: var(--red-800); }
     .toast-undo:active { background: color-mix(in srgb, var(--color-on-toast) 20%, transparent); }
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
@@ -492,11 +638,11 @@
 <body>
   <main class="screen">
     <header class="top-bar">
-      <button class="icon-button" type="button" aria-label="منو"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 12H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 17H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-      <button class="icon-button" type="button" aria-label="اعلان‌ها"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.02 20.53C9.69 20.53 7.36 20.16 5.15 19.42C4.31 19.13 3.67 18.54 3.39 17.77C3.1 17 3.2 16.15 3.66 15.39L4.81 13.48C5.05 13.08 5.27 12.28 5.27 11.81V8.92C5.27 5.2 8.3 2.17 12.02 2.17C15.74 2.17 18.77 5.2 18.77 8.92V11.81C18.77 12.27 18.99 13.08 19.23 13.49L20.37 15.39C20.8 16.11 20.88 16.98 20.59 17.77C20.3 18.56 19.67 19.16 18.88 19.42C16.68 20.16 14.35 20.53 12.02 20.53ZM12.02 3.67C9.13 3.67 6.77 6.02 6.77 8.92V11.81C6.77 12.54 6.47 13.62 6.1 14.25L4.95 16.16C4.73 16.53 4.67 16.92 4.8 17.25C4.92 17.59 5.22 17.85 5.63 17.99C9.81 19.39 14.24 19.39 18.42 17.99C18.78 17.87 19.06 17.6 19.19 17.24C19.32 16.88 19.29 16.49 19.09 16.16L17.94 14.25C17.56 13.6 17.27 12.53 17.27 11.8V8.92C17.27 6.02 14.92 3.67 12.02 3.67Z" fill="currentColor"/><path d="M13.88 3.94C13.81 3.94 13.74 3.93 13.67 3.91C13.38 3.83 13.1 3.77 12.83 3.73C11.98 3.62 11.16 3.68 10.39 3.91C10.11 4 9.81 3.91 9.62 3.7C9.43 3.49 9.37 3.19 9.48 2.92C9.89 1.87 10.89 1.18 12.03 1.18C13.17 1.18 14.17 1.86 14.58 2.92C14.68 3.19 14.63 3.49 14.44 3.7C14.29 3.86 14.08 3.94 13.88 3.94Z" fill="currentColor"/><path d="M12.02 22.81C11.03 22.81 10.07 22.41 9.37 21.71C8.67 21.01 8.27 20.05 8.27 19.06H9.77C9.77 19.65 10.01 20.23 10.43 20.65C10.85 21.07 11.43 21.31 12.02 21.31C13.26 21.31 14.27 20.3 14.27 19.06H15.77C15.77 21.13 14.09 22.81 12.02 22.81Z" fill="currentColor"/></svg></button>
+      <button class="icon-button" id="menu-button" type="button" aria-label="منو" aria-haspopup="dialog" aria-controls="menu-drawer"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 12H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 17H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <button class="icon-button" id="notif-button" type="button" aria-label="اعلان‌ها" aria-haspopup="dialog" aria-controls="notif-drawer"><span class="bell-dot" id="bell-dot" hidden></span><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.02 20.53C9.69 20.53 7.36 20.16 5.15 19.42C4.31 19.13 3.67 18.54 3.39 17.77C3.1 17 3.2 16.15 3.66 15.39L4.81 13.48C5.05 13.08 5.27 12.28 5.27 11.81V8.92C5.27 5.2 8.3 2.17 12.02 2.17C15.74 2.17 18.77 5.2 18.77 8.92V11.81C18.77 12.27 18.99 13.08 19.23 13.49L20.37 15.39C20.8 16.11 20.88 16.98 20.59 17.77C20.3 18.56 19.67 19.16 18.88 19.42C16.68 20.16 14.35 20.53 12.02 20.53ZM12.02 3.67C9.13 3.67 6.77 6.02 6.77 8.92V11.81C6.77 12.54 6.47 13.62 6.1 14.25L4.95 16.16C4.73 16.53 4.67 16.92 4.8 17.25C4.92 17.59 5.22 17.85 5.63 17.99C9.81 19.39 14.24 19.39 18.42 17.99C18.78 17.87 19.06 17.6 19.19 17.24C19.32 16.88 19.29 16.49 19.09 16.16L17.94 14.25C17.56 13.6 17.27 12.53 17.27 11.8V8.92C17.27 6.02 14.92 3.67 12.02 3.67Z" fill="currentColor"/><path d="M13.88 3.94C13.81 3.94 13.74 3.93 13.67 3.91C13.38 3.83 13.1 3.77 12.83 3.73C11.98 3.62 11.16 3.68 10.39 3.91C10.11 4 9.81 3.91 9.62 3.7C9.43 3.49 9.37 3.19 9.48 2.92C9.89 1.87 10.89 1.18 12.03 1.18C13.17 1.18 14.17 1.86 14.58 2.92C14.68 3.19 14.63 3.49 14.44 3.7C14.29 3.86 14.08 3.94 13.88 3.94Z" fill="currentColor"/><path d="M12.02 22.81C11.03 22.81 10.07 22.41 9.37 21.71C8.67 21.01 8.27 20.05 8.27 19.06H9.77C9.77 19.65 10.01 20.23 10.43 20.65C10.85 21.07 11.43 21.31 12.02 21.31C13.26 21.31 14.27 20.3 14.27 19.06H15.77C15.77 21.13 14.09 22.81 12.02 22.81Z" fill="currentColor"/></svg></button>
     </header>
 
-    <h1 class="greeting">سلام نسترن عزیز !</h1>
+    <h1 class="greeting" id="greeting">سلام نسترن عزیز !</h1>
 
     <div class="day-picker">
       <div class="date-field">
@@ -507,7 +653,6 @@
         </button>
         <ul class="date-menu" id="date-menu" role="listbox" aria-label="انتخاب روز" tabindex="-1" hidden></ul>
       </div>
-      <button class="tomorrow" id="tomorrow" type="button" aria-pressed="false">فردا</button>
     </div>
 
     <section id="main-view" aria-label="کارهای روز" hidden>
@@ -553,6 +698,84 @@
 
   <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
 
+  <!-- منوی کناری -->
+  <dialog class="drawer" id="menu-drawer" aria-labelledby="menu-title">
+    <div class="sheet-header">
+      <h2 class="sheet-title" id="menu-title">منو</h2>
+      <div class="header-actions">
+        <button class="sheet-close theme-toggle" type="button" id="theme-toggle" aria-label="تغییر به حالت تاریک">
+          <span class="theme-icon theme-icon--moon"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.63455 1.61177C9.89255 1.86978 9.96925 2.25802 9.82874 2.59476C9.39183 3.64181 9.1501 4.79159 9.1501 6.00011C9.1501 10.8878 13.1124 14.8501 18.0001 14.8501C19.2086 14.8501 20.3584 14.6084 21.4055 14.1715C21.7422 14.031 22.1304 14.1077 22.3884 14.3657C22.6464 14.6237 22.7231 15.0119 22.5826 15.3486C20.9779 19.1944 17.181 21.9001 12.7501 21.9001C6.86826 21.9001 2.1001 17.1319 2.1001 11.2501C2.1001 6.8192 4.80578 3.02233 8.65157 1.41758C8.9883 1.27707 9.37655 1.35377 9.63455 1.61177ZM7.5171 4.11204C5.32304 5.72332 3.9001 8.32121 3.9001 11.2501C3.9001 16.1378 7.86238 20.1001 12.7501 20.1001C15.679 20.1001 18.2769 18.6772 19.8882 16.4831C19.275 16.5929 18.644 16.6501 18.0001 16.6501C12.1183 16.6501 7.3501 11.8819 7.3501 6.00011C7.3501 5.35618 7.40734 4.72517 7.5171 4.11204Z" fill="currentColor"/></svg></span><span class="theme-icon theme-icon--sun"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.0001 2.09998C12.4972 2.09998 12.9001 2.50292 12.9001 2.99998V5.24998C12.9001 5.74703 12.4972 6.14998 12.0001 6.14998C11.503 6.14998 11.1001 5.74703 11.1001 5.24998V2.99998C11.1001 2.50292 11.503 2.09998 12.0001 2.09998ZM4.99974 4.99962C5.35121 4.64815 5.92106 4.64815 6.27253 4.99962L7.86352 6.59061C8.21499 6.94208 8.21499 7.51193 7.86352 7.8634C7.51205 8.21487 6.9422 8.21487 6.59073 7.8634L4.99974 6.27241C4.64827 5.92094 4.64827 5.35109 4.99974 4.99962ZM19.0005 4.99962C19.3519 5.35109 19.3519 5.92094 19.0005 6.27241L17.4095 7.8634C17.058 8.21487 16.4881 8.21487 16.1367 7.8634C15.7852 7.51193 15.7852 6.94208 16.1367 6.59061L17.7277 4.99962C18.0791 4.64815 18.649 4.64815 19.0005 4.99962ZM12.0001 9.14998C10.4261 9.14998 9.1501 10.426 9.1501 12C9.1501 13.574 10.4261 14.85 12.0001 14.85C13.5741 14.85 14.8501 13.574 14.8501 12C14.8501 10.426 13.5741 9.14998 12.0001 9.14998ZM7.3501 12C7.3501 9.43185 9.43197 7.34998 12.0001 7.34998C14.5682 7.34998 16.6501 9.43185 16.6501 12C16.6501 14.5681 14.5682 16.65 12.0001 16.65C9.43197 16.65 7.3501 14.5681 7.3501 12ZM2.1001 12C2.1001 11.5029 2.50304 11.1 3.0001 11.1H5.2501C5.74715 11.1 6.1501 11.5029 6.1501 12C6.1501 12.497 5.74715 12.9 5.2501 12.9H3.0001C2.50304 12.9 2.1001 12.497 2.1001 12ZM17.8501 12C17.8501 11.5029 18.253 11.1 18.7501 11.1H21.0001C21.4972 11.1 21.9001 11.5029 21.9001 12C21.9001 12.497 21.4972 12.9 21.0001 12.9H18.7501C18.253 12.9 17.8501 12.497 17.8501 12ZM7.86352 16.1365C8.21499 16.488 8.21499 17.0579 7.86352 17.4093L6.27253 19.0003C5.92106 19.3518 5.35121 19.3518 4.99974 19.0003C4.64827 18.6489 4.64827 18.079 4.99974 17.7275L6.59073 16.1365C6.9422 15.7851 7.51205 15.7851 7.86352 16.1365ZM16.1367 16.1365C16.4881 15.7851 17.058 15.7851 17.4095 16.1365L19.0005 17.7275C19.3519 18.079 19.3519 18.6489 19.0005 19.0003C18.649 19.3518 18.0791 19.3518 17.7277 19.0003L16.1367 17.4093C15.7852 17.0579 15.7852 16.488 16.1367 16.1365ZM12.0001 17.85C12.4972 17.85 12.9001 18.2529 12.9001 18.75V21C12.9001 21.497 12.4972 21.9 12.0001 21.9C11.503 21.9 11.1001 21.497 11.1001 21V18.75C11.1001 18.2529 11.503 17.85 12.0001 17.85Z" fill="currentColor"/></svg></span>
+        </button>
+        <button class="sheet-close" type="button" id="menu-close" aria-label="بستن منو"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+    <button class="profile-card" type="button" id="account-button" aria-describedby="profile-hint">
+      <span class="avatar" id="avatar" aria-hidden="true">ن</span>
+      <span class="profile-text">
+        <span class="profile-name" id="profile-name">نسترن</span>
+        <span class="profile-hint" id="profile-hint">حساب کاربری</span>
+      </span>
+      <svg class="menu-chevron" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.2L16.6 8.6L18 10L12 16L6 10L7.4 8.6L12 13.2Z" fill="currentColor"/></svg>
+    </button>
+    <div class="menu-bottom">
+      <button class="menu-item menu-item--quiet" type="button" id="logout-button"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.9 7.56c.31-3.6 2.16-5.07 6.21-5.07h.13c4.47 0 6.26 1.79 6.26 6.26v6.52c0 4.47-1.79 6.26-6.26 6.26h-.13c-4.02 0-5.87-1.45-6.2-4.99M15 12H3.62M5.85 8.65 2.5 12l3.35 3.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>خروج از حساب</span></button>
+      <p class="menu-footer">نسخه‌ی ۱.۰</p>
+    </div>
+  </dialog>
+
+  <!-- اعلان‌ها: یادآوری‌های داخل برنامه بر اساس ساعت کارهای امروز -->
+  <dialog class="drawer drawer--end" id="notif-drawer" aria-labelledby="notif-title">
+    <div class="sheet-header">
+      <h2 class="sheet-title" id="notif-title">اعلان‌ها</h2>
+      <button class="sheet-close" type="button" id="notif-close" aria-label="بستن اعلان‌ها"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <ul class="notif-list" id="notif-list"></ul>
+    <div class="notif-empty" id="notif-empty" hidden>
+      <span class="notif-empty-icon"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.02 20.53C9.69 20.53 7.36 20.16 5.15 19.42C4.31 19.13 3.67 18.54 3.39 17.77C3.1 17 3.2 16.15 3.66 15.39L4.81 13.48C5.05 13.08 5.27 12.28 5.27 11.81V8.92C5.27 5.2 8.3 2.17 12.02 2.17C15.74 2.17 18.77 5.2 18.77 8.92V11.81C18.77 12.27 18.99 13.08 19.23 13.49L20.37 15.39C20.8 16.11 20.88 16.98 20.59 17.77C20.3 18.56 19.67 19.16 18.88 19.42C16.68 20.16 14.35 20.53 12.02 20.53ZM12.02 3.67C9.13 3.67 6.77 6.02 6.77 8.92V11.81C6.77 12.54 6.47 13.62 6.1 14.25L4.95 16.16C4.73 16.53 4.67 16.92 4.8 17.25C4.92 17.59 5.22 17.85 5.63 17.99C9.81 19.39 14.24 19.39 18.42 17.99C18.78 17.87 19.06 17.6 19.19 17.24C19.32 16.88 19.29 16.49 19.09 16.16L17.94 14.25C17.56 13.6 17.27 12.53 17.27 11.8V8.92C17.27 6.02 14.92 3.67 12.02 3.67Z" fill="currentColor"/><path d="M13.88 3.94C13.81 3.94 13.74 3.93 13.67 3.91C13.38 3.83 13.1 3.77 12.83 3.73C11.98 3.62 11.16 3.68 10.39 3.91C10.11 4 9.81 3.91 9.62 3.7C9.43 3.49 9.37 3.19 9.48 2.92C9.89 1.87 10.89 1.18 12.03 1.18C13.17 1.18 14.17 1.86 14.58 2.92C14.68 3.19 14.63 3.49 14.44 3.7C14.29 3.86 14.08 3.94 13.88 3.94Z" fill="currentColor"/><path d="M12.02 22.81C11.03 22.81 10.07 22.41 9.37 21.71C8.67 21.01 8.27 20.05 8.27 19.06H9.77C9.77 19.65 10.01 20.23 10.43 20.65C10.85 21.07 11.43 21.31 12.02 21.31C13.26 21.31 14.27 20.3 14.27 19.06H15.77C15.77 21.13 14.09 22.81 12.02 22.81Z" fill="currentColor"/></svg></span>
+      <p>اعلان تازه‌ای ندارید.</p>
+      <p class="menu-hint">یادآوری کارهای ساعت‌دار امروز اینجا نمایش داده می‌شود.</p>
+    </div>
+  </dialog>
+  <!-- حساب کاربری -->
+  <dialog class="sheet" id="account-sheet" aria-labelledby="account-title">
+    <div class="sheet-header">
+      <h2 class="sheet-title" id="account-title">حساب کاربری</h2>
+      <button class="sheet-close" type="button" id="account-close" aria-label="بستن"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="account-body">
+      <div class="photo-picker">
+        <button class="avatar-button" type="button" id="photo-button" aria-label="انتخاب عکس پروفایل">
+          <span class="avatar avatar--lg" id="account-avatar" aria-hidden="true"></span>
+          <span class="avatar-badge" aria-hidden="true"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.76 22h10.48c2.76 0 3.86-1.69 3.99-3.75l.52-8.26A3.753 3.753 0 0 0 18 6c-.61 0-1.17-.35-1.45-.89l-.72-1.45C15.37 2.75 14.17 2 13.15 2h-2.29c-1.03 0-2.23.75-2.69 1.66l-.72 1.45C7.17 5.65 6.61 6 6 6 3.83 6 2.11 7.83 2.25 9.99l.52 8.26C2.89 20.31 4 22 6.76 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 18c1.79 0 3.25-1.46 3.25-3.25S13.79 11.5 12 11.5s-3.25 1.46-3.25 3.25S10.21 18 12 18Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <input class="visually-hidden" id="photo-input" type="file" accept="image/*" tabindex="-1" aria-hidden="true" />
+        <button class="text-button text-button--muted" type="button" id="photo-remove" hidden>حذف عکس</button>
+        <p class="photo-error" id="photo-error" role="alert"></p>
+      </div>
+      <label class="field-label" for="account-name">نام و نام خانوادگی</label>
+      <input class="field field--text" id="account-name" type="text" autocomplete="name" maxlength="60" placeholder="مثلاً نسترن احمدی" />
+      <label class="field-label" for="account-phone">شماره موبایل</label>
+      <input class="field field--text field--phone" id="account-phone" type="tel" inputmode="numeric" autocomplete="tel" dir="ltr" maxlength="14" placeholder="۰۹۱۲۳۴۵۶۷۸۹" aria-describedby="phone-error phone-hint" />
+      <p class="photo-error" id="phone-error" role="alert"></p>
+      <p class="menu-hint" id="phone-hint">شماره‌ی ورود شماست؛ بعد از تغییر، با شماره‌ی جدید وارد می‌شوید.</p>
+      <div class="sheet-actions">
+        <button class="btn btn--secondary" type="button" id="account-cancel">انصراف</button>
+        <button class="btn btn--primary" type="button" id="account-save">ذخیره</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- تأیید خروج -->
+  <dialog class="confirm" id="logout-dialog" role="alertdialog" aria-labelledby="logout-title" aria-describedby="logout-desc">
+    <h2 class="confirm-title" id="logout-title">از حساب خارج می‌شوید؟</h2>
+    <p class="confirm-desc" id="logout-desc">با خروج، کارها و تنظیماتی که روی این دستگاه ذخیره شده پاک می‌شوند و قابل بازگشت نیستند.</p>
+    <div class="sheet-actions">
+      <button class="btn btn--secondary" type="button" id="logout-cancel">انصراف</button>
+      <button class="btn btn--danger" type="button" id="logout-confirm">خروج</button>
+    </div>
+  </dialog>
+  <template id="notif-icons"><span data-kind="overdue"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 7.5v5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11.995 16h.009" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span data-kind="clock"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="m15.71 15.18-3.1-1.85c-.54-.32-.98-1.09-.98-1.72v-4.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></template>
+
   <!-- برگه‌ی افزودن و ویرایش — یک فرم مشترک -->
   <dialog class="sheet" id="task-sheet" aria-labelledby="sheet-title">
     <div class="sheet-header">
@@ -573,12 +796,13 @@
       </div>
 
       <div class="picker time-picker" id="time-picker" data-mode="single" hidden>
-        <p class="picker-value" id="time-display" aria-live="polite"></p>
+        <p class="visually-hidden" id="time-display" aria-live="polite"></p>
         <div class="segmented" role="radiogroup" aria-label="نوع زمان">
           <button class="segment" type="button" role="radio" data-mode="single" aria-checked="true">یک زمان</button>
           <button class="segment" type="button" role="radio" data-mode="range" aria-checked="false">بازه‌ی زمانی</button>
         </div>
 
+        <div class="picker-body">
         <div class="time-row">
           <div class="time-group" role="group" aria-labelledby="start-label">
             <p class="time-group-label" id="start-label">ساعت</p>
@@ -601,34 +825,40 @@
 
         <p class="time-meta is-range-only" id="duration-text" aria-live="polite"></p>
         <p class="time-error" id="time-error" role="alert"></p>
+        <div class="picker-spacer"></div>
         <div class="picker-actions">
-          <button class="btn btn--secondary" type="button" id="time-cancel">انصراف</button>
+          <button class="btn btn--secondary" type="button" id="time-cancel">بدون ساعت</button>
           <button class="btn btn--primary" type="button" id="time-done">تأیید</button>
+        </div>
         </div>
       </div>
 
-      <div class="picker" id="date-picker" hidden>
+      <div class="picker-area" id="date-picker" hidden>
+      <div class="picker date-box">
         <p class="picker-value" id="date-display" aria-live="polite"></p>
-        <button class="quick-date" type="button" id="no-date" aria-pressed="false">بدون تاریخ</button>
+        <div class="picker-body">
         <div class="cal-head">
           <button class="cal-nav cal-nav--prev" type="button" id="cal-prev" aria-label="ماه قبل"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.2L16.6 8.6L18 10L12 16L6 10L7.4 8.6L12 13.2Z" fill="currentColor"/></svg></button>
           <p class="cal-title" id="cal-title" aria-live="polite"></p>
           <button class="cal-nav cal-nav--next" type="button" id="cal-next" aria-label="ماه بعد"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.2L16.6 8.6L18 10L12 16L6 10L7.4 8.6L12 13.2Z" fill="currentColor"/></svg></button>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
+        </div>
+      </div>
+        <button class="quick-date" type="button" id="no-date" aria-pressed="false">بدون تاریخ</button>
       </div>
 
       <label class="visually-hidden" for="task-desc">توضیحات</label>
       <textarea class="field field--area" id="task-desc" maxlength="300" placeholder="توضیحات .."></textarea>
 
-      <label class="repeat">
-        <input class="check" id="task-repeat" type="checkbox" />
-        <span>هر روز</span>
-      </label>
+      <div class="repeat">
+        <input class="check" id="task-repeat" type="checkbox" aria-labelledby="repeat-label" />
+        <span id="repeat-label">هر روز</span>
+      </div>
 
       <div class="sheet-actions">
         <button class="btn btn--secondary" type="button" id="sheet-cancel">انصراف</button>
-        <button class="btn btn--primary" id="save-task" type="submit" value="save" formnovalidate disabled>افزودن</button>
+        <button class="btn btn--primary" id="save-task" type="button" disabled>افزودن</button>
       </div>
     </form>
   </dialog>
@@ -643,13 +873,19 @@
         <button class="kebab" type="button" data-action="more" aria-expanded="false"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="18" r="1.5" fill="currentColor"/></svg></button>
         <input class="check" type="checkbox" />
         <label class="task-text">
-          <span class="task-title"></span>
-          <span class="task-desc"></span>
+          <span class="task-title-row">
+            <span class="task-title"></span>
+            <span class="badge" data-kind="repeat">
+              <svg class="badge-icon badge-icon--repeat" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.375 13.7083C17.4316 17.2292 13.8126 19.3186 10.2917 18.3752C9.12886 18.0636 8.12441 17.4616 7.33274 16.6685L6.9589 16.2947L9.87878 16.2941C10.3758 16.2941 10.7787 15.891 10.7786 15.394C10.7785 14.8969 10.3755 14.4941 9.87845 14.4941L4.78633 14.4951C4.54763 14.4951 4.31873 14.59 4.14998 14.7588C3.98122 14.9276 3.88645 15.1565 3.8865 15.3952L3.88757 20.4854C3.88767 20.9825 4.2907 21.3854 4.78775 21.3853C5.28481 21.3851 5.68767 20.9821 5.68757 20.4851L5.68695 17.5683L6.05878 17.9401C7.06802 18.9512 8.34923 19.7182 9.82581 20.1139C14.3069 21.3146 18.913 18.6553 20.1137 14.1742C20.2423 13.694 19.9574 13.2005 19.4773 13.0719C18.9972 12.9432 18.5036 13.2282 18.375 13.7083ZM19.8497 9.24143C20.0185 9.07261 20.1133 8.84366 20.1133 8.60494L20.1124 3.5146C20.1123 3.01754 19.7093 2.61467 19.2123 2.61475C18.7152 2.61483 18.3123 3.01784 18.3124 3.51489L18.3129 6.43194L17.9411 6.06016C16.9319 5.04926 15.6504 4.28192 14.174 3.88631C9.69286 2.6856 5.08683 5.34489 3.88611 9.826C3.75747 10.3061 4.04239 10.7996 4.52251 10.9283C5.00263 11.0569 5.49613 10.772 5.62478 10.2919C6.5682 6.771 10.1872 4.68156 13.7081 5.62497C14.871 5.93656 15.8755 6.53857 16.6671 7.33175L17.0405 7.70508L14.1221 7.70508C13.625 7.70508 13.2221 8.10803 13.2221 8.60508C13.2221 9.10214 13.625 9.50508 14.1221 9.50508H19.2133C19.452 9.50508 19.6809 9.41024 19.8497 9.24143Z" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"/></svg>
+              <svg class="badge-icon badge-icon--undated" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <span class="badge-label"></span>
+            </span>
+          </span>
+          <span class="task-desc-row">
+            <span class="task-desc"></span>
+            <span class="task-time"></span>
+          </span>
         </label>
-        <div class="task-meta">
-          <span class="task-time"></span>
-          <span class="badge"></span>
-        </div>
       </div>
     </li>
   </template>
@@ -662,10 +898,10 @@
     const TOAST_MS = 5000;
     const $ = (id) => document.getElementById(id);
     const root = document.documentElement;
-    const SWIPE = () => parseFloat(getComputedStyle(root).getPropertyValue("--height-5xl")) * 2 + parseFloat(getComputedStyle(root).getPropertyValue("--space-2xs")) * 3;
+    const SWIPE = () => parseFloat(getComputedStyle(root).getPropertyValue("--height-4xl")) * 2 + parseFloat(getComputedStyle(root).getPropertyValue("--space-xs")) * 3;
 
     const el = {
-      dateSelector: $("date-selector"), dateLabel: $("date-label"), dateMenu: $("date-menu"), tomorrow: $("tomorrow"),
+      dateSelector: $("date-selector"), dateLabel: $("date-label"), dateMenu: $("date-menu"),
       mainView: $("main-view"), summary: $("summary"), filters: $("filters"),
       searchInput: $("search-input"), searchButton: $("search-button"),
       tasks: $("tasks"), noResults: $("no-results"), listEnd: $("list-end"),
@@ -727,9 +963,9 @@
 
     // ---------- رندر ----------
     function render() {
+      updateBell();
       const d = state.selected, key = selectedKey(), rel = relativeName(d);
       el.dateLabel.textContent = dayLabel(d);
-      el.tomorrow.setAttribute("aria-pressed", String(rel === "فردا"));
       el.emptyMessage.textContent = `هیچ کاری ندارید برای ${rel || "این روز"}!`;
 
       const dayTasks = tasksForDay(key);
@@ -779,8 +1015,15 @@
       const time = li.querySelector(".task-time");
       time.textContent = timeLabel(t.time, t.endTime); time.hidden = !t.time;
       const badge = li.querySelector(".badge");
-      badge.textContent = t.date === null ? "بدون تاریخ" : t.repeat ? "هر روز" : "";
-      badge.hidden = !badge.textContent;
+      const kind = t.date === null ? "undated" : t.repeat ? "repeat" : "";
+      badge.dataset.kind = kind;
+      badge.querySelector(".badge-label").textContent = kind === "undated" ? "بدون تاریخ" : "هر روز";
+      badge.hidden = !kind;
+      badge.title = kind === "undated" ? "بدون تاریخ" : "هر روز";
+      // بج بالای ساعت (سمت چپ کارت)؛ ساعت روبه‌روی توضیحات.
+      // اگر نه توضیحات هست نه بج، ساعت روبه‌روی عنوان می‌آید
+      if (!t.description && !kind) li.querySelector(".task-title-row").append(time);
+      li.querySelector(".task-desc-row").hidden = !(t.description || (kind && t.time));
       const more = li.querySelector('[data-action="more"]');
       more.setAttribute("aria-label", `گزینه‌های ${t.title}`);
       more.setAttribute("aria-expanded", String(open));
@@ -1050,10 +1293,6 @@
 
     // ---------- انتخاب روز (بالای صفحه) ----------
     function selectDay(d) { state.selected = startOfDay(d); state.openId = null; render(); }
-    el.tomorrow.addEventListener("click", () => {
-      const isTomorrow = el.tomorrow.getAttribute("aria-pressed") === "true";
-      selectDay(addDays(new Date(), isTomorrow ? 0 : 1));
-    });
     let activeIndex = 0;
     function openMenu() {
       const today = startOfDay(new Date());
@@ -1236,7 +1475,7 @@
       renderTime(); togglePicker(null);
     }
     el.timeDone.addEventListener("click", confirmTime);
-    el.timeCancel.addEventListener("click", () => togglePicker(null));
+    el.timeCancel.addEventListener("click", () => { form.time = ""; form.endTime = ""; renderTime(); togglePicker(null); }); // «بدون ساعت»
 
     // ---------- برگه: انتخابگر تاریخ اختصاصی (ماه شمسی) ----------
     const WEEKDAYS = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
@@ -1343,18 +1582,239 @@
       persist(); render();
     });
     // بیرون زدن یا Esc وقتی انتخابگر باز است، اول فقط انتخابگر را می‌بندد
+    // فقط ضربه‌ای که هم شروع و هم پایانش بیرون از کادر برگه باشد آن را می‌بندد؛
+    // کلیک روی حاشیه و فضای خالی داخل برگه دیگر آن را نمی‌بندد
+    const outsideSheet = (e) => {
+      const r = el.sheet.getBoundingClientRect();
+      return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    };
+    let pressStartedOutside = false;
+    el.sheet.addEventListener("pointerdown", (e) => { pressStartedOutside = outsideSheet(e); });
     el.sheet.addEventListener("click", (e) => {
-      if (e.target !== el.sheet) return;
+      const outside = pressStartedOutside && outsideSheet(e);
+      pressStartedOutside = false;
+      if (!outside) return;
       if (el.sheet.classList.contains("is-picking")) togglePicker(null); else el.sheet.close();
     });
     // انصراف دکمه‌ی معمولی است تا Enter در فرم همیشه «افزودن/ذخیره» را بزند
     $("sheet-cancel").addEventListener("click", () => el.sheet.close());
+    // ذخیره مستقیم با جاوااسکریپت؛ به ارسال فرم تکیه نمی‌کند، چون بعضی محیط‌های نمایش (مثل پیش‌نمایش آرتیفکت) ارسال فرم را مسدود می‌کنند
+    const saveSheet = () => { if (el.fTitle.value.trim()) el.sheet.close("save"); };
+    el.save.addEventListener("click", saveSheet);
+    el.form.addEventListener("submit", (e) => { e.preventDefault(); saveSheet(); });
+    el.fTitle.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); saveSheet(); } });
     el.sheetClose.addEventListener("click", () => {
       if (el.sheet.classList.contains("is-picking")) togglePicker(null); else el.sheet.close();
     });
     el.sheet.addEventListener("cancel", (e) => {
       if (el.sheet.classList.contains("is-picking")) { e.preventDefault(); togglePicker(null); }
     });
+
+    // ---------- منو: ظاهر (سیستم / روشن / تاریک) و پاک کردن کارهای انجام‌شده ----------
+    const drawer = $("menu-drawer");
+    const THEME_KEY = "today-theme";
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+    const effectiveTheme = () => root.getAttribute("data-theme") || (systemDark.matches ? "dark" : "light");
+    function syncThemeToggle() {
+      const mode = effectiveTheme(), t = $("theme-toggle");
+      t.dataset.mode = mode;
+      t.setAttribute("aria-label", mode === "dark" ? "تغییر به حالت روشن" : "تغییر به حالت تاریک");
+      t.title = t.getAttribute("aria-label");
+      // آیکون را دوباره می‌سازیم تا انیمیشن چرخش در هر بار تغییر اجرا شود
+      t.querySelectorAll(".theme-icon").forEach((ic) => { ic.style.animation = "none"; void ic.offsetWidth; ic.style.animation = ""; });
+    }
+    function applyTheme(choice) {
+      if (choice === "light" || choice === "dark") root.setAttribute("data-theme", choice);
+      else root.removeAttribute("data-theme");
+      syncThemeToggle();
+    }
+    systemDark.addEventListener("change", syncThemeToggle);
+    let savedTheme = "system";
+    try { savedTheme = localStorage.getItem(THEME_KEY) || "system"; } catch {}
+    applyTheme(savedTheme);
+
+    // ---------- حساب کاربری (روی همین دستگاه) ----------
+    const PROFILE_KEY = "today-profile";
+    // نام موقع ثبت‌نام پرسیده نمی‌شود؛ شماره‌ی موبایل همان شماره‌ی ورود است (اینجا نمونه، تا صفحه‌ی ورود ساخته شود)
+    const DEMO_PHONE = "09121234567";
+    let profile = { name: "", phone: DEMO_PHONE, photo: "" };
+    try {
+      const p = JSON.parse(localStorage.getItem(PROFILE_KEY));
+      if (p && typeof p === "object") profile = { name: p.name || "", phone: p.phone || DEMO_PHONE, photo: p.photo || "" };
+    } catch {}
+    const USER_ICON = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10ZM20.59 22c0-3.87-3.85-7-8.59-7s-8.59 3.13-8.59 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    function paintAvatar(node, name, photo) {
+      node.replaceChildren();
+      if (photo) { const img = document.createElement("img"); img.src = photo; img.alt = ""; node.append(img); }
+      else if (name) node.textContent = name.trim()[0];
+      else node.innerHTML = USER_ICON;
+    }
+    const firstName = (n) => n.trim().split(/\s+/)[0] || "";
+    function renderProfile() {
+      const n = profile.name.trim();
+      $("greeting").textContent = n ? `سلام ${firstName(n)} عزیز !` : "سلام !";
+      $("profile-name").textContent = n || faDigits(profile.phone);
+      paintAvatar($("avatar"), n, profile.photo);
+    }
+    renderProfile();
+    const accountSheet = $("account-sheet");
+    let draftPhoto = "";
+    function renderAccountDraft() {
+      paintAvatar($("account-avatar"), $("account-name").value.trim(), draftPhoto);
+      $("photo-remove").hidden = !draftPhoto;
+      $("photo-button").setAttribute("aria-label", draftPhoto ? "تغییر عکس پروفایل" : "انتخاب عکس پروفایل");
+    }
+    $("account-button").addEventListener("click", () => {
+      drawer.close();
+      $("account-name").value = profile.name;
+      $("account-phone").value = faDigits(profile.phone);
+      $("account-phone").removeAttribute("aria-invalid"); $("phone-error").textContent = "";
+      draftPhoto = profile.photo; $("photo-error").textContent = "";
+      renderAccountDraft();
+      accountSheet.showModal();
+      $("account-name").focus();
+    });
+
+    // عکس پروفایل: برش مربعی از وسط و کوچک کردن به ۱۹۲ پیکسل تا روی دستگاه کم‌حجم ذخیره شود
+    $("photo-button").addEventListener("click", () => $("photo-input").click());
+    $("photo-input").addEventListener("change", () => {
+      const file = $("photo-input").files[0];
+      $("photo-input").value = "";
+      $("photo-error").textContent = "";
+      if (!file) return;
+      if (!file.type.startsWith("image/")) { $("photo-error").textContent = "لطفاً یک فایل تصویری انتخاب کنید."; return; }
+      if (file.size > 15 * 1024 * 1024) { $("photo-error").textContent = "حجم عکس باید کمتر از ۱۵ مگابایت باشد."; return; }
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const size = 192, side = Math.min(img.naturalWidth, img.naturalHeight);
+        const c = document.createElement("canvas"); c.width = c.height = size;
+        c.getContext("2d").drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, size, size);
+        draftPhoto = c.toDataURL("image/jpeg", 0.85);
+        URL.revokeObjectURL(url); renderAccountDraft();
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); $("photo-error").textContent = "این عکس قابل خواندن نیست."; };
+      img.src = url;
+    });
+    $("photo-remove").addEventListener("click", () => { draftPhoto = ""; renderAccountDraft(); $("photo-button").focus(); });
+
+    // شماره‌ی موبایل ایران: ارقام فارسی/انگلیسی و پیشوند +۹۸ پذیرفته می‌شوند و به شکل 09xxxxxxxxx ذخیره می‌شوند
+    function normalizePhone(v) {
+      let d = toLatin(v).replace(/\D/g, "");
+      if (d.startsWith("0098")) d = "0" + d.slice(4);
+      else if (d.startsWith("98") && d.length === 12) d = "0" + d.slice(2);
+      else if (d.startsWith("9") && d.length === 10) d = "0" + d;
+      return d;
+    }
+    $("account-phone").addEventListener("input", () => {
+      const i = $("account-phone");
+      i.value = faDigits(i.value.replace(/[^\d۰-۹٠-٩+]/g, ""));
+      if (i.getAttribute("aria-invalid") === "true" && /^09\d{9}$/.test(normalizePhone(i.value))) { i.removeAttribute("aria-invalid"); $("phone-error").textContent = ""; }
+    });
+    const saveAccount = () => {
+      const phone = normalizePhone($("account-phone").value);
+      if (!/^09\d{9}$/.test(phone)) {
+        $("phone-error").textContent = "شماره‌ی موبایل باید ۱۱ رقم باشد و با ۰۹ شروع شود.";
+        $("account-phone").setAttribute("aria-invalid", "true"); $("account-phone").focus();
+        return;
+      }
+      const phoneChanged = phone !== profile.phone;
+      profile = { ...profile, name: $("account-name").value.trim(), photo: draftPhoto, phone };
+      try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }
+      catch { $("photo-error").textContent = "فضای ذخیره‌سازی کافی نیست؛ عکس کوچک‌تری انتخاب کنید."; return; }
+      renderProfile(); accountSheet.close(); toast(phoneChanged ? "شماره‌ی موبایل به‌روز شد" : "حساب کاربری به‌روز شد");
+    };
+    $("account-save").addEventListener("click", saveAccount);
+    $("account-name").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); saveAccount(); } });
+    $("account-name").addEventListener("input", renderAccountDraft);
+    $("account-cancel").addEventListener("click", () => { accountSheet.close(); renderProfile(); });
+    $("account-close").addEventListener("click", () => { accountSheet.close(); renderProfile(); });
+
+    // ---------- خروج از حساب ----------
+    // برنامه سرور ندارد؛ خروج یعنی پاک شدن داده‌های همین دستگاه، پس قبلش تأیید گرفته می‌شود
+    const logoutDialog = $("logout-dialog");
+    $("logout-button").addEventListener("click", () => { logoutDialog.showModal(); $("logout-cancel").focus(); });
+    $("logout-cancel").addEventListener("click", () => logoutDialog.close());
+    $("logout-confirm").addEventListener("click", () => {
+      for (const k of [STORAGE_KEY, LEGACY_KEY, PROFILE_KEY, THEME_KEY]) { try { localStorage.removeItem(k); } catch {} }
+      state.tasks = []; state.selected = startOfDay(new Date()); state.filter = "all"; state.query = "";
+      profile = { name: "", phone: DEMO_PHONE, photo: "" };
+      applyTheme("system"); renderProfile(); render();
+      logoutDialog.close(); drawer.close();
+      toast("از حساب خارج شدید");
+    });
+    // بستن با کلیک بیرون، مثل بقیه‌ی پنجره‌ها
+    for (const dlg of [accountSheet, logoutDialog]) {
+      let pressOut = false;
+      const out = (e) => { const r = dlg.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
+      dlg.addEventListener("pointerdown", (e) => { pressOut = out(e); });
+      dlg.addEventListener("click", (e) => { if (pressOut && out(e)) { dlg.close(); if (dlg === accountSheet) renderProfile(); } pressOut = false; });
+    }
+    $("theme-toggle").addEventListener("click", () => {
+      const next = effectiveTheme() === "dark" ? "light" : "dark";
+      applyTheme(next);
+      try { localStorage.setItem(THEME_KEY, next); } catch {}
+    });
+    $("menu-button").addEventListener("click", () => drawer.showModal());
+    $("menu-close").addEventListener("click", () => drawer.close());
+    // مثل برگه‌ها: فقط کلیکی که شروع و پایانش بیرون از منو باشد آن را می‌بندد
+    let drawerPressOutside = false;
+    const outsideDrawer = (e) => { const r = drawer.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
+    drawer.addEventListener("pointerdown", (e) => { drawerPressOutside = outsideDrawer(e); });
+    drawer.addEventListener("click", (e) => { if (drawerPressOutside && outsideDrawer(e)) drawer.close(); drawerPressOutside = false; });
+
+    // ---------- اعلان‌ها ----------
+    // یادآوری‌های داخل برنامه برای کارهای ساعت‌دار امروز: گذشته، در حال انجام، تا یک ساعت آینده
+    const notifDrawer = $("notif-drawer");
+    const nowMinutes = () => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); };
+    function notifications() {
+      const today = keyOf(startOfDay(new Date())), now = nowMinutes();
+      const out = [];
+      for (const t of tasksForDay(today)) {
+        if (!t.time || isDone(t, today)) continue;
+        const start = toMin(t.time), end = t.endTime ? toMin(t.endTime) : null;
+        if (end !== null && start <= now && now < end) out.push({ kind: "progress", order: 1, t, title: `«${t.title}» در حال انجام است`, sub: `تا ساعت ${iso(t.endTime)}` });
+        else if ((end ?? start) < now) out.push({ kind: "overdue", order: 0, t, title: `زمان «${t.title}» گذشته است`, sub: `ساعت ${timeLabel(t.time, t.endTime)}` });
+        else if (start >= now && start - now <= 60) out.push({ kind: "upcoming", order: 2, t, title: start === now ? `«${t.title}» همین حالا` : `«${t.title}» تا ${faDigits(start - now)} دقیقه‌ی دیگر`, sub: `ساعت ${timeLabel(t.time, t.endTime)}` });
+      }
+      return out.sort((a, b) => a.order - b.order || toMin(a.t.time) - toMin(b.t.time));
+    }
+    function updateBell() {
+      const n = notifications().length;
+      $("bell-dot").hidden = n === 0;
+      $("notif-button").setAttribute("aria-label", n ? `اعلان‌ها، ${faDigits(n)} مورد تازه` : "اعلان‌ها");
+    }
+    function renderNotifs() {
+      const today = keyOf(startOfDay(new Date()));
+      const items = notifications();
+      const icons = $("notif-icons").content;
+      $("notif-list").replaceChildren(...items.map((n) => {
+        const li = document.createElement("li");
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "notif-item"; b.dataset.kind = n.kind; b.dataset.id = n.t.id;
+        const ic = document.createElement("span"); ic.className = "notif-icon";
+        ic.append(icons.querySelector(`[data-kind="${n.kind === "overdue" ? "overdue" : "clock"}"] svg`).cloneNode(true));
+        const tx = document.createElement("span"); tx.className = "notif-text";
+        const ti = document.createElement("span"); ti.className = "notif-title"; ti.textContent = n.title;
+        const su = document.createElement("span"); su.className = "notif-sub"; su.textContent = n.sub;
+        tx.append(ti, su); b.append(ic, tx); li.append(b);
+        return li;
+      }));
+      $("notif-empty").hidden = items.length > 0;
+      $("notif-list").hidden = items.length === 0;
+    }
+    $("notif-button").addEventListener("click", () => { renderNotifs(); notifDrawer.showModal(); });
+    $("notif-close").addEventListener("click", () => notifDrawer.close());
+    // زدن روی اعلان: رفتن به امروز و باز کردن همان کار برای ویرایش
+    $("notif-list").addEventListener("click", (e) => {
+      const b = e.target.closest(".notif-item"); if (!b) return;
+      notifDrawer.close(); selectDay(new Date()); openSheet(findTask(b.dataset.id));
+    });
+    let notifPressOutside = false;
+    const outsideNotif = (e) => { const r = notifDrawer.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
+    notifDrawer.addEventListener("pointerdown", (e) => { notifPressOutside = outsideNotif(e); });
+    notifDrawer.addEventListener("click", (e) => { if (notifPressOutside && outsideNotif(e)) notifDrawer.close(); notifPressOutside = false; });
+    setInterval(() => { updateBell(); if (notifDrawer.open) renderNotifs(); }, 60 * 1000);
 
     // بالا آمدن برگه همراه کیبورد
     if (window.visualViewport) {
