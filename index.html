@@ -82,6 +82,8 @@
       /* طراحی Redesign: کارت‌ها و کادر تاریخ یاسیِ کم‌رنگ */
       --color-card: color-mix(in srgb, var(--purple-50) 50%, var(--purple-100));
       --color-card-hover: var(--purple-100);
+      /* کارت‌های کار: یاسیِ خیلی روشن با حاشیه‌ی ظریف */
+      --color-task: var(--purple-50); --color-task-border: var(--purple-100);
       --color-liquid-surface: var(--purple-100);
       --color-star: var(--purple-50);
       /* رنگ‌های صحنه‌ی تبریک؛ در حالت تاریک هم همین عمق و طلایی بودن را نگه می‌دارند */
@@ -111,7 +113,7 @@
         --amber-50: #451a03; --amber-100: #78350f; --amber-200: #92400e; --amber-300: #b45309; --amber-400: #d97706; --amber-500: #f59e0b; --amber-600: #fbbf24; --amber-700: #fcd34d; --amber-800: #fde68a; --amber-900: #fef3c7; --amber-950: #fffbeb;
         --color-star: var(--purple-950);
         /* کارت‌ها در حالت تاریک: یاسیِ ملایم روی زمینه‌ی تیره، نه بنفش اشباع */
-        --color-card: color-mix(in srgb, var(--mauve-100) 72%, var(--purple-100)); --color-card-hover: color-mix(in srgb, var(--mauve-100) 55%, var(--purple-100));
+        --color-card: color-mix(in srgb, var(--mauve-100) 72%, var(--purple-100)); --color-card-hover: color-mix(in srgb, var(--mauve-100) 55%, var(--purple-100)); --color-task: var(--mauve-100); --color-task-border: color-mix(in srgb, var(--mauve-200) 70%, var(--purple-200));
         --hero-deep: var(--purple-100); --hero-mid: var(--purple-300); --hero-glow: var(--purple-500);
         --gold-1: var(--amber-800); --gold-2: var(--amber-600); --gold-3: var(--amber-400);
         color-scheme: dark;
@@ -127,7 +129,7 @@
       --amber-50: #451a03; --amber-100: #78350f; --amber-200: #92400e; --amber-300: #b45309; --amber-400: #d97706; --amber-500: #f59e0b; --amber-600: #fbbf24; --amber-700: #fcd34d; --amber-800: #fde68a; --amber-900: #fef3c7; --amber-950: #fffbeb;
       --color-star: var(--purple-950);
         /* کارت‌ها در حالت تاریک: یاسیِ ملایم روی زمینه‌ی تیره، نه بنفش اشباع */
-        --color-card: color-mix(in srgb, var(--mauve-100) 72%, var(--purple-100)); --color-card-hover: color-mix(in srgb, var(--mauve-100) 55%, var(--purple-100));
+        --color-card: color-mix(in srgb, var(--mauve-100) 72%, var(--purple-100)); --color-card-hover: color-mix(in srgb, var(--mauve-100) 55%, var(--purple-100)); --color-task: var(--mauve-100); --color-task-border: color-mix(in srgb, var(--mauve-200) 70%, var(--purple-200));
         --hero-deep: var(--purple-100); --hero-mid: var(--purple-300); --hero-glow: var(--purple-500);
         --gold-1: var(--amber-800); --gold-2: var(--amber-600); --gold-3: var(--amber-400);
       color-scheme: dark;
@@ -173,7 +175,7 @@
     .screen { position: relative; isolation: isolate; }
     .page-glow {
       position: absolute; inset-inline: 0; top: 0; height: calc(var(--space-8xl) * 3.75); z-index: -1; pointer-events: none;
-      background: linear-gradient(to bottom, var(--color-card), transparent);
+      background: linear-gradient(to bottom, var(--color-task), transparent);
     }
     body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 16; background: var(--color-page); }
 .date-field { flex: 1; position: relative; min-width: 0; isolation: isolate; }
@@ -293,7 +295,7 @@
 .task-body {
       position: relative; min-height: calc(var(--height-4xl) + var(--space-xl)); padding: var(--space-sm) var(--space-md);
       display: flex; align-items: center; gap: var(--space-sm);
-      background: var(--color-card); border: 1px solid var(--color-card); border-radius: var(--radius-xl);
+      background: var(--color-task); border: 1px solid var(--color-task-border); border-radius: var(--radius-xl);
       transition: transform var(--dur-3) var(--ease-out), background-color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out); touch-action: pan-y;
     }
     .task.is-open .task-body { transform: translateX(calc(-1 * var(--swipe))); }
