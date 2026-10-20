@@ -1,14 +1,8 @@
-<!doctype html>
-<html lang="fa" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-  <title>امروز</title>
-  <!-- فونت سیستم طراحی IRANYekanX FaNum است؛ اگر فایلش را دارید با @font-face اضافه کنید. Vazirmatn جایگزین موقت است. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>امروز</title>
+<script>document.documentElement.setAttribute("dir", "rtl"); document.documentElement.setAttribute("lang", "fa");</script>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
     /* =====================================================================
        توکن‌ها — دقیقاً از متغیرهای فیگما
        Color Seed · Size & Spacing · Typography (Mobile)
@@ -852,9 +846,215 @@
     @keyframes theme-reveal { from { clip-path: circle(0 at var(--reveal-x, 50%) var(--reveal-y, 0)); } to { clip-path: circle(var(--reveal-r, 150%) at var(--reveal-x, 50%) var(--reveal-y, 0)); } }
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
-  </style>
-</head>
-<body>
+  
+    /* =====================================================================
+       Redesign — مطابق فریم فیگما 4300:6049 (لیست «امروز»)
+       ===================================================================== */
+    @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --color-page: #fff; --color-task: #fafafa; --color-task-border: transparent; } }
+    :root[data-theme="light"] { --color-page: #fff; --color-task: #fafafa; --color-task-border: transparent; }
+    .page-glow, .date-field::before { display: none; }
+
+    /* هدر: دکمه‌های ۴۴×۴۴ بدون پس‌زمینه، نقطه‌ی قرمز اعلان بالا-چپ */
+    .icon-button { width: 44px; height: 44px; background: transparent; border-radius: var(--radius-sm); color: var(--mauve-600); }
+    .bell-dot { top: 8px; left: 8px; right: auto; inset-inline-end: auto; box-shadow: 0 0 0 2px var(--mauve-100); border-radius: 4px; }
+
+    /* کادر تاریخ: خط دور، بدون سایه، هاله‌ی بنفش سمت شروع */
+    .date-selector { background: transparent; border: 1px solid var(--mauve-200); border-radius: var(--radius-lg); box-shadow: none; height: var(--height-date); padding-inline: var(--space-md); }
+    .date-selector::before {
+      content: ""; position: absolute; z-index: -1; pointer-events: none; top: -1px; height: 60px; width: 192px; inset-inline-start: 0;
+      border-start-end-radius: 0; border-end-end-radius: 0; border-top-left-radius: 50px; border-bottom-left-radius: 50px;
+      background: linear-gradient(to left, var(--purple-200), transparent);
+    }
+    .date-selector .label { font: var(--font-06); font-weight: var(--font-weight-medium); color: var(--mauve-600); }
+    .date-text { gap: 4px; }
+    .summary { color: var(--mauve-500); }
+
+    /* فیلترها و دکمه‌های کنار */
+    .toolbar { justify-content: space-between; margin-top: var(--space-xs); gap: var(--space-xs); }
+    .filters { flex: none; gap: var(--space-xs); }
+    .chip { flex: none; width: 89px; max-width: none; height: 32px; padding: 0; border-radius: var(--radius-sm); background: transparent; border: 1px solid var(--mauve-200); font: var(--font-04); color: var(--mauve-600); }
+    .chip[aria-pressed="true"] { background: var(--purple-600); border-color: var(--purple-600); color: #fff; font-weight: var(--font-weight-medium); }
+    .search-field { border-radius: var(--radius-sm); background: transparent; border-color: var(--mauve-200); }
+    .toolbar-actions { display: flex; gap: var(--space-xs); margin-inline-start: auto; }
+    .search-button, .tick-button { width: 32px; height: 32px; margin: 0; flex-shrink: 0; display: grid; place-items: center; border: 1px solid var(--mauve-200); border-radius: 10px; background: transparent; color: var(--mauve-600); }
+    .search-button[aria-pressed="true"] { background: var(--purple-600); border-color: var(--purple-600); color: #fff; }
+    .toolbar:has(.search-button[aria-pressed="true"]) .tick-button { display: none; }
+
+    /* کارت کار: ۶۴ پیکسل، پس‌زمینه‌ی شطرنجی، بدون حاشیه */
+    .tasks { padding-top: var(--space-md); gap: var(--space-sm); }
+    .task-card { border-radius: var(--radius-lg); }
+    .task-body {
+      width: 100%; margin-inline-start: auto; min-height: 64px; padding: 0 var(--space-md); gap: var(--space-xs);
+      border: 0; border-radius: var(--radius-lg); background-color: var(--color-task);
+      background-image:
+        linear-gradient(to right, color-mix(in srgb, var(--mauve-300) 16%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in srgb, var(--mauve-300) 16%, transparent) 1px, transparent 1px);
+      background-size: 8px 8px;
+      transition: width var(--dur-3) var(--ease-out), background-color var(--dur-2) var(--ease-out);
+    }
+    .task.is-open .task-body { transform: none; width: calc(100% - var(--swipe)); }
+    .task.is-dragging .task-body { transition: none; }
+    .task.is-hint .task-body { animation: swipe-hint-w 1.4s var(--ease-out) .6s both; }
+    @keyframes swipe-hint-w { 0%, 100% { width: 100%; } 35%, 55% { width: calc(100% - .45 * var(--swipe)); } }
+    .task-title { color: var(--mauve-700); }
+    .task-desc { color: var(--mauve-500); }
+    /* انجام‌شده: طبق فریم فقط چک‌باکس تغییر می‌کند */
+    .task.is-done .task-body { background: var(--color-page); border: 1px dashed var(--color-border-strong); }
+    .task.is-done .task-title { color: var(--mauve-400); font-weight: var(--font-weight-regular); text-decoration: line-through wavy var(--mauve-400); text-decoration-thickness: 1.5px; text-decoration-skip-ink: none; }
+    .task.is-done .task-desc { color: var(--mauve-400); }
+    .task.is-done .task-time { color: var(--mauve-400); }
+    @media (hover: hover) {
+      .task:not(.is-done):not(.is-refilling) .task-body:hover { background-color: var(--color-task); border-color: transparent; }
+      .task.is-done .task-body:hover { background: var(--color-page); border-color: var(--mauve-400); }
+    }
+
+    /* بج تکرار و ساعت: ستون سمت چپ کارت */
+    .task-body { position: relative; }
+    .badge { position: absolute; left: 22px; top: 14px; margin: 0; background: var(--mauve-50); border: 1px solid var(--mauve-200); }
+    .badge[data-kind="repeat"] { background: var(--mauve-50); border-color: var(--mauve-200); color: var(--purple-600); }
+    .badge[data-kind="undated"] { background: var(--mauve-50); border-color: var(--mauve-200); color: var(--mauve-600); }
+    .task.is-done .badge { background: transparent; border-color: var(--mauve-200); }
+    .task.is-done .badge[data-kind="repeat"], .task.is-done .badge[data-kind="undated"] { color: var(--mauve-400); }
+    .task-time { position: absolute; left: 22px; top: 41px; margin: 0; font: var(--font-04); font-weight: var(--font-weight-medium); color: var(--mauve-600); }
+    .task:not(:has(.badge:not([hidden]))) .task-time { top: 50%; transform: translateY(-50%); }
+    .task:has(.task-time:not([hidden])) .task-text, .task:has(.badge:not([hidden])) .task-text { padding-inline-end: 56px; }
+
+    /* چک‌باکس: ۲۴×۲۴، گوشه ۸، حاشیه ۱ */
+    .check { width: 24px; height: 24px; border: 1px solid var(--mauve-300); border-radius: var(--radius-xs); background: var(--color-page); box-shadow: none; }
+    .check::after {
+      width: 14px; height: 14px; margin: 0; border: 0; border-radius: 0; background: var(--purple-600);
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.2 7.6l3 3L11.8 3.4' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.2 7.6l3 3L11.8 3.4' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+      transform: scale(0);
+    }
+    .check:checked { background: var(--purple-50); border-color: var(--purple-600); box-shadow: none; }
+    .check:checked::after { transform: scale(1); }
+    @media (hover: hover) {
+      .check:not(:checked):not(:disabled):hover { border-color: var(--purple-400); background: var(--color-page); }
+      .check:checked:not(:disabled):hover { background: var(--purple-50); border-color: var(--purple-600); }
+    }
+
+    /* دکمه‌های ویرایش و حذف: ۵۳×۴۸، گوشه ۱۶، چسبیده به لبه */
+    .task-actions { padding-inline: 0; gap: var(--space-xs); }
+    .task-action { width: 53px; height: 48px; border-radius: var(--radius-md); }
+    .task-action--edit { background: var(--mauve-50); color: var(--purple-600); }
+    .task-action--delete { background: var(--red-50); color: var(--red-600); }
+
+    /* ناوبری پایین: نوار سفید با برآمدگی وسط، تب‌ها و دکمه‌ی افزودن لاوندری */
+    .nav-wrap { margin-top: 0; padding: 0; background: none; pointer-events: none; }
+    .bottom-nav { pointer-events: auto; height: 74px; padding: 0; display: block; background: none; border-radius: 0; filter: none; }
+    .bottom-nav::before { display: none; }
+    .bottom-nav::after { content: ""; position: absolute; z-index: -1; inset-inline: 0; top: 100%; height: env(safe-area-inset-bottom, 0px); background: var(--color-page); }
+    .nav-shape { position: absolute; inset: 0; width: 100%; height: 74px; z-index: -1; filter: drop-shadow(0 -2px 6px color-mix(in srgb, var(--mauve-950) 8%, transparent)); }
+    .nav-fill { fill: var(--color-page); }
+    .nav-line { stroke: var(--mauve-200); stroke-width: 1; vector-effect: non-scaling-stroke; }
+    .nav-tab { position: absolute; top: 18px; width: 48px; height: 48px; border-radius: var(--radius-md); }
+    .nav-tab--home { left: calc(50% + 80px); }
+    .nav-tab--profile { left: calc(50% - 128px); color: var(--purple-400); }
+    .nav-tab[aria-current="page"] { color: var(--purple-600); filter: none; }
+    .nav-tab[aria-current="page"]::after { content: ""; position: absolute; left: calc(50% - 3px); top: 40px; width: 6px; height: 6px; border-radius: 50%; background: var(--purple-600); }
+    .nav-add {
+      left: calc(50% - 32px); top: 10px; transform: none; width: 64px; height: 54px; border-radius: 50%; box-shadow: none;
+      color: var(--purple-600);
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--purple-200) 75%, transparent), color-mix(in srgb, var(--purple-100) 70%, transparent) 62%, transparent);
+    }
+    .nav-add:active:not(:disabled) { transform: scale(.94); }
+    @media (hover: hover) { .nav-add:hover { background: radial-gradient(closest-side, color-mix(in srgb, var(--purple-300) 70%, transparent), color-mix(in srgb, var(--purple-200) 70%, transparent) 62%, transparent); } }
+  
+    /* بازگرداندن شطرنجی در حالت‌هایی که پس‌زمینه را با shorthand ریست می‌کنند */
+    .task:not(.is-done):not(.is-refilling) .task-body:hover {
+      background-image:
+        linear-gradient(to right, color-mix(in srgb, var(--mauve-300) 16%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in srgb, var(--mauve-300) 16%, transparent) 1px, transparent 1px);
+      background-size: 8px 8px;
+    }
+    /* نوار پیشرفت کادر تاریخ: همان هاله‌ی ملایم فریم (بدون ستاره و سحابی) */
+    .date-selector .progress-fill { background: linear-gradient(to left, var(--purple-200), transparent); background-size: 100% 100%; animation: none; border-radius: 0; }
+    .date-selector .progress-fill::before, .date-selector .progress-fill::after { display: none; }
+    .nav-add svg { width: 18px; height: 18px; }
+    .nav-tab .ic-fill { display: none; }
+    .nav-tab[aria-current="page"] .ic-fill { display: block; }
+    .nav-tab[aria-current="page"] .ic-line { display: none; }
+    .nav-add { background: radial-gradient(closest-side, color-mix(in srgb, var(--purple-200) 90%, transparent), color-mix(in srgb, var(--purple-100) 80%, transparent) 60%, transparent); }
+  
+    /* دکمه‌ی تیک: وقتی همه‌ی کارها انجام شده، تیکش پر و بنفش می‌شود */
+    .tick-button.is-all { background: var(--purple-50); border-color: var(--purple-600); color: var(--purple-600); }
+    .tick-button.is-all path { fill: currentColor; }
+  
+    /* هاله‌ی بنفش کادر تاریخ فقط با انجام کارها ظاهر می‌شود و به نسبت تعدادشان پر می‌شود */
+    .date-selector::before { display: none; }
+    .date-selector .progress-fill { background: linear-gradient(to left, var(--purple-200) 45%, color-mix(in srgb, var(--purple-200) 0%, transparent)); }
+  
+    /* صفحه‌ی «در حال طراحی»: کارت پروفایلی که خودش ساخته می‌شود (چرخه‌ی ۶ ثانیه‌ای) */
+    .wip-view { gap: var(--space-lg); }
+    .wip-art { width: min(220px, 60vw); }
+    .wip-art * { transform-box: fill-box; transform-origin: center; }
+    .wip-text { display: flex; flex-direction: column; align-items: center; gap: var(--space-2xs); }
+    .wip-title { font: var(--font-09); font-weight: var(--font-weight-bold); color: var(--mauve-700); }
+    .wip-sub { font: var(--font-06); color: var(--mauve-500); display: inline-flex; align-items: baseline; }
+    .wip-dots { display: inline-flex; gap: 3px; margin-inline-start: 4px; }
+    .wip-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--purple-500); animation: pw-dotty 1.2s ease-in-out infinite; }
+    .wip-dots i:nth-child(2) { animation-delay: .15s; } .wip-dots i:nth-child(3) { animation-delay: .3s; }
+    .wip-view:not([hidden]) .wip-text { animation: fade-up var(--dur-3) var(--ease-out) .12s both; }
+    .wip-view:not([hidden]) .wip-art { animation: pw-enter .7s cubic-bezier(.34,1.56,.64,1) both; }
+
+    .pw-shadow { animation: pw-shadow 4s ease-in-out infinite; }
+    .pw-glow { animation: pw-breathe 4s ease-in-out infinite; }
+    .pw-glow--2 { animation-delay: -2s; }
+    .pw-orbit { transform-box: view-box; transform-origin: 140px 116px; animation: pw-spin 22s linear infinite; }
+    .pw-card { animation: pw-float 4s ease-in-out infinite; }
+    .pw-gear--a { animation: pw-spin 6s linear infinite; }
+    .pw-gear--b { animation: pw-spin 4.5s linear infinite reverse; }
+    .pw-ring { transform: rotate(-90deg); stroke-dashoffset: 132; animation: pw-ring 6s cubic-bezier(.65,0,.35,1) infinite; }
+    .pw-person { transform-origin: 50% 100%; animation: pw-person 6s ease-out infinite; }
+    .pw-line { transform-origin: 100% 50%; transform: scaleX(0); }
+    .pw-line--1 { animation: pw-l1 6s linear infinite; }
+    .pw-line--2 { animation: pw-l2 6s linear infinite; }
+    .pw-line--btn { animation: pw-lb 6s linear infinite; }
+    .pw-chip { transform: scale(0); animation: pw-chip 6s cubic-bezier(.34,1.56,.64,1) infinite; }
+    .pw-chip--2 { animation-delay: .12s; } .pw-chip--3 { animation-delay: .24s; }
+    .pw-badge { transform: scale(0); animation: pw-badge 6s infinite; }
+    .pw-pencil { transform-box: view-box; transform-origin: 0 0; animation: pw-write 6s ease-in-out infinite; }
+    .pw-spark { animation: pw-twinkle 2.6s ease-in-out infinite; }
+    .pw-spark--2 { animation-delay: -.9s; } .pw-spark--3 { animation-delay: -1.7s; }
+    .pw-dot { animation: pw-rise 4.5s ease-in-out infinite; }
+    .pw-dot--2 { animation-delay: -1.5s; } .pw-dot--3 { animation-delay: -3s; }
+
+    @keyframes pw-enter { from { opacity: 0; transform: scale(.85) translateY(10px); } }
+    @keyframes pw-float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-6px) rotate(-1deg); } }
+    @keyframes pw-shadow { 0%, 100% { transform: scaleX(1); opacity: 1; } 50% { transform: scaleX(.86); opacity: .55; } }
+    @keyframes pw-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes pw-spin { to { transform: rotate(360deg); } }
+    @keyframes pw-ring { 0% { stroke-dashoffset: 132; } 16%, 90% { stroke-dashoffset: 0; } 97%, 100% { stroke-dashoffset: -132; } }
+    @keyframes pw-person { 0%, 10% { transform: translateY(14px) scale(.6); opacity: 0; } 20%, 92% { transform: none; opacity: 1; } 98%, 100% { transform: translateY(6px); opacity: 0; } }
+    @keyframes pw-l1 { 0%, 22% { transform: scaleX(0); opacity: 1; } 34%, 92% { transform: scaleX(1); opacity: 1; } 98%, 100% { transform: scaleX(1); opacity: 0; } }
+    @keyframes pw-l2 { 0%, 36% { transform: scaleX(0); opacity: 1; } 46%, 92% { transform: scaleX(1); opacity: 1; } 98%, 100% { transform: scaleX(1); opacity: 0; } }
+    @keyframes pw-lb { 0%, 60% { transform: scaleX(0); opacity: 1; } 72%, 92% { transform: scaleX(1); opacity: 1; } 98%, 100% { transform: scaleX(1); opacity: 0; } }
+    @keyframes pw-chip { 0%, 48% { transform: scale(0); } 54%, 92% { transform: scale(1); opacity: 1; } 98%, 100% { transform: scale(1); opacity: 0; } }
+    @keyframes pw-badge { 0%, 74% { transform: scale(0) rotate(-40deg); } 79% { transform: scale(1.25) rotate(8deg); } 83%, 92% { transform: scale(1) rotate(0); } 97%, 100% { transform: scale(0); } }
+    @keyframes pw-write {
+      0%, 14% { transform: translate(206px, 104px) rotate(0); }
+      22% { transform: translate(166px, 114px) rotate(-4deg); }
+      25% { transform: translate(152px, 112px) rotate(3deg); } 28% { transform: translate(138px, 115px) rotate(-3deg); } 31% { transform: translate(124px, 113px) rotate(3deg); }
+      34% { transform: translate(114px, 114px) rotate(0); }
+      36% { transform: translate(156px, 128px) rotate(-4deg); }
+      41% { transform: translate(140px, 127px) rotate(3deg); } 46% { transform: translate(124px, 128px) rotate(0); }
+      52% { transform: translate(200px, 120px) rotate(10deg); }
+      60% { transform: translate(172px, 174px) rotate(-4deg); }
+      64% { transform: translate(150px, 172px) rotate(3deg); } 68% { transform: translate(128px, 175px) rotate(-3deg); } 72% { transform: translate(108px, 174px) rotate(0); }
+      80%, 100% { transform: translate(206px, 104px) rotate(0); }
+    }
+    @keyframes pw-twinkle { 0%, 100% { transform: scale(.4) rotate(0); opacity: .35; } 50% { transform: scale(1.1) rotate(90deg); opacity: 1; } }
+    @keyframes pw-rise { 0% { transform: translateY(8px); opacity: 0; } 30%, 70% { opacity: 1; } 100% { transform: translateY(-26px); opacity: 0; } }
+    @keyframes pw-dotty { 0%, 80%, 100% { transform: translateY(0); opacity: .35; } 40% { transform: translateY(-4px); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .wip-art *, .wip-dots i { animation: none !important; }
+      .pw-line, .pw-chip, .pw-badge, .pw-person { transform: none; opacity: 1; }
+      .pw-ring { stroke-dashoffset: 0; }
+      .pw-pencil { transform: translate(206px, 104px); }
+    }
+</style>
+
   <main class="screen">
     <div class="page-glow" aria-hidden="true"></div>
     <header class="top-bar">
@@ -888,7 +1088,7 @@
         </div>
         <label class="visually-hidden" for="search-input">جستجو در کارها</label>
         <input class="search-field" id="search-input" type="search" placeholder="جستجو در کارها" hidden />
-        <button class="search-button" id="search-button" type="button" aria-pressed="false" aria-label="جستجو"><svg class="icon-search" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 20.75c-5.38 0-9.75-4.37-9.75-9.75S5.62 1.25 11 1.25s9.75 4.37 9.75 9.75-4.37 9.75-9.75 9.75Zm0-18c-4.55 0-8.25 3.7-8.25 8.25s3.7 8.25 8.25 8.25 8.25-3.7 8.25-8.25-3.7-8.25-8.25-8.25ZM20.16 22.79c-.08 0-.16-.01-.23-.02-.47-.06-1.32-.38-1.8-1.81-.25-.75-.16-1.5.25-2.07.41-.57 1.1-.89 1.89-.89 1.02 0 1.82.39 2.18 1.08.36.69.26 1.57-.31 2.42-.71 1.07-1.48 1.29-1.98 1.29Zm-.6-2.3c.17.52.41.78.57.8.16.02.46-.17.77-.62.29-.43.31-.74.24-.88s-.35-.29-.87-.29c-.31 0-.54.1-.67.27-.12.17-.14.43-.04.72Z" fill="currentColor"/></svg><svg class="icon-close" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="toolbar-actions"><button class="tick-button" id="tick-button" type="button" data-tip="انجام همه" aria-label="انجام‌دادن همه‌ی کارها"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.789 12.169L8.958 12.046L9.094 11.922L13.825 7.192L13.888 7.125L13.977 7.02L14.031 6.946L14.106 6.831L14.193 6.669L14.263 6.5L14.316 6.324L14.352 6.144L14.37 5.961V5.778L14.352 5.595L14.316 5.415L14.263 5.24L14.193 5.07L14.106 4.908L14.004 4.756L13.888 4.614L13.758 4.484L13.616 4.368L13.464 4.266L13.343 4.199L13.218 4.142L13.089 4.094L12.957 4.056L12.822 4.027L12.686 4.009L12.594 4.002L12.456 4L12.319 4.009L12.183 4.027L12.048 4.056L11.959 4.08L11.829 4.125L11.703 4.179L11.581 4.243L11.463 4.315L11.316 4.424L11.18 4.547L7.361 8.366L6.195 7.2L6.128 7.137L6.023 7.048L5.911 6.967L5.834 6.918L5.672 6.832L5.588 6.795L5.459 6.746L5.371 6.72L5.237 6.688L5.055 6.661L4.917 6.653L4.78 6.654L4.642 6.666L4.506 6.688L4.372 6.72L4.241 6.761L4.113 6.813L3.989 6.873L3.87 6.942L3.756 7.02L3.649 7.106L3.548 7.2L3.454 7.301L3.341 7.446L3.266 7.561L3.2 7.682L3.142 7.807L3.094 7.937L3.068 8.025L3.036 8.159L3.02 8.249L3.005 8.386L3 8.524L3.005 8.661L3.02 8.798L3.036 8.889L3.068 9.023L3.109 9.154L3.142 9.24L3.2 9.365L3.266 9.486L3.315 9.564L3.396 9.675L3.485 9.781L3.548 9.847L6.013 12.312L6.149 12.436L6.297 12.545L6.454 12.639L6.62 12.718L6.793 12.78L6.971 12.824L7.153 12.851L7.336 12.86L7.52 12.851L7.702 12.824L7.88 12.78L8.053 12.718L8.219 12.639L8.376 12.545L8.524 12.436L8.66 12.312L8.789 12.169Z" stroke-linejoin="round" stroke="currentColor"/></svg></button><button class="search-button" id="search-button" type="button" aria-pressed="false" aria-label="جستجو"><svg class="icon-search" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 20.75c-5.38 0-9.75-4.37-9.75-9.75S5.62 1.25 11 1.25s9.75 4.37 9.75 9.75-4.37 9.75-9.75 9.75Zm0-18c-4.55 0-8.25 3.7-8.25 8.25s3.7 8.25 8.25 8.25 8.25-3.7 8.25-8.25-3.7-8.25-8.25-8.25ZM20.16 22.79c-.08 0-.16-.01-.23-.02-.47-.06-1.32-.38-1.8-1.81-.25-.75-.16-1.5.25-2.07.41-.57 1.1-.89 1.89-.89 1.02 0 1.82.39 2.18 1.08.36.69.26 1.57-.31 2.42-.71 1.07-1.48 1.29-1.98 1.29Zm-.6-2.3c.17.52.41.78.57.8.16.02.46-.17.77-.62.29-.43.31-.74.24-.88s-.35-.29-.87-.29c-.31 0-.54.1-.67.27-.12.17-.14.43-.04.72Z" fill="currentColor"/></svg><svg class="icon-close" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
       <ul class="tasks" id="tasks"></ul>
       <div class="no-results" id="no-results" data-variant="search" aria-live="polite" hidden>
@@ -910,41 +1110,49 @@
 
     <div class="list-end" id="list-end" hidden></div>
 
-    <!-- صفحه‌ی پروفایل: فعلاً فقط تصویر «در حال طراحی» -->
     <section class="wip-view" id="profile-view" aria-labelledby="wip-title" hidden>
-      <svg class="wip-art" aria-hidden="true" focusable="false" width="200" height="168" viewBox="0 0 200 168" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="100" cy="156" rx="70" ry="7" fill="var(--mauve-200)"/>
-        <circle cx="100" cy="82" r="72" fill="var(--mauve-100)"/>
-        <path d="M27 52v8M23 56h8M170 34v10M165 39h10" stroke="var(--mauve-300)" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="176" cy="104" r="3" fill="var(--mauve-300)"/><circle cx="22" cy="112" r="2.5" fill="var(--mauve-300)"/>
-        <rect x="52" y="34" width="96" height="112" rx="16" fill="var(--color-surface)" stroke="var(--mauve-400)" stroke-width="2" stroke-dasharray="6 5"/>
-        <circle cx="100" cy="70" r="18" fill="var(--purple-100)"/>
-        <circle cx="100" cy="65" r="7" fill="var(--purple-400)"/>
-        <path d="M87 82c2.6-5.6 7.3-8 13-8s10.4 2.4 13 8" stroke="var(--purple-400)" stroke-width="4" stroke-linecap="round"/>
-        <rect x="70" y="100" width="60" height="7" rx="3.5" fill="var(--mauve-200)"/>
-        <rect x="78" y="114" width="44" height="7" rx="3.5" fill="var(--mauve-200)"/>
-        <rect x="84" y="128" width="32" height="7" rx="3.5" fill="var(--mauve-100)"/>
-        <g class="wip-pencil">
-          <path d="M131 132l30-50 11 6.4-30 50-13.2 7.1L131 132Z" fill="var(--purple-600)"/>
-          <path d="M161 82l11 6.4 4-6.8a6.3 6.3 0 0 0-11-6.4l-4 6.8Z" fill="var(--purple-300)"/>
-          <path d="M131 132l11 6.4-13.2 7.1L131 132Z" fill="var(--amber-200)"/>
-          <path d="M128.8 145.5l2.4-1.3-.3-3.3-2.1 4.6Z" fill="var(--mauve-800)"/>
-          <path d="M137 135l26-43.5" stroke="var(--purple-400)" stroke-width="2" stroke-linecap="round"/>
+      <svg class="wip-art" aria-hidden="true" focusable="false" viewBox="0 0 280 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><clipPath id="pw-av-clip"><circle cx="140" cy="76" r="17"/></clipPath></defs>
+        <ellipse class="pw-shadow" cx="140" cy="210" rx="66" ry="6" fill="var(--mauve-200)"/>
+        <circle class="pw-glow" cx="140" cy="116" r="88" fill="var(--mauve-100)"/>
+        <circle class="pw-glow pw-glow--2" cx="140" cy="116" r="62" fill="var(--purple-50)" opacity=".7"/>
+        <g class="pw-orbit"><circle cx="140" cy="116" r="104" stroke="var(--mauve-200)" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="140" cy="12" r="4" fill="var(--purple-400)"/><circle cx="244" cy="116" r="2.5" fill="var(--mauve-300)"/></g>
+        <g class="pw-gear pw-gear--a"><path d="M70.00 53.00 L72.34 50.23 L74.59 50.91 L75.00 54.52 L76.36 55.64 L79.98 55.33 L81.09 57.41 L78.83 60.24 L79.00 62.00 L81.77 64.34 L81.09 66.59 L77.48 67.00 L76.36 68.36 L76.67 71.98 L74.59 73.09 L71.76 70.83 L70.00 71.00 L67.66 73.77 L65.41 73.09 L65.00 69.48 L63.64 68.36 L60.02 68.67 L58.91 66.59 L61.17 63.76 L61.00 62.00 L58.23 59.66 L58.91 57.41 L62.52 57.00 L63.64 55.64 L63.33 52.02 L65.41 50.91 L68.24 53.17ZM73.60 62a3.6 3.6 0 1 0 -7.2 0a3.6 3.6 0 1 0 7.2 0Z" fill="var(--purple-300)" fill-rule="evenodd"/></g>
+        <g class="pw-gear pw-gear--b"><path d="M52.00 73.80 L54.20 71.79 L56.25 72.64 L56.38 75.62 L57.37 76.90 L60.21 77.80 L60.50 80.00 L57.99 81.60 L57.37 83.10 L58.01 86.01 L56.25 87.36 L53.60 85.99 L52.00 86.20 L49.80 88.21 L47.75 87.36 L47.62 84.38 L46.63 83.10 L43.79 82.20 L43.50 80.00 L46.01 78.40 L46.63 76.90 L45.99 73.99 L47.75 72.64 L50.40 74.01ZM54.40 80a2.4 2.4 0 1 0 -4.8 0a2.4 2.4 0 1 0 4.8 0Z" fill="var(--mauve-300)" fill-rule="evenodd"/></g>
+        <g class="pw-card">
+          <rect x="90" y="40" width="100" height="152" rx="18" fill="var(--mauve-200)" transform="translate(4 5)"/>
+          <rect x="90" y="40" width="100" height="152" rx="18" fill="var(--color-surface)" stroke="var(--mauve-400)" stroke-width="2"/>
+          <path d="M91 58a17 17 0 0 1 17-17h64a17 17 0 0 1 17 17v18H91Z" fill="var(--purple-100)"/>
+          <circle cx="140" cy="76" r="21" fill="var(--color-surface)"/>
+          <circle cx="140" cy="76" r="17" fill="var(--mauve-100)"/>
+          <g class="pw-person" clip-path="url(#pw-av-clip)"><circle cx="140" cy="71" r="6.5" fill="var(--purple-400)"/><path d="M126 94c1.5-8 7-12 14-12s12.5 4 14 12Z" fill="var(--purple-400)"/></g>
+          <circle class="pw-ring" cx="140" cy="76" r="21" stroke="var(--purple-600)" stroke-width="3" stroke-linecap="round" stroke-dasharray="132" pathLength="132"/>
+          <path class="pw-line pw-line--1" d="M166 114H114" stroke="var(--mauve-300)" stroke-width="6" stroke-linecap="round"/>
+          <path class="pw-line pw-line--2" d="M156 128H124" stroke="var(--mauve-200)" stroke-width="5" stroke-linecap="round"/>
+          <rect class="pw-chip pw-chip--1" x="153" y="140" width="24" height="18" rx="6" fill="var(--purple-50)" stroke="var(--purple-200)"/>
+          <rect class="pw-chip pw-chip--2" x="128" y="140" width="24" height="18" rx="6" fill="var(--purple-50)" stroke="var(--purple-200)"/>
+          <rect class="pw-chip pw-chip--3" x="103" y="140" width="24" height="18" rx="6" fill="var(--purple-50)" stroke="var(--purple-200)"/>
+          <path class="pw-line pw-line--btn" d="M172 174H108" stroke="var(--purple-600)" stroke-width="10" stroke-linecap="round"/>
         </g>
-        <g class="wip-gear" transform="translate(48 120)">
-          <circle r="13" fill="var(--purple-50)" stroke="var(--purple-300)" stroke-width="2"/>
-          <circle r="4.5" fill="var(--purple-300)"/>
-          <path d="M0-17v6M0 11v6M-17 0h6M11 0h6M-12-12l4.2 4.2M7.8 7.8l4.2 4.2M12-12l-4.2 4.2M-7.8 7.8L-12 12" stroke="var(--purple-300)" stroke-width="3" stroke-linecap="round"/>
-        </g>
+        <g class="pw-badge"><circle cx="190" cy="182" r="14" fill="var(--purple-600)" stroke="var(--color-page)" stroke-width="3"/><path d="M184 182.5l4 4 8-8.5" stroke="var(--color-page)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g class="pw-pencil"><g transform="rotate(0)"><path d="M0 0l2-10.5 8.5 8.5Z" fill="var(--mauve-200)"/><path d="M0 0l.9-4.6 3.7 3.7Z" fill="var(--purple-800)"/><path d="M2-10.5l20-20 8.5 8.5-20 20Z" fill="var(--purple-500)"/><path d="M6.3-14.8l20-20" stroke="var(--purple-300)" stroke-width="1.6"/><path d="M22-30.5l4-4a3 3 0 0 1 4.2 0l4.3 4.3a3 3 0 0 1 0 4.2l-4 4Z" fill="var(--purple-200)"/></g></g>
+        <path class="pw-spark pw-spark--1" d="M40 132l2.6-6.4 2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6Z" fill="var(--purple-300)"/>
+        <path class="pw-spark pw-spark--2" d="M226 54l2-5 2 5 5 2-5 2-2 5-2-5-5-2Z" fill="var(--mauve-300)"/>
+        <path class="pw-spark pw-spark--3" d="M232 144l1.6-4 1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6Z" fill="var(--purple-400)"/>
+        <circle class="pw-dot pw-dot--1" cx="60" cy="176" r="3" fill="var(--purple-200)"/>
+        <circle class="pw-dot pw-dot--2" cx="218" cy="190" r="2.5" fill="var(--mauve-300)"/>
+        <circle class="pw-dot pw-dot--3" cx="76" cy="196" r="2" fill="var(--purple-300)"/>
       </svg>
-      <p class="wip-title" id="wip-title">این صفحه در حال طراحی می‌باشد</p>
+      <div class="wip-text">
+        <h2 class="wip-title" id="wip-title">در حال طراحی</h2>
+        <p class="wip-sub">صفحه‌ی پروفایل داره ساخته می‌شه<span class="wip-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+      </div>
     </section>
-
     <div class="nav-wrap">
-      <nav class="bottom-nav" aria-label="ناوبری اصلی">
-        <button class="nav-tab nav-tab--home" id="home-button" type="button" aria-label="خانه" aria-current="page"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.29318 4.96556C3.62636 6.90311 2.29295 7.87189 1.76925 9.30291C1.72724 9.41771 1.68945 9.534 1.65596 9.65157C1.23852 11.1171 1.74783 12.6846 2.76647 15.8197C3.7851 18.9547 4.29442 20.5222 5.49356 21.4625C5.58976 21.5379 5.68869 21.6098 5.79015 21.678C7.05497 22.5279 8.70315 22.5279 11.9995 22.5279C15.2959 22.5279 16.9441 22.5279 18.2089 21.678C18.3103 21.6098 18.4093 21.5379 18.5055 21.4625C19.7046 20.5222 20.2139 18.9547 21.2326 15.8197C22.2512 12.6846 22.7605 11.1171 22.3431 9.65157C22.3096 9.534 22.2718 9.41771 22.2298 9.30291C21.7061 7.87189 20.3727 6.90312 17.7059 4.96557C15.0391 3.02801 13.7056 2.05923 12.1828 2.00336C12.0607 1.99888 11.9384 1.99888 11.8162 2.00336C10.2934 2.05923 8.95999 3.02801 6.29318 4.96556ZM9.99951 17.0697C9.5853 17.0697 9.24951 17.4054 9.24951 17.8197C9.24951 18.2339 9.5853 18.5697 9.99951 18.5697H13.9995C14.4137 18.5697 14.7495 18.2339 14.7495 17.8197C14.7495 17.4054 14.4137 17.0697 13.9995 17.0697H9.99951Z" fill="currentColor"/></svg></button>
-        <button class="nav-tab nav-tab--profile" id="profile-button" type="button" aria-label="حساب کاربری"><svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.87039 0 6.33333 2.60954 6.33333 5.82857C6.33333 9.0476 8.87039 11.6571 12 11.6571C15.1296 11.6571 17.6667 9.0476 17.6667 5.82857C17.6667 2.60954 15.1296 0 12 0Z" fill="currentColor"/><path d="M15.3441 14.2502C13.1287 13.8866 10.8713 13.8866 8.65591 14.2502L8.41845 14.2892C5.2969 14.8016 3 17.5711 3 20.8224C3 22.5774 4.38312 24 6.08929 24H17.9107C19.6169 24 21 22.5774 21 20.8224C21 17.5711 18.7031 14.8016 15.5816 14.2892L15.3441 14.2502Z" fill="currentColor"/></svg></button>
-        <button class="nav-add" id="add-button" type="button" aria-label="افزودن کار"><svg aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="10" width="28" height="8" rx="4" fill="currentColor"/><rect x="10" y="0" width="8" height="28" rx="4" fill="currentColor"/></svg></button>
+      <nav class="bottom-nav" aria-label="ناوبری اصلی"><svg class="nav-shape" aria-hidden="true" focusable="false" viewBox="0 0 392 74" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="nav-fill" d="M0 74V39C0 25.7 10.7 15 24 15H129C160 15 165 0 196 0S232 15 263 15H368C381.3 15 392 25.7 392 39V74Z"/><path class="nav-line" d="M0 74V39C0 25.7 10.7 15 24 15H129C160 15 165 0 196 0S232 15 263 15H368C381.3 15 392 25.7 392 39V74" fill="none"/></svg>
+        <button class="nav-tab nav-tab--home" id="home-button" type="button" aria-label="خانه" aria-current="page"><svg class="ic-line" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 17.0697C9.58579 17.0697 9.25001 17.4054 9.25001 17.8197C9.25001 18.2339 9.58579 18.5697 10 18.5697H14C14.4142 18.5697 14.75 18.2339 14.75 17.8197C14.75 17.4054 14.4142 17.0697 14 17.0697H10Z" fill="currentColor"/><path d="M12.2108 1.25387C12.0703 1.24871 11.9297 1.24871 11.7892 1.25387C10.8618 1.28789 10.0268 1.60323 9.11115 2.12818C8.21888 2.63974 7.19165 3.38608 5.88826 4.33305L5.81741 4.38453C4.51402 5.33149 3.48676 6.07783 2.72451 6.76835C1.94232 7.47693 1.38435 8.17368 1.06542 9.04515C1.01711 9.17717 0.973653 9.31091 0.935143 9.44611C0.680923 10.3386 0.722785 11.2303 0.939096 12.2633C1.14989 13.27 1.54227 14.4776 2.04013 16.0098L2.0672 16.0931C2.56503 17.6253 2.95741 18.8329 3.37858 19.7712C3.81077 20.7341 4.301 21.4801 5.03127 22.0527C5.14189 22.1394 5.25566 22.2221 5.37234 22.3005C6.1426 22.8181 7.00355 23.0538 8.05284 23.1673C9.07539 23.2779 10.3451 23.2779 11.9562 23.2779H12.0438C13.6549 23.2779 14.9246 23.2779 15.9472 23.1673C16.9965 23.0538 17.8574 22.8181 18.6277 22.3005C18.7444 22.2221 18.8581 22.1394 18.9687 22.0527C19.699 21.4801 20.1892 20.7341 20.6214 19.7712C21.0426 18.8329 21.435 17.6253 21.9328 16.093L21.9599 16.0097C22.4577 14.4776 22.8501 13.2699 23.0609 12.2633C23.2772 11.2303 23.3191 10.3386 23.0649 9.44611C23.0264 9.31091 22.9829 9.17717 22.9346 9.04515C22.6157 8.17368 22.0577 7.47693 21.2755 6.76835C20.5132 6.07782 19.486 5.33149 18.1826 4.38452L18.1117 4.33303C16.8084 3.38607 15.7811 2.63973 14.8889 2.12818C13.9733 1.60323 13.1382 1.28789 12.2108 1.25387ZM11.8442 2.75286C11.948 2.74905 12.052 2.74905 12.1558 2.75286C12.7512 2.7747 13.3443 2.97167 14.1428 3.42948C14.9566 3.89603 15.9189 4.59396 17.2655 5.57232C18.6121 6.55068 19.5733 7.25026 20.2684 7.88002C20.9506 8.49798 21.3212 9.00112 21.526 9.56067C21.5617 9.65824 21.5938 9.75709 21.6222 9.85703C21.7855 10.4301 21.7814 11.055 21.5928 11.9558C21.4005 12.874 21.0341 14.0049 20.5198 15.5879C20.0054 17.1709 19.6371 18.3012 19.253 19.157C18.8761 19.9967 18.5121 20.5046 18.0432 20.8723C17.9614 20.9364 17.8773 20.9975 17.7911 21.0555C17.2965 21.3878 16.701 21.577 15.7859 21.676C14.8533 21.7768 13.6645 21.7779 12 21.7779C10.3355 21.7779 9.14673 21.7768 8.21414 21.676C7.29905 21.577 6.7035 21.3878 6.20894 21.0555C6.12269 20.9975 6.0386 20.9364 5.95684 20.8723C5.48796 20.5046 5.12396 19.9967 4.74705 19.157C4.36293 18.3012 3.9946 17.1709 3.48025 15.5879C2.9659 14.0049 2.59951 12.874 2.40725 11.9558C2.21861 11.055 2.21454 10.4301 2.37776 9.85703C2.40623 9.7571 2.43834 9.65824 2.47405 9.56067C2.67883 9.00112 3.04942 8.49798 3.73157 7.88002C4.42676 7.25026 5.38791 6.55068 6.73451 5.57232C8.0811 4.59396 9.04345 3.89603 9.85722 3.42948C10.6557 2.97167 11.2488 2.7747 11.8442 2.75286Z" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"/></svg><svg class="ic-fill" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.29318 4.96556C3.62636 6.90311 2.29295 7.87189 1.76925 9.30291C1.72724 9.41771 1.68945 9.534 1.65596 9.65157C1.23852 11.1171 1.74783 12.6846 2.76647 15.8197C3.7851 18.9547 4.29442 20.5222 5.49356 21.4625C5.58976 21.5379 5.68869 21.6098 5.79015 21.678C7.05497 22.5279 8.70315 22.5279 11.9995 22.5279C15.2959 22.5279 16.9441 22.5279 18.2089 21.678C18.3103 21.6098 18.4093 21.5379 18.5055 21.4625C19.7046 20.5222 20.2139 18.9547 21.2326 15.8197C22.2512 12.6846 22.7605 11.1171 22.3431 9.65157C22.3096 9.534 22.2718 9.41771 22.2298 9.30291C21.7061 7.87189 20.3727 6.90312 17.7059 4.96557C15.0391 3.02801 13.7056 2.05923 12.1828 2.00336C12.0607 1.99888 11.9384 1.99888 11.8162 2.00336C10.2934 2.05923 8.95999 3.02801 6.29318 4.96556ZM9.99951 17.0697C9.5853 17.0697 9.24951 17.4054 9.24951 17.8197C9.24951 18.2339 9.5853 18.5697 9.99951 18.5697H13.9995C14.4137 18.5697 14.7495 18.2339 14.7495 17.8197C14.7495 17.4054 14.4137 17.0697 13.9995 17.0697H9.99951Z" fill="currentColor"/></svg></button>
+        <button class="nav-tab nav-tab--profile" id="profile-button" type="button" aria-label="حساب کاربری"><svg class="ic-fill" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7.5" r="4.25" fill="currentColor" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 19.6c0-2.6 2.2-4.6 4.9-4.9a22 22 0 0 1 5.2 0c2.7.3 4.9 2.3 4.9 4.9 0 1-.8 1.9-1.9 1.9H6.4c-1.1 0-1.9-.9-1.9-1.9Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><svg class="ic-line" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7.5" r="4.25" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 19.6c0-2.6 2.2-4.6 4.9-4.9a22 22 0 0 1 5.2 0c2.7.3 4.9 2.3 4.9 4.9 0 1-.8 1.9-1.9 1.9H6.4c-1.1 0-1.9-.9-1.9-1.9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+        <button class="nav-add" id="add-button" type="button" aria-label="افزودن کار"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="4 4 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 9H15.8333C15.3731 9 15 8.6269 15 8.16667V7C15 5.34315 13.6569 4 12 4C10.3431 4 9 5.34315 9 7V8.16667C9 8.6269 8.6269 9 8.16667 9H7C5.34315 9 4 10.3431 4 12C4 13.6569 5.34315 15 7 15H8.16667C8.6269 15 9 15.3731 9 15.8333V17C9 18.6569 10.3431 20 12 20C13.6569 20 15 18.6569 15 17V15.8333C15 15.3731 15.3731 15 15.8333 15H17C18.6569 15 20 13.6569 20 12C20 10.3431 18.6569 9 17 9Z" fill="currentColor"/></svg></button>
       </nav>
     </div>
   </main>
@@ -1188,7 +1396,7 @@
     const TOAST_MS = 5000;
     const $ = (id) => document.getElementById(id);
     const root = document.documentElement;
-    const SWIPE = () => parseFloat(getComputedStyle(root).getPropertyValue("--height-4xl")) * 2 + parseFloat(getComputedStyle(root).getPropertyValue("--space-xs")) * 3;
+    const SWIPE = () => 130; // دو دکمه‌ی ۵۳ + فاصله‌ی ۸ + ۱۶ تا کارت (فریم Redesign)
 
     const el = {
       dateSelector: $("date-selector"), dateLabel: $("date-label"), dateMenu: $("date-menu"),
@@ -1265,6 +1473,7 @@
 
       const done = dayTasks.filter((t) => isDone(t, key)).length;
       updateProgress();
+      { const tb = $("tick-button"), allDone = has && done === dayTasks.length; tb.classList.toggle("is-all", allDone); tb.setAttribute("aria-pressed", String(allDone)); }
       el.summary.hidden = !has;
       if (!has) { el.summary.textContent = ""; return; }
       el.summary.textContent = `${faDigits(done)} از ${faDigits(dayTasks.length)} مورد انجام شده`;
@@ -1598,7 +1807,7 @@
         try { drag.body.setPointerCapture(e.pointerId); } catch {}
       }
       drag.pos = Math.min(0, Math.max(-SWIPE(), drag.base + dx));
-      drag.body.style.transform = `translateX(${drag.pos}px)`;
+      drag.body.style.width = `calc(100% + ${drag.pos}px)`;
     });
     function endDrag(e) {
       if (!drag || (e && e.pointerId !== drag.id)) return;
@@ -1606,7 +1815,7 @@
       drag = null;
       if (!moved) return;
       li.classList.remove("is-dragging");
-      body.style.transform = "";
+      body.style.width = "";
       state.openId = pos < -SWIPE() / 2 ? li.dataset.id : null;
       suppressClickUntil = Date.now() + 350; // فقط کلیکِ بلافاصله بعد از کشیدن نادیده گرفته می‌شود
       render();
@@ -1652,6 +1861,28 @@
       else { el.searchInput.value = ""; state.query = ""; render(); }
     }
     el.searchButton.addEventListener("click", () => setSearch(el.searchInput.hidden));
+    // دکمه‌ی تیک کنار جستجو: همه‌ی کارهای باز این روز را انجام‌شده می‌کند (با امکان بازگردانی)
+    $("tick-button").addEventListener("click", () => {
+      const key = selectedKey(), open = tasksForDay(key).filter((t) => !isDone(t, key));
+      if (!open.length) {
+        const all = tasksForDay(key);
+        if (!all.length) return;
+        all.forEach((t) => { if (t.repeat) t.doneDates = t.doneDates.filter((k) => k !== key); else t.done = false; });
+        persist(); render();
+        toast("تیک همه‌ی کارها برداشته شد", () => {
+          all.forEach((t) => { if (t.repeat) t.doneDates = [...new Set([...t.doneDates, key])]; else t.done = true; });
+          persist(); render();
+        });
+        return;
+      }
+      open.forEach((t) => { if (t.repeat) t.doneDates = [...new Set([...t.doneDates, key])]; else t.done = true; });
+      persist(); render();
+      toast("همه کارها انجام شد", () => {
+        open.forEach((t) => { if (t.repeat) t.doneDates = t.doneDates.filter((k) => k !== key); else t.done = false; });
+        persist(); render();
+      });
+      maybeCelebrate(key);
+    });
     el.searchInput.addEventListener("input", () => { state.query = el.searchInput.value; render(); });
     el.searchInput.addEventListener("keydown", (e) => { if (e.key === "Escape") { setSearch(false); el.searchButton.focus(); } });
 
@@ -2358,7 +2589,7 @@
     function showView(view, push = true) {
       const profile = view === "profile";
       document.body.classList.toggle("view-profile", profile);
-      $("profile-view").hidden = !profile;
+      $("profile-view").hidden = !profile; if (profile) renderProfilePage();
       $("home-button").toggleAttribute("aria-current", !profile); if (!profile) $("home-button").setAttribute("aria-current", "page");
       $("profile-button").toggleAttribute("aria-current", profile); if (profile) $("profile-button").setAttribute("aria-current", "page");
       window.scrollTo({ top: 0 });
@@ -2441,8 +2672,10 @@
       vv.addEventListener("resize", sync); vv.addEventListener("scroll", sync);
     }
 
+
+    function renderProfilePage() {}
     render();
   })();
   </script>
-</body>
-</html>
+
+</body></html>
