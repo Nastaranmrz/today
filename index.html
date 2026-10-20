@@ -871,8 +871,9 @@
 
     /* فیلترها و دکمه‌های کنار */
     .toolbar { justify-content: space-between; margin-top: var(--space-xs); gap: var(--space-xs); }
-    .filters { flex: none; gap: var(--space-xs); }
-    .chip { flex: none; width: 89px; max-width: none; height: 32px; padding: 0; border-radius: var(--radius-sm); background: transparent; border: 1px solid var(--mauve-200); font: var(--font-04); color: var(--mauve-600); }
+    .filters { flex: 1 1 auto; min-width: 0; max-width: calc(89px * 3 + var(--space-xs) * 2); gap: var(--space-xs); }
+    @media (max-width: 360px) { .filters, .toolbar-actions { gap: 6px; } .toolbar { gap: 6px; } .chip { font-size: 11px !important; padding-inline: 2px !important; text-overflow: clip; } }
+    .chip { flex: 1 1 0; min-width: 0; width: auto; max-width: 89px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-inline: 4px !important; height: 32px; padding: 0; border-radius: var(--radius-sm); background: transparent; border: 1px solid var(--mauve-200); font: var(--font-04); color: var(--mauve-600); }
     .chip[aria-pressed="true"] { background: var(--purple-600); border-color: var(--purple-600); color: #fff; font-weight: var(--font-weight-medium); }
     .search-field { border-radius: var(--radius-sm); background: transparent; border-color: var(--mauve-200); }
     .toolbar-actions { display: flex; gap: var(--space-xs); margin-inline-start: auto; }
@@ -1053,7 +1054,62 @@
       .pw-ring { stroke-dashoffset: 0; }
       .pw-pencil { transform: translate(206px, 104px); }
     }
-</style>
+
+    /* ---------- باتم‌شیت‌ها طبق دیزاین Redesign (فیگما 4347:7720) ---------- */
+    .sheet {
+      width: calc(100% - var(--space-xl) * 2); max-width: 392px;
+      margin: auto auto calc(var(--space-2xl) + var(--space-xs) + env(safe-area-inset-bottom, 0px) + var(--keyboard, 0px));
+      max-height: calc(100dvh - var(--space-2xl) * 2 - var(--keyboard, 0px));
+      padding: var(--space-xl); border-radius: var(--radius-xl);
+      background: var(--mauve-50); box-shadow: 0 12px 40px color-mix(in srgb, var(--mauve-950) 12%, transparent);
+    }
+    .sheet::backdrop { background: rgba(0, 0, 0, .2); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+    @keyframes sheet-in { from { transform: translateY(calc(100% + var(--space-2xl) + var(--space-xs))); } }
+    .sheet .sheet-header { margin-bottom: var(--space-md); }
+    .sheet .sheet-title { font: var(--font-07); font-weight: var(--font-weight-demibold); color: var(--mauve-800); }
+    .sheet .sheet-close { width: var(--height-3xl); height: var(--height-2xl); border-radius: var(--radius-xs); margin-inline-end: 0; color: var(--mauve-600); }
+    .sheet form { gap: var(--space-sm); }
+    .sheet .field { border-color: var(--mauve-100); background: var(--mauve-100); border-radius: var(--radius-sm); font: 13px/20px var(--font-family); font-weight: var(--font-weight-medium); color: var(--mauve-800); }
+    .sheet .field::placeholder, .sheet .picker-trigger .value.is-empty { color: var(--mauve-400); }
+    .sheet .field--text { height: 42px; padding-inline: var(--space-sm); }
+    .sheet .field--area { height: 96px; padding: var(--space-sm) var(--space-md); }
+    .sheet .field-row { gap: var(--space-sm); }
+    .sheet .picker-trigger { height: 42px; padding-inline: var(--space-sm); gap: var(--space-xs); }
+    .sheet .picker-trigger svg { order: 0; flex-shrink: 0; width: var(--size-lg); height: var(--size-lg); color: var(--mauve-600); }
+    .sheet .picker { border-color: var(--mauve-200); border-radius: var(--radius-sm); background: var(--mauve-50); }
+    .sheet .picker-value, .sheet .segmented { background: var(--mauve-100); }
+    .sheet .time-input { background: var(--mauve-100); }
+    .sheet .time-part { border-color: var(--mauve-50); background: var(--mauve-50); }
+    .sheet .quick-date { height: 42px; border-color: var(--mauve-200); border-radius: var(--radius-sm); }
+    .sheet .repeat { margin-top: var(--space-2xs); font: var(--font-06); color: var(--mauve-700); }
+    .sheet .repeat:has(.check:checked) { color: var(--purple-600); }
+    .sheet .sheet-actions, .sheet .picker-actions { gap: var(--space-sm); }
+    .sheet .sheet-actions { margin-top: var(--space-2xs); }
+    .sheet .btn { height: var(--height-4xl); border-radius: var(--radius-sm); font: var(--font-06); font-weight: var(--font-weight-medium); }
+    .sheet .btn--primary { background: var(--purple-600); color: var(--purple-50); }
+    .sheet .btn--secondary { background: var(--mauve-100); color: var(--mauve-600); }
+    .sheet .btn--primary:disabled { opacity: .4; }
+    .sheet .account-body { gap: var(--space-xs); }
+    .sheet .account-body .sheet-actions { margin-top: var(--space-sm); }
+    .sheet .field-label { font: var(--font-04); color: var(--mauve-600); margin-top: var(--space-2xs); }
+  
+    /* ---------- هاور: فقط آیتم‌های بنفش، هاور بنفش؛ بقیه یک پله پررنگ‌ترِ رنگ خودشان ---------- */
+    @media (hover: hover) {
+      /* پس‌زمینه‌ی شفاف یا mauve-50 ← mauve-100 */
+      .icon-button:hover, .search-button:not([aria-pressed="true"]):hover, .tick-button:not(.is-all):hover,
+      .kebab:hover, .cal-nav:hover, .sheet-close:hover, .nav-tab:not(.nav-tab--add):hover,
+      .tomorrow:not([aria-pressed="true"]):hover, .date-selector:hover, .text-button--muted:hover,
+      .cal-day:not([aria-pressed="true"]):hover, .date-menu li:hover, .task-action--edit:hover { background: var(--mauve-100); }
+      /* دکمه‌های قاب‌دار: پس‌زمینه کمی پر و قاب یک پله پررنگ‌تر */
+      .chip:not([aria-pressed="true"]):hover, .quick-date:not([aria-pressed="true"]):hover,
+      .search-button:not([aria-pressed="true"]):hover, .tick-button:not(.is-all):hover { background: var(--mauve-100); border-color: var(--mauve-300); }
+      /* پس‌زمینه‌ی mauve-100 ← mauve-200 */
+      .btn--secondary:hover:not(:disabled), .sheet .btn--secondary:hover:not(:disabled),
+      .segment:not([aria-checked="true"]):hover, .notif-item:hover, .profile-card:hover { background: var(--mauve-200); }
+      /* آیتم‌های بنفش کم‌رنگ */
+      .tick-button.is-all:hover { background: var(--purple-100); }
+    }
+  </style>
 
   <main class="screen">
     <div class="page-glow" aria-hidden="true"></div>
