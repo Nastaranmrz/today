@@ -1109,6 +1109,175 @@
       /* آیتم‌های بنفش کم‌رنگ */
       .tick-button.is-all:hover { background: var(--purple-100); }
     }
+  
+    /* ---------- صفحه‌ی اصلی طبق فریم Redesign (فیگما 4368:7646) ---------- */
+    :root { --height-date: 52px; }
+    .date-selector { border-radius: var(--radius-md); }
+    .date-selector::before { height: 52px; }
+    .day-picker { margin-top: 6px; padding-top: 0; }
+    .summary { font: var(--font-03); color: var(--mauve-500); }
+    /* فیلترها: عرض به اندازه‌ی متن، فاصله‌ی داخلی ۱۶، گوشه‌ی ۱۲ */
+    .filters { flex: 0 1 auto; max-width: none; gap: var(--space-xs); }
+    .chip { flex: 0 1 auto; width: auto; max-width: none; padding-inline: var(--space-md) !important; border-radius: var(--radius-sm); font: var(--font-04); }
+    .chip[aria-pressed="true"] { font-weight: var(--font-weight-medium); }
+    @media (max-width: 360px) { .chip { padding-inline: var(--space-xs) !important; } }
+    /* کار انجام‌شده: همان کارت عادی، فقط چک‌باکس تیک می‌خورد */
+    .task.is-done .task-body {
+      border: 0; background-color: var(--color-task);
+      background-image:
+        linear-gradient(to right, color-mix(in srgb, var(--mauve-300) 16%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in srgb, var(--mauve-300) 16%, transparent) 1px, transparent 1px);
+      background-size: 8px 8px;
+    }
+    .task.is-done .task-title { color: var(--mauve-700); text-decoration: none; }
+    .task.is-done .task-desc { color: var(--mauve-500); }
+    .task.is-done .task-time { color: var(--mauve-600); }
+    .task.is-done .badge { background: var(--mauve-50); border-color: var(--mauve-200); }
+    .task.is-done .badge[data-kind="repeat"] { color: var(--purple-600); }
+    .task.is-done .badge[data-kind="undated"] { color: var(--mauve-600); }
+    @media (hover: hover) { .task.is-done .task-body:hover { background-color: var(--color-task); border: 0; } }
+  
+    /* ---------- انتخاب تاریخ طبق فریم Redesign (فیگما 4365:6015) ---------- */
+    .sheet.is-picking:has(#date-picker:not([hidden])) { border-radius: 32px; }
+    .sheet.is-picking:has(#date-picker:not([hidden])) .sheet-title { font: var(--font-06); font-weight: var(--font-weight-demibold); }
+    .sheet .date-box { border: 0; background: transparent; border-radius: var(--radius-sm); }
+    .sheet .date-box .picker-value { padding: var(--space-2xs); border-radius: var(--radius-sm); background: var(--mauve-100); }
+    .sheet .date-box .picker-value { min-height: 48px; display: grid; place-items: center; font: 13px/20px var(--font-family); color: var(--mauve-600); }
+    .sheet .date-box .picker-body { padding: var(--space-sm); gap: 2px; }
+    .sheet .date-box .cal-head { height: 32px; }
+    .sheet .date-box .cal-title { font: var(--font-06); font-weight: var(--font-weight-demibold); color: var(--mauve-600); }
+    .sheet .date-box .cal-nav { width: 24px; height: 24px; color: var(--mauve-600); }
+    .sheet .date-box .cal-grid { gap: 2px; }
+    .sheet .date-box .cal-weekday { font: var(--font-04); color: var(--mauve-500); height: 28px; padding: 0; }
+    .sheet .date-box .cal-empty, .sheet .date-box .cal-day { height: 40px; }
+    .sheet .date-box .cal-day { border-radius: var(--radius-xs); font: var(--font-06); color: var(--mauve-800); box-shadow: none; }
+    .sheet .date-box .cal-day.is-past { color: var(--mauve-500); }
+    .sheet .date-box .cal-day.is-today:not([aria-pressed="true"]) { color: var(--purple-600); font-weight: var(--font-weight-medium); }
+    .sheet .date-box .cal-day[aria-pressed="true"] { background: var(--purple-600); color: var(--purple-50); font-weight: var(--font-weight-medium); }
+    .sheet .date-actions { margin-top: var(--space-2xs); }
+    .sheet .date-actions .btn { flex: 1; }
+  
+    /* ---------- انتخاب ساعت طبق فریم Redesign (فیگما 4365:6465) ---------- */
+    .sheet.is-picking:has(#time-picker:not([hidden])) { border-radius: 32px; }
+    .sheet.is-picking:has(#time-picker:not([hidden])) .sheet-title { font: var(--font-06); font-weight: var(--font-weight-demibold); }
+    .sheet .time-picker { border: 0; background: transparent; border-radius: var(--radius-sm); height: 340px; }
+    .sheet .time-picker .segmented { background: var(--mauve-100); padding: var(--space-2xs); gap: var(--space-2xs); border-radius: var(--radius-sm); }
+    .sheet .time-picker .segment { height: 40px; border-radius: var(--radius-xs); font: 13px/20px var(--font-family); color: var(--mauve-600); }
+    .sheet .time-picker .segment[aria-checked="true"] { background: var(--mauve-50); color: var(--mauve-700); font-weight: var(--font-weight-medium); box-shadow: 0 0 4px rgba(10, 3, 20, .12); }
+    .sheet .time-picker .picker-body { padding: var(--space-md) 0 0; }
+    .sheet .time-picker[data-mode="range"] .time-row { justify-content: space-between; gap: 0; }
+    .sheet .time-picker .time-group { align-items: center; gap: var(--space-xs); }
+    .sheet .time-picker .time-group-label { font: var(--font-03); color: var(--mauve-500); }
+    .sheet .time-picker .time-input { background: var(--mauve-100); padding: var(--space-xs); gap: var(--space-2xs); border-radius: var(--radius-md); }
+    .sheet .time-picker .time-part { width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--mauve-50); border: 1px solid var(--mauve-100); font: var(--font-07); font-weight: var(--font-weight-medium); color: var(--mauve-500); }
+    .sheet .time-picker .time-part:focus { border-color: var(--purple-600); color: var(--purple-600); background: var(--mauve-50); }
+    .sheet .time-picker .time-sep { font: var(--font-10); font-weight: var(--font-weight-medium); color: var(--mauve-500); }
+    .sheet .time-picker .time-range-sep { font: var(--font-06); color: var(--mauve-400); padding-bottom: 20px; }
+  
+    /* ---------- برگه‌ی کار جدید طبق فریم Redesign (فیگما 4365:6915) ---------- */
+    #task-sheet { border-radius: 32px; }
+    #task-sheet .sheet-title { font: var(--font-06); font-weight: var(--font-weight-demibold); color: var(--mauve-800); }
+    #task-sheet .picker-trigger .value:not(.is-empty) { color: var(--mauve-700); }
+    #task-sheet .repeat { margin-top: var(--space-2xs); gap: var(--space-xs); color: var(--mauve-600); font: var(--font-06); }
+    #task-sheet .repeat-note { font: var(--font-03); font-weight: var(--font-weight-medium); color: var(--mauve-400); min-width: 0; }
+    #task-sheet .check:not(:checked) { background: #fff; border-color: var(--mauve-300); }
+    #task-sheet:not(.is-picking) .sheet-actions { margin-top: 30px; }
+  
+    /* ---------- برگه‌ی حساب کاربری طبق فریم Redesign (فیگما 4378:9342) ---------- */
+    #account-sheet { border-radius: 32px; }
+    #account-sheet .sheet-header { margin-bottom: 9px; }
+    #account-sheet .sheet-title { font: var(--font-06); font-weight: var(--font-weight-demibold); color: var(--mauve-800); }
+    #account-sheet .account-body { gap: 0; }
+    #account-sheet .photo-picker { margin-bottom: 0; }
+    #account-sheet .avatar--lg { width: 72px; height: 72px; background: var(--purple-100); }
+    #account-sheet #account-avatar svg { width: 40px; height: 40px; }
+    #account-sheet #account-avatar svg path, #account-sheet #account-avatar svg circle { fill: var(--purple-300); stroke: var(--purple-600); }
+    #account-sheet .avatar-badge { width: 30px; height: 30px; bottom: -3px; inset-inline-start: -3px; background: var(--purple-600); color: #fff; box-shadow: 0 0 0 3px var(--mauve-50); }
+    #account-sheet .avatar-badge svg { width: 20px; height: 20px; }
+    #account-sheet .field-label { font: var(--font-04); color: var(--mauve-600); margin-top: 14px; margin-bottom: 13px; }
+    #account-sheet .field-label[for="account-phone"] { margin-top: 7px; margin-bottom: 8px; }
+    #account-sheet .field--phone { color: var(--mauve-700); text-align: left; }
+    #account-sheet .menu-hint { display: none; }
+    #account-sheet .account-body .sheet-actions { margin-top: 35px; }
+  
+    /* ---------- منو طبق فریم Redesign (فیگما 4377:6037) ---------- */
+    #menu-drawer {
+      inset-block: calc(var(--space-xl) + env(safe-area-inset-top, 0px)) calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
+      inset-inline-start: var(--space-xl); inset-inline-end: auto;
+      width: min(310px, calc(100vw - var(--space-xl) * 2)); height: auto; max-height: none;
+      padding: var(--space-xl) var(--space-xl) var(--space-md);
+      border-radius: 32px; background: var(--mauve-50); box-shadow: none; gap: 0;
+    }
+    #menu-drawer::backdrop { background: rgba(0, 0, 0, .2); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+    #menu-drawer[open] { animation-name: menu-in; }
+    @keyframes menu-in { from { transform: translateX(calc(100% + var(--space-xl))); } }
+    #menu-drawer .sheet-close { width: 40px; height: 32px; border-radius: var(--radius-xs); }
+    #menu-drawer .sheet-title { font: var(--font-06); font-weight: var(--font-weight-demibold); color: var(--mauve-800); }
+    #menu-drawer .profile-card { margin-top: 32px; min-height: 72px; border-radius: var(--radius-lg); background: var(--mauve-100); }
+    #menu-drawer #avatar { width: 48px; height: 48px; background: var(--purple-100); }
+    #menu-drawer #avatar svg { width: 24px; height: 24px; }
+    #menu-drawer #avatar svg path, #menu-drawer #avatar svg circle { fill: var(--purple-300); stroke: var(--purple-600); stroke-width: 1px; }
+    #menu-drawer .profile-name { font: var(--font-07); font-weight: var(--font-weight-medium); color: var(--mauve-800); }
+    #menu-drawer .profile-hint { font: var(--font-04); color: var(--mauve-500); }
+    #menu-drawer .menu-bottom { gap: var(--space-xl); }
+    #menu-drawer .menu-item--quiet { height: 48px; border-radius: var(--radius-md); border-color: var(--mauve-200); font: var(--font-06); }
+    #menu-drawer .menu-footer { font: var(--font-04); color: var(--mauve-500); }
+  
+    /* ---------- اعلان‌ها طبق فریم Redesign (فیگما 4378:8371 و 4378:8853) ---------- */
+    #notif-drawer {
+      inset-block: calc(var(--space-xl) + env(safe-area-inset-top, 0px)) calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
+      inset-inline-start: auto; inset-inline-end: var(--space-xl);
+      width: min(310px, calc(100vw - var(--space-xl) * 2)); height: auto; max-height: none;
+      padding: var(--space-xl) 19px var(--space-xl);
+      border-radius: 32px; background: var(--mauve-50); box-shadow: none; gap: 0;
+    }
+    #notif-drawer .sheet-header { padding-inline: 5px; }
+    #notif-drawer::backdrop { background: rgba(0, 0, 0, .2); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+    #notif-drawer[open] { animation-name: notif-in; }
+    @keyframes notif-in { from { transform: translateX(calc(-100% - var(--space-xl))); } }
+    #notif-drawer .sheet-title { font: var(--font-06); font-weight: var(--font-weight-demibold); color: var(--mauve-800); }
+    #notif-drawer .sheet-close { width: 40px; height: 32px; border-radius: var(--radius-xs); background: transparent; }
+    #notif-drawer .notif-list { margin-top: 32px; gap: var(--space-xs); }
+    #notif-drawer .notif-item { min-height: 68px; padding: var(--space-sm); gap: var(--space-sm); border-radius: var(--radius-md); background: var(--mauve-100); }
+    #notif-drawer .notif-icon { width: 32px; height: 32px; }
+    #notif-drawer .notif-icon svg { width: 20px; height: 20px; }
+    #notif-drawer .notif-item[data-kind="overdue"] .notif-icon { background: var(--red-100, #fee2e2); }
+    #notif-drawer .notif-item[data-kind="progress"] .notif-icon { background: var(--purple-100); }
+    #notif-drawer .notif-item[data-kind="upcoming"] .notif-icon { background: var(--mauve-200); }
+    #notif-drawer .notif-title { font: 13px/24px var(--font-family); font-weight: var(--font-weight-medium); color: var(--mauve-800); }
+    #notif-drawer .notif-sub { font: var(--font-04); color: var(--mauve-500); }
+    #notif-drawer .notif-empty { flex: 1; justify-content: center; padding-top: 80px; }
+    #notif-drawer .notif-empty > p:not(.menu-hint) { font: var(--font-06); font-weight: var(--font-weight-medium); color: var(--mauve-600); }
+    #notif-drawer .notif-empty .menu-hint { font: var(--font-04); color: var(--mauve-500); }
+    #notif-drawer .notif-empty-icon { width: 48px; height: 48px; background: var(--mauve-100); }
+  
+    /* ---------- ناوبری پایین دقیقاً طبق فریم Redesign (فیگما 4368:7646) ---------- */
+    .bottom-nav { height: 75px; }
+    .nav-shape { height: 75px; filter: drop-shadow(0 -1px 5px rgba(0, 0, 0, .05)); }
+    .nav-fill { fill: #fff; }
+    .nav-line { stroke: url(#nav-stroke-grad); stroke-width: .5; }
+    .nav-tab { top: 19px; }
+    .nav-tab[aria-current="page"] svg { filter: drop-shadow(0 0 2px rgba(147, 51, 234, .35)); }
+    .nav-add {
+      top: 11px; width: 64px; height: 54px; border-radius: 100px;
+      border: 0; box-shadow: none;
+      background: radial-gradient(closest-side, rgba(147, 51, 234, .24), rgba(147, 51, 234, .12) 72%, rgba(147, 51, 234, 0));
+    }
+    @media (hover: hover) { .nav-add:hover { background: radial-gradient(closest-side, rgba(147, 51, 234, .4), rgba(147, 51, 234, .05)); } }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .nav-fill { fill: var(--color-page); } }
+    :root[data-theme="dark"] .nav-fill { fill: var(--color-page); }
+  
+    /* حالت خالیِ فیلترها (انجام‌شده / بدون تاریخ / جستجو): تصویر دقیقاً جای تصویر «هیچ کاری ندارید» */
+    #main-view:has(#no-results:not([hidden])) { flex: 1; display: flex; flex-direction: column; }
+    #no-results:not([hidden]) { flex: 1; justify-content: flex-end; padding-top: 0; padding-bottom: calc(var(--space-8xl) + 4px); }
+    .screen:has(#no-results:not([hidden])) .list-end { display: none; }
+  
+    /* صفحه‌ی «در حال طراحی» طبق فریم فیگما 4386:6130 */
+    .wip-view { gap: 0; }
+    .wip-art { width: 152px; margin-top: 82px; }
+    .wip-text { gap: 0; }
+    .wip-title { font: 16px/32px var(--font-family); font-weight: var(--font-weight-bold); color: var(--mauve-700); }
+    .wip-sub { font: 13px/24px var(--font-family); color: var(--mauve-500); }
   </style>
 
   <main class="screen">
@@ -1205,9 +1374,9 @@
       </div>
     </section>
     <div class="nav-wrap">
-      <nav class="bottom-nav" aria-label="ناوبری اصلی"><svg class="nav-shape" aria-hidden="true" focusable="false" viewBox="0 0 392 74" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="nav-fill" d="M0 74V39C0 25.7 10.7 15 24 15H129C160 15 165 0 196 0S232 15 263 15H368C381.3 15 392 25.7 392 39V74Z"/><path class="nav-line" d="M0 74V39C0 25.7 10.7 15 24 15H129C160 15 165 0 196 0S232 15 263 15H368C381.3 15 392 25.7 392 39V74" fill="none"/></svg>
+      <nav class="bottom-nav" aria-label="ناوبری اصلی"><svg class="nav-shape" aria-hidden="true" focusable="false" viewBox="0 0 392 75" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="nav-stroke-grad" x1="196" y1="2.5" x2="196" y2="30" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#BEBEBE"/><stop offset="1" stop-color="#BEBEBE" stop-opacity="0"/></linearGradient></defs><path class="nav-fill" d="M0 75H392C392 42.1391 365.361 15.5 332.5 15.5H262.306C250.893 15.5 239.604 13.1324 229.153 8.5467C208.023 -0.7245 183.977 -0.7245 162.847 8.5467C152.396 13.1324 141.107 15.5 129.694 15.5H59.5C26.6391 15.5 0 42.1391 0 75Z"/><path class="nav-line" d="M0.25 74.75C0.39 42.14 26.86 15.75 59.5 15.75H129.694C141.142 15.75 152.465 13.375 162.947 8.775C184.013 -0.468 207.987 -0.468 229.053 8.775C239.535 13.375 250.858 15.75 262.306 15.75H332.5C365.139 15.75 391.613 42.142 391.748 74.75" fill="none"/></svg>
         <button class="nav-tab nav-tab--home" id="home-button" type="button" aria-label="خانه" aria-current="page"><svg class="ic-line" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 17.0697C9.58579 17.0697 9.25001 17.4054 9.25001 17.8197C9.25001 18.2339 9.58579 18.5697 10 18.5697H14C14.4142 18.5697 14.75 18.2339 14.75 17.8197C14.75 17.4054 14.4142 17.0697 14 17.0697H10Z" fill="currentColor"/><path d="M12.2108 1.25387C12.0703 1.24871 11.9297 1.24871 11.7892 1.25387C10.8618 1.28789 10.0268 1.60323 9.11115 2.12818C8.21888 2.63974 7.19165 3.38608 5.88826 4.33305L5.81741 4.38453C4.51402 5.33149 3.48676 6.07783 2.72451 6.76835C1.94232 7.47693 1.38435 8.17368 1.06542 9.04515C1.01711 9.17717 0.973653 9.31091 0.935143 9.44611C0.680923 10.3386 0.722785 11.2303 0.939096 12.2633C1.14989 13.27 1.54227 14.4776 2.04013 16.0098L2.0672 16.0931C2.56503 17.6253 2.95741 18.8329 3.37858 19.7712C3.81077 20.7341 4.301 21.4801 5.03127 22.0527C5.14189 22.1394 5.25566 22.2221 5.37234 22.3005C6.1426 22.8181 7.00355 23.0538 8.05284 23.1673C9.07539 23.2779 10.3451 23.2779 11.9562 23.2779H12.0438C13.6549 23.2779 14.9246 23.2779 15.9472 23.1673C16.9965 23.0538 17.8574 22.8181 18.6277 22.3005C18.7444 22.2221 18.8581 22.1394 18.9687 22.0527C19.699 21.4801 20.1892 20.7341 20.6214 19.7712C21.0426 18.8329 21.435 17.6253 21.9328 16.093L21.9599 16.0097C22.4577 14.4776 22.8501 13.2699 23.0609 12.2633C23.2772 11.2303 23.3191 10.3386 23.0649 9.44611C23.0264 9.31091 22.9829 9.17717 22.9346 9.04515C22.6157 8.17368 22.0577 7.47693 21.2755 6.76835C20.5132 6.07782 19.486 5.33149 18.1826 4.38452L18.1117 4.33303C16.8084 3.38607 15.7811 2.63973 14.8889 2.12818C13.9733 1.60323 13.1382 1.28789 12.2108 1.25387ZM11.8442 2.75286C11.948 2.74905 12.052 2.74905 12.1558 2.75286C12.7512 2.7747 13.3443 2.97167 14.1428 3.42948C14.9566 3.89603 15.9189 4.59396 17.2655 5.57232C18.6121 6.55068 19.5733 7.25026 20.2684 7.88002C20.9506 8.49798 21.3212 9.00112 21.526 9.56067C21.5617 9.65824 21.5938 9.75709 21.6222 9.85703C21.7855 10.4301 21.7814 11.055 21.5928 11.9558C21.4005 12.874 21.0341 14.0049 20.5198 15.5879C20.0054 17.1709 19.6371 18.3012 19.253 19.157C18.8761 19.9967 18.5121 20.5046 18.0432 20.8723C17.9614 20.9364 17.8773 20.9975 17.7911 21.0555C17.2965 21.3878 16.701 21.577 15.7859 21.676C14.8533 21.7768 13.6645 21.7779 12 21.7779C10.3355 21.7779 9.14673 21.7768 8.21414 21.676C7.29905 21.577 6.7035 21.3878 6.20894 21.0555C6.12269 20.9975 6.0386 20.9364 5.95684 20.8723C5.48796 20.5046 5.12396 19.9967 4.74705 19.157C4.36293 18.3012 3.9946 17.1709 3.48025 15.5879C2.9659 14.0049 2.59951 12.874 2.40725 11.9558C2.21861 11.055 2.21454 10.4301 2.37776 9.85703C2.40623 9.7571 2.43834 9.65824 2.47405 9.56067C2.67883 9.00112 3.04942 8.49798 3.73157 7.88002C4.42676 7.25026 5.38791 6.55068 6.73451 5.57232C8.0811 4.59396 9.04345 3.89603 9.85722 3.42948C10.6557 2.97167 11.2488 2.7747 11.8442 2.75286Z" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"/></svg><svg class="ic-fill" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.29318 4.96556C3.62636 6.90311 2.29295 7.87189 1.76925 9.30291C1.72724 9.41771 1.68945 9.534 1.65596 9.65157C1.23852 11.1171 1.74783 12.6846 2.76647 15.8197C3.7851 18.9547 4.29442 20.5222 5.49356 21.4625C5.58976 21.5379 5.68869 21.6098 5.79015 21.678C7.05497 22.5279 8.70315 22.5279 11.9995 22.5279C15.2959 22.5279 16.9441 22.5279 18.2089 21.678C18.3103 21.6098 18.4093 21.5379 18.5055 21.4625C19.7046 20.5222 20.2139 18.9547 21.2326 15.8197C22.2512 12.6846 22.7605 11.1171 22.3431 9.65157C22.3096 9.534 22.2718 9.41771 22.2298 9.30291C21.7061 7.87189 20.3727 6.90312 17.7059 4.96557C15.0391 3.02801 13.7056 2.05923 12.1828 2.00336C12.0607 1.99888 11.9384 1.99888 11.8162 2.00336C10.2934 2.05923 8.95999 3.02801 6.29318 4.96556ZM9.99951 17.0697C9.5853 17.0697 9.24951 17.4054 9.24951 17.8197C9.24951 18.2339 9.5853 18.5697 9.99951 18.5697H13.9995C14.4137 18.5697 14.7495 18.2339 14.7495 17.8197C14.7495 17.4054 14.4137 17.0697 13.9995 17.0697H9.99951Z" fill="currentColor"/></svg></button>
-        <button class="nav-tab nav-tab--profile" id="profile-button" type="button" aria-label="حساب کاربری"><svg class="ic-fill" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7.5" r="4.25" fill="currentColor" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 19.6c0-2.6 2.2-4.6 4.9-4.9a22 22 0 0 1 5.2 0c2.7.3 4.9 2.3 4.9 4.9 0 1-.8 1.9-1.9 1.9H6.4c-1.1 0-1.9-.9-1.9-1.9Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><svg class="ic-line" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7.5" r="4.25" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 19.6c0-2.6 2.2-4.6 4.9-4.9a22 22 0 0 1 5.2 0c2.7.3 4.9 2.3 4.9 4.9 0 1-.8 1.9-1.9 1.9H6.4c-1.1 0-1.9-.9-1.9-1.9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+        <button class="nav-tab nav-tab--profile" id="profile-button" type="button" aria-label="حساب کاربری"><svg class="ic-fill" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.38358 3C8.75808 3 9.06166 3.31153 9.06166 3.69582V3.92169C9.10586 3.91015 9.15023 3.89901 9.19476 3.88829C11.0399 3.44416 12.9601 3.44416 14.8052 3.88829C14.8498 3.89901 14.8941 3.91014 14.9383 3.92169V3.69582C14.9383 3.31153 15.2419 3 15.6164 3C15.9909 3 16.2945 3.31153 16.2945 3.69582V4.42901C18.2277 5.38732 19.6726 7.19919 20.1754 9.39896C20.6082 11.2924 20.6082 13.2628 20.1754 15.1562C19.5504 17.8905 17.4698 20.0255 14.8052 20.6669C12.9601 21.111 11.0399 21.111 9.19476 20.6669C6.53017 20.0255 4.44963 17.8906 3.82461 15.1562C3.3918 13.2628 3.3918 11.2924 3.82461 9.39896C4.32745 7.19918 5.77233 5.38732 7.70551 4.42901V3.69582C7.70551 3.31153 8.00909 3 8.38358 3ZM12 12.6487C11.7004 12.6487 11.4575 12.8979 11.4575 13.2054C11.4575 13.5128 11.7004 13.762 12 13.762H14.7123C15.0119 13.762 15.2547 13.5128 15.2547 13.2054C15.2547 12.8979 15.0119 12.6487 14.7123 12.6487H12ZM9.28766 15.432C8.98807 15.432 8.7452 15.6812 8.7452 15.9886C8.7452 16.2961 8.98807 16.5453 9.28766 16.5453H14.7123C15.0119 16.5453 15.2547 16.2961 15.2547 15.9886C15.2547 15.6812 15.0119 15.432 14.7123 15.432H9.28766Z" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"/></svg><svg class="ic-line" aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.07008 3V5.51375M15.9299 3V5.51375M3.83327 15.2485C3.38891 13.3097 3.38891 11.292 3.83327 9.35323C4.44858 6.66865 6.49673 4.57251 9.11985 3.94279C11.0142 3.48802 12.9858 3.48802 14.8801 3.94279C17.5033 4.57251 19.5514 6.66865 20.1667 9.35323C20.6111 11.292 20.6111 13.3097 20.1667 15.2485C19.5514 17.9331 17.5033 20.0292 14.8801 20.6589C12.9858 21.1137 11.0142 21.1137 9.11986 20.6589C6.49673 20.0292 4.44858 17.9331 3.83327 15.2485Z" stroke-width="1.5" stroke-linecap="round" stroke="currentColor"/><path d="M12 13H15M9 16H15" stroke-width="1.5" stroke-linecap="round" stroke="currentColor"/></svg></button>
         <button class="nav-add" id="add-button" type="button" aria-label="افزودن کار"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="4 4 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 9H15.8333C15.3731 9 15 8.6269 15 8.16667V7C15 5.34315 13.6569 4 12 4C10.3431 4 9 5.34315 9 7V8.16667C9 8.6269 8.6269 9 8.16667 9H7C5.34315 9 4 10.3431 4 12C4 13.6569 5.34315 15 7 15H8.16667C8.6269 15 9 15.3731 9 15.8333V17C9 18.6569 10.3431 20 12 20C13.6569 20 15 18.6569 15 17V15.8333C15 15.3731 15.3731 15 15.8333 15H17C18.6569 15 20 13.6569 20 12C20 10.3431 18.6569 9 17 9Z" fill="currentColor"/></svg></button>
       </nav>
     </div>
@@ -1364,7 +1533,7 @@
               <input class="time-part" id="start-m" data-part="m" data-which="start" inputmode="numeric" autocomplete="off" placeholder="--" aria-label="دقیقه" aria-describedby="time-error" />
             </div>
           </div>
-          <span class="time-range-sep is-range-only" aria-hidden="true">الی</span>
+          <span class="time-range-sep is-range-only" aria-hidden="true">الــی</span>
           <div class="time-group is-range-only" id="end-section" role="group" aria-labelledby="end-label">
             <p class="time-group-label" id="end-label">پایان</p>
             <div class="time-input" dir="ltr">
@@ -1397,7 +1566,10 @@
         <div class="cal-grid" id="cal-grid"></div>
         </div>
       </div>
-        <button class="quick-date" type="button" id="no-date" aria-pressed="false">بدون تاریخ</button>
+        <div class="picker-actions date-actions">
+          <button class="btn btn--secondary" type="button" id="date-cancel">انصراف</button>
+          <button class="btn btn--primary" type="button" id="date-done">تایید</button>
+        </div>
       </div>
 
       <label class="visually-hidden" for="task-desc">توضیحات</label>
@@ -1406,6 +1578,7 @@
       <div class="repeat">
         <input class="check" id="task-repeat" type="checkbox" aria-labelledby="repeat-label" />
         <span id="repeat-label">هر روز</span>
+        <span class="repeat-note" aria-hidden="true">(اگه میخوای این کار رو هر روز انجام بدی این تیک رو بزن)</span>
       </div>
 
       <div class="sheet-actions">
@@ -1464,7 +1637,7 @@
       sheet: $("task-sheet"), form: $("task-form"), sheetTitle: $("sheet-title"), save: $("save-task"),
       fTitle: $("task-title"), fDesc: $("task-desc"), fRepeat: $("task-repeat"),
       timeTrigger: $("time-trigger"), timeValue: $("time-value"), timePicker: $("time-picker"),
-      timeCancel: $("time-cancel"), timeDone: $("time-done"), timeDisplay: $("time-display"), dateDisplay: $("date-display"), noDate: $("no-date"), sheetClose: $("sheet-close"),
+      timeCancel: $("time-cancel"), timeDone: $("time-done"), timeDisplay: $("time-display"), dateDisplay: $("date-display"), noDate: null, dateCancel: $("date-cancel"), dateDone: $("date-done"), sheetClose: $("sheet-close"),
       dateTrigger: $("date-trigger"), dateValue: $("date-value"), datePicker: $("date-picker"),
       calTitle: $("cal-title"), calGrid: $("cal-grid"), calPrev: $("cal-prev"), calNext: $("cal-next"),
       template: $("task-template"),
@@ -1479,6 +1652,7 @@
     const faDigits = (s) => String(s).replace(/\d/g, (n) => "۰۱۲۳۴۵۶۷۸۹"[n]);
     const fmtLong = new Intl.DateTimeFormat("fa-IR-u-ca-persian", { weekday: "long", day: "numeric", month: "long" });
     const fmtMonth = new Intl.DateTimeFormat("fa-IR-u-ca-persian", { month: "long", year: "numeric" });
+    const fmtMonthName = new Intl.DateTimeFormat("fa-IR-u-ca-persian", { month: "long" });
     const fmtNum = new Intl.DateTimeFormat("en-US-u-ca-persian", { year: "numeric", month: "numeric", day: "numeric" });
     const persianParts = (d) => Object.fromEntries(fmtNum.formatToParts(d).filter((p) => p.type !== "literal").map((p) => [p.type, parseInt(p.value, 10)]));
     function persianDate(d) {
@@ -2167,14 +2341,18 @@
     function renderDateValue() {
       el.dateValue.textContent = form.date ? shortLabel(dateOf(form.date)) : "بدون تاریخ";
       el.dateValue.classList.toggle("is-empty", !form.date);
-      el.dateDisplay.textContent = el.dateValue.textContent;
-      el.dateDisplay.classList.toggle("is-empty", !form.date);
-      el.noDate.setAttribute("aria-pressed", String(form.date === null));
+      renderDateDisplay();
+    }
+    // پیش‌نویس تاریخ: انتخاب روز فقط پیش‌نمایش است؛ «تایید» آن را روی کار می‌نشاند
+    function renderDateDisplay() {
+      const d = form.dateDraft;
+      el.dateDisplay.textContent = d ? shortLabel(dateOf(d)) : "بدون تاریخ";
+      el.dateDisplay.classList.toggle("is-empty", !d);
     }
     function renderCalendar() {
       const start = form.calMonth;
       const month = persianParts(start).month;
-      el.calTitle.textContent = fmtMonth.format(start);
+      el.calTitle.textContent = `${fmtMonthName.format(start)} ${faDigits(persianParts(start).year)}`;
       const cells = WEEKDAYS.map((w) => { const s = document.createElement("span"); s.className = "cal-weekday"; s.textContent = w; s.setAttribute("aria-hidden", "true"); return s; });
       const lead = (start.getDay() + 1) % 7; // شنبه اولین ستون
       for (let i = 0; i < lead; i++) { const s = document.createElement("span"); s.className = "cal-empty"; cells.push(s); }
@@ -2184,7 +2362,7 @@
         b.type = "button"; b.className = "cal-day"; b.dataset.date = k;
         b.textContent = faDigits(persianParts(d).day);
         b.setAttribute("aria-label", dayLabel(d));
-        b.setAttribute("aria-pressed", String(form.date === k));
+        b.setAttribute("aria-pressed", String(form.dateDraft === k));
         if (k === todayKey) b.classList.add("is-today");
         else if (k < todayKey) b.classList.add("is-past");
         cells.push(b);
@@ -2200,8 +2378,15 @@
       if (!key) el.fRepeat.checked = false;
       renderDateValue(); renderCalendar(); togglePicker(null);
     }
-    el.calGrid.addEventListener("click", (e) => { const b = e.target.closest("[data-date]"); if (b) setFormDate(b.dataset.date); });
-    el.noDate.addEventListener("click", () => setFormDate(null));
+    el.calGrid.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-date]"); if (!b) return;
+      form.dateDraft = b.dataset.date;
+      el.calGrid.querySelectorAll('[aria-pressed="true"]').forEach((x) => x.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
+      renderDateDisplay();
+    });
+    el.dateDone.addEventListener("click", () => setFormDate(form.dateDraft ?? null));
+    el.dateCancel.addEventListener("click", () => { form.dateDraft = form.date; togglePicker(null); });
 
     // با باز شدن هر انتخابگر، بقیه‌ی فرم پنهان می‌شود و فوکوس مستقیم روی گزینه‌ی انتخاب‌شده می‌رود
     let sheetTitleText = "";
@@ -2226,6 +2411,7 @@
       }
       if (timeOn) { startTimeDraft(); tp.start.h.focus({ preventScroll: true }); selectAll(tp.start.h); }
       if (dateOn) {
+        form.dateDraft = form.date; if (form.date) form.calMonth = monthStart(dateOf(form.date)); renderCalendar(); renderDateDisplay();
         (el.calGrid.querySelector('[aria-pressed="true"]') || el.calGrid.querySelector(".is-today") || el.calGrid.querySelector(".cal-day")).focus({ preventScroll: true });
       }
       if (!picking && wasOpen && el.sheet.open) (wasOpen === "time" ? el.timeTrigger : el.dateTrigger).focus({ preventScroll: true });
