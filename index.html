@@ -1397,7 +1397,7 @@
     /* کار انجام‌شده: پس‌زمینه‌ی صفحه بدون شطرنجی، قاب خط‌چین به رنگ تیک، متن خط‌خورده و کم‌رنگ؛ چک‌باکس پررنگ می‌ماند */
     .tasks .task.is-done .task-body, .tasks .task.is-done .task-body:hover {
       background: #fff; background-image: none; box-shadow: none;
-      outline: 1.5px dashed var(--tone-check); outline-offset: -1.5px;
+      outline: 1.5px dashed color-mix(in srgb, var(--tone-check) 45%, #fff); outline-offset: -1.5px;
     }
     .tasks .task.is-done .task-title { color: #a79db4; text-decoration: line-through; text-decoration-color: #857a93; text-decoration-thickness: 1.5px; }
     .tasks .task.is-done .task-desc, .tasks .task.is-done .task-time { color: #c4bccd; }
