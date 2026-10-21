@@ -1722,20 +1722,10 @@
       min-height: 64px; height: 64px; padding-inline: 10px 16px; gap: 8px;
       border: 1px solid transparent; border-radius: 20px;
       background-color: var(--tone-bg, var(--color-task));
-      background-image:
-        linear-gradient(to right, var(--card-grid) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--card-grid) 1px, transparent 1px);
-      background-size: 8px 8px; background-position: 0 0;
+      background-image: none;
       box-shadow: none;
       transition: background-color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out),
                   border-color var(--dur-2) var(--ease-out), width var(--dur-3) var(--ease-out), transform var(--dur-1) var(--ease-out);
-    }
-    /* لایه‌ی مایع هم شطرنجی است تا موقع خالی‌شدن، همان کارت رنگی دیده شود که می‌رود */
-    .skin-notebook .task .liquid {
-      background-image:
-        linear-gradient(to right, var(--card-grid) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--card-grid) 1px, transparent 1px);
-      background-size: 8px 8px; background-position: 0 0;
     }
 
     /* کارت غیرفعال (انجام‌شده) و کارتی که در حال پر شدن است: رنگ پس‌زمینه، بدون شطرنجی، کم‌رنگ */
