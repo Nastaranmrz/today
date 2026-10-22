@@ -1423,6 +1423,32 @@
     @media (max-width: 360px) { .filters .chip { padding-inline: 14px !important; } }
     /* ===== COLORFUL-THEME END ===== */
   </style>
+  <style>
+    /* Sheets open from the top and leave a keyboard-safe scroll area on mobile. */
+    dialog.sheet {
+      position: fixed;
+      inset-block-start: calc(env(safe-area-inset-top, 0px) + 16px);
+      inset-block-end: auto;
+      margin: 0 auto;
+      max-height: calc(100dvh - var(--keyboard, 0px) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 32px);
+      border-radius: var(--radius-xl);
+      overscroll-behavior: contain;
+      scroll-padding-block: 16px 88px;
+    }
+    dialog.sheet[open] { animation: sheet-in-top var(--dur-3) var(--ease-out); }
+    @keyframes sheet-in-top { from { transform: translateY(-100%); } }
+    dialog.sheet .sheet-actions, dialog.sheet .picker-actions, dialog.sheet .date-actions {
+      position: sticky;
+      inset-block-end: -1px;
+      z-index: 2;
+      padding-block: var(--space-xs);
+      background: var(--mauve-50);
+    }
+    @media (max-height: 560px) {
+      dialog.sheet { padding: var(--space-md); }
+      dialog.sheet .sheet-header { margin-bottom: var(--space-xs); }
+    }
+  </style>
 
   <main class="screen">
     <div class="page-glow" aria-hidden="true"></div>
@@ -2941,7 +2967,7 @@
     // ---------- بسته شدن نرم برگه‌ها، منوها و پنجره‌ها ----------
     // close() هر پنجره اول انیمیشن خروج را اجرا می‌کند و بعد واقعاً می‌بندد؛ Esc هم از همین مسیر می‌رود
     const EXIT_FRAMES = {
-      sheet: [{ transform: "translateY(0)" }, { transform: "translateY(100%)" }],
+      sheet: [{ transform: "translateY(0)" }, { transform: "translateY(-100%)" }],
       drawer: [{ transform: "translateX(0)" }, { transform: "translateX(100%)" }],
       drawerEnd: [{ transform: "translateX(0)" }, { transform: "translateX(-100%)" }],
       confirm: [{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(.96)" }],
