@@ -1670,7 +1670,7 @@
       </svg>
       <div class="wip-text">
         <h2 class="wip-title" id="wip-title">در حال طراحی</h2>
-        <p class="wip-sub">صفحه‌ی پروفایل داره ساخته می‌شه<span class="wip-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+        <p class="wip-sub">صفحه‌ی تقویم داره ساخته می‌شه<span class="wip-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
       </div>
     </section>
     <div class="nav-wrap">
@@ -1983,10 +1983,10 @@
         }
         const today = keyOf(startOfDay(new Date()));
         const samples = [
-          { id: "sample-walk", title: "پیاده‌روی صبحگاهی", description: "۲۰ دقیقه برای شروع پرانرژی روز", time: "07:30", endTime: "", date: today, repeat: false, done: true, doneDates: [] },
           { id: "sample-book", title: "مطالعه کتاب", description: "چند صفحه از کتابی که شروع کردی بخون", time: "19:00", endTime: "", date: today, repeat: false, done: false, doneDates: [] },
           { id: "sample-call", title: "تماس با دوست", description: "", time: "17:00", endTime: "", date: today, repeat: false, done: false, doneDates: [] },
           { id: "sample-language", title: "تمرین زبان", description: "مرور واژه‌های جدید", time: "", endTime: "", date: today, repeat: true, done: false, doneDates: [] },
+          { id: "sample-walk", title: "پیاده‌روی صبحگاهی", description: "۲۰ دقیقه برای شروع پرانرژی روز", time: "", endTime: "", date: today, repeat: false, done: true, doneDates: [] },
         ];
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(samples)); } catch {}
         return samples;
