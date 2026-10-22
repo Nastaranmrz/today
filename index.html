@@ -1505,6 +1505,15 @@
       overscroll-behavior: contain;
       scroll-padding-block: 16px 88px;
     }
+    @media (min-width: 601px) {
+      dialog.sheet {
+        width: min(calc(100vw - 48px), 392px);
+        max-width: 392px;
+        margin: auto auto calc(var(--space-2xl) + var(--space-xs) + env(safe-area-inset-bottom, 0px));
+        max-height: calc(100dvh - var(--space-2xl) * 2);
+        border-radius: var(--radius-xl);
+      }
+    }
     @media (max-width: 600px) {
       #cal-grid, #day-grid {
         aspect-ratio: 1 / 1;
@@ -1959,13 +1968,28 @@
     // ---------- ذخیره‌سازی ----------
     function load() {
       try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        if (Array.isArray(saved)) return saved;
-        const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY)) || {};
-        return Object.entries(legacy).flatMap(([k, list]) => {
-          const [y, m, d] = k.split("-").map(Number);
-          return list.map((t) => ({ id: t.id, title: t.title, description: "", time: "", date: `${y}-${pad(m)}-${pad(d)}`, repeat: false, done: !!t.done, doneDates: [] }));
-        });
+        const savedRaw = localStorage.getItem(STORAGE_KEY);
+        if (savedRaw !== null) {
+          const saved = JSON.parse(savedRaw);
+          return Array.isArray(saved) ? saved : [];
+        }
+        const legacyRaw = localStorage.getItem(LEGACY_KEY);
+        if (legacyRaw !== null) {
+          const legacy = JSON.parse(legacyRaw) || {};
+          return Object.entries(legacy).flatMap(([k, list]) => {
+            const [y, m, d] = k.split("-").map(Number);
+            return list.map((t) => ({ id: t.id, title: t.title, description: "", time: "", date: `${y}-${pad(m)}-${pad(d)}`, repeat: false, done: !!t.done, doneDates: [] }));
+          });
+        }
+        const today = keyOf(startOfDay(new Date()));
+        const samples = [
+          { id: "sample-walk", title: "پیاده‌روی صبحگاهی", description: "۲۰ دقیقه برای شروع پرانرژی روز", time: "07:30", endTime: "", date: today, repeat: false, done: true, doneDates: [] },
+          { id: "sample-book", title: "مطالعه کتاب", description: "چند صفحه از کتابی که شروع کردی بخون", time: "19:00", endTime: "", date: today, repeat: false, done: false, doneDates: [] },
+          { id: "sample-call", title: "تماس با دوست", description: "", time: "17:00", endTime: "", date: today, repeat: false, done: false, doneDates: [] },
+          { id: "sample-language", title: "تمرین زبان", description: "مرور واژه‌های جدید", time: "", endTime: "", date: today, repeat: true, done: false, doneDates: [] },
+        ];
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(samples)); } catch {}
+        return samples;
       } catch { return []; }
     }
     function persist() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tasks)); } catch {} }
