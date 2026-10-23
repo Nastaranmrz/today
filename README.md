@@ -1,65 +1,78 @@
-<div align="center">
+<p align="left">
+  <strong>TO DO LIST</strong><br />
+  <em>A calm, Persian-first space for planning your day.</em>
+</p>
+
+<p align="left">
+  <a href="https://nastaranmrz.github.io/today/"><img src="https://img.shields.io/badge/open-live%20app-7c3aed?style=flat-square" alt="Open the live app" /></a>
+  <a href="https://github.com/Nastaranmrz/today"><img src="https://img.shields.io/github/stars/Nastaranmrz/today?style=flat-square&logo=github" alt="GitHub stars" /></a>
+  <a href="https://github.com/Nastaranmrz/today/commits/main"><img src="https://img.shields.io/github/last-commit/Nastaranmrz/today?style=flat-square&logo=github&label=last%20update" alt="Last update on GitHub" /></a>
+  <a href="TESTING.md"><img src="https://img.shields.io/badge/manual%20tests-documented-2f855a?style=flat-square" alt="Manual tests documented" /></a>
+  <img src="https://img.shields.io/badge/interface-Persian%20%7C%20RTL-5b5870?style=flat-square" alt="Persian right-to-left interface" />
+</p>
 
 # To do list
 
-### برنامه‌ریزی روزانه، ساده و فارسی
+Plan your day, keep track of what matters, and see your progress at a glance. To do list is a lightweight, right-to-left task planner designed around a Persian interface.
 
-یک فهرست کار سبک برای ثبت کارهای روزانه، تعیین زمان و پیگیری انجام آن‌ها.
+<p align="left">
+  <a href="https://nastaranmrz.github.io/today/"><strong>→ Open the app</strong></a>
+  &nbsp; · &nbsp;
+  <a href="TESTING.md">Manual test guide (Persian)</a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/Nastaranmrz/today/issues">Report an issue</a>
+</p>
 
-[**باز کردن اپ**](https://nastaranmrz.github.io/today/) · [راهنمای تست](TESTING.md) · [گزارش مشکل](https://github.com/Nastaranmrz/today/issues)
+## What you can do
 
-![رابط فارسی](https://img.shields.io/badge/رابط-فارسی-7c3aed?style=flat-square)
-![نسخهٔ وب](https://img.shields.io/badge/اجرا-بدون%20نصب-5b5870?style=flat-square)
-![انتشار](https://img.shields.io/badge/میزبانی-GitHub%20Pages-2f855a?style=flat-square)
-
-</div>
-
----
-
-## دربارهٔ اپ
-
-**To do list** کمک می‌کند کارهای روزانه را یک‌جا بنویسی، برایشان تاریخ و ساعت بگذاری و پیشرفت روزت را ببینی. رابط اپ فارسی و راست‌چین است و برای صفحه‌های کوچک هم چیدمان جداگانه دارد.
-
-## امکانات
-
-| | امکان | توضیح |
+| | Feature | Details |
 |---|---|---|
-| ✍️ | مدیریت کارها | افزودن، ویرایش، انجام‌دادن و حذف کارها |
-| 🔎 | پیدا کردن سریع | جست‌وجو و فیلتر کارهای انجام‌شده یا همهٔ کارها |
-| 🗓️ | زمان‌بندی | انتخاب تاریخ، ساعت مشخص یا بازهٔ زمانی |
-| 🔁 | تکرار روزانه | علامت‌گذاری کارهایی که هر روز انجام می‌شوند |
-| 🎨 | نمایش شخصی | حالت روشن و تاریک و اطلاعات محلی پروفایل |
-| 📱 | رابط فارسی | چیدمان راست‌چین و سازگار با موبایل |
+| ✍️ | Manage tasks | Add, edit, complete, and remove tasks. |
+| 🔎 | Find what you need | Search tasks and filter completed or all items. |
+| 🗓️ | Plan your time | Choose a date, a single time, or a time range. |
+| 🔁 | Build a routine | Mark tasks to repeat every day. |
+| 🎨 | Make it yours | Switch between light and dark themes and edit local profile details. |
+| 📱 | Use it in Persian | Read a right-to-left interface with responsive layouts. |
 
-## شروع سریع
+## Get started
 
-### استفاده از نسخهٔ آنلاین
+### Use the live app
 
-به [nastaranmrz.github.io/today](https://nastaranmrz.github.io/today/) برو؛ نصب یا ساخت حساب لازم نیست.
+Open **[nastaranmrz.github.io/today](https://nastaranmrz.github.io/today/)** in a modern browser. There is nothing to install and no sign-up is required.
 
-### اجرا از روی فایل
+### Run the downloaded file
 
-1. فایل `index.html` را دریافت کن.
-2. آن را با یک مرورگر به‌روز باز کن.
+1. Download `index.html` from this repository.
+2. Open it in a modern browser.
 
-این پروژه یک اپ استاتیک است و برای اجرا به نصب وابستگی یا دستور build نیاز ندارد. فونت Vazirmatn از Google Fonts بارگذاری می‌شود؛ اگر اینترنت در دسترس نباشد، متن با فونت جایگزین مرورگر نمایش داده می‌شود.
+This is a static, single-file app. There is no build step or package installation. The Vazirmatn typeface is loaded from Google Fonts; when it cannot be reached, the browser falls back to a system font.
 
-## داده‌ها کجا ذخیره می‌شوند؟
+## How your data is stored
 
-کارها، تنظیمات نمایش و اطلاعات پروفایل در `localStorage` مرورگر ذخیره می‌شوند. داده‌ها به حساب ابری ارسال یا بین دستگاه‌ها همگام‌سازی نمی‌شوند. برای همین:
+Tasks, theme preferences, and profile details are saved in the browser's `localStorage` on your device. The app does not provide cloud sync, so this information does not automatically move between browsers or devices.
 
-- در همان مرورگر و همان دستگاه دوباره در دسترس‌اند.
-- پاک‌کردن داده‌های سایت یا مرورگر ممکن است آن‌ها را حذف کند.
-- برای امتحان اپ، از اطلاعات حساس واقعی استفاده نکن.
+- Reopen the app in the same browser to find your saved data.
+- Clearing the site's browser data may remove it.
+- Avoid entering sensitive information into a demo or shared device.
 
-## کیفیت و مشارکت
+## Project map
 
-سناریوهای دستی، معیار موفقیت و مواردی که هنوز باید بررسی شوند در [TESTING.md](TESTING.md) آمده‌اند. برای گزارش ایراد، یک مورد در [بخش Issues مخزن](https://github.com/Nastaranmrz/today/issues) باز کن و مرورگر، اندازهٔ صفحه، مراحل بازتولید و نتیجهٔ مورد انتظار را بنویس.
+```text
+today/
+├── index.html    # App markup, styles, and behavior
+├── README.md     # Project overview and getting started
+├── TESTING.md    # Manual scenarios and execution notes (Persian)
+└── .nojekyll     # GitHub Pages configuration
+```
 
-## ساختار پروژه
+## Quality checks
 
-نسخهٔ فعلی اپ در یک فایل اصلی (`index.html`) نگهداری می‌شود تا اجرای آن ساده و انتشار با GitHub Pages مستقیم باشد. `.nojekyll` هم برای انتشار مستقیم فایل‌ها در Pages نگه داشته شده است.
+The manual guide covers task creation and editing, search, filters, date and time selection, navigation, and known follow-up checks. See **[TESTING.md](TESTING.md)** for steps, success criteria, previous observations, and scenarios that still need a real mobile device.
 
-## مجوز استفاده
+## Feedback
 
-مخزن هنوز فایل مجوز ندارد؛ بنابراین شرایط بازاستفاده و بازتوزیع کد مشخص نشده است. عمومی‌بودن صفحهٔ GitHub به‌تنهایی به معنی داشتن مجوز متن‌باز نیست.
+Found something confusing or broken? [Open an issue](https://github.com/Nastaranmrz/today/issues) with the browser and device you used, steps to reproduce it, and what you expected to happen.
+
+## License
+
+No license has been added to this repository yet. Until one is chosen, reuse and redistribution terms are not specified.
