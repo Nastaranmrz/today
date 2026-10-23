@@ -1,107 +1,107 @@
-# راهنمای آزمون | To do list
+# Test Plan & Results | To do list
 
-این سند برای اجرای دوبارهٔ سناریوهای مهم اپ و ثبت نتیجهٔ قابل‌پیگیری است. آزمون‌ها دستی‌اند و جای تست خودکار یا بررسی روی دستگاه‌های واقعی را نمی‌گیرند.
+This document records repeatable manual checks for the app. It complements automated checks; it does not replace testing on real devices or assistive technology.
 
-**نسخهٔ آنلاین:** [nastaranmrz.github.io/today](https://nastaranmrz.github.io/today/)  
-**آخرین دور ثبت‌شده:** ۲۳ اکتبر ۲۰۲۶ · مرورگر دسکتاپ در محیط مرورگر داخلی  
-**وضعیت داده در پایان آن دور:** چهار نمونه‌کار، یک کار انجام‌شده، بدون دادهٔ آزمایشی
+**Live app:** [nastaranmrz.github.io/today](https://nastaranmrz.github.io/today/)  
+**Latest test run:** October 23, 2026  
+**Test environment:** Desktop browser in the Codex in-app browser; exact browser version and viewport were not exposed  
+**End state:** Four sample tasks, one completed; temporary test data removed
 
-## راهنمای وضعیت
+## Status key
 
-| نشان | معنی |
+| Status | Meaning |
 |---|---|
-| ✅ قبول | نتیجه با معیار موفقیت مطابقت داشت |
-| ❌ رد | نتیجه با معیار موفقیت مطابقت نداشت؛ ایراد را ثبت کن |
-| ⚠️ ناقص | بخشی از سناریو بررسی شد اما نتیجهٔ کامل در دست نیست |
-| ⬜ اجرا نشده | هنوز آزموده نشده است |
+| PASS | Observed behavior met the success criteria |
+| FAIL | Observed behavior did not meet the criteria; record an issue |
+| PARTIAL | Only part of the scenario was verified |
+| BLOCKED | Could not run because the required device or capability was unavailable |
+| NOT RUN | Has not been tested |
 
-## پیش از شروع
+## Before you start
 
-1. نسخه و آدرس اپ، تاریخ، سیستم‌عامل، مرورگر و اندازهٔ صفحه را یادداشت کن.
-2. برای دادهٔ آزمایشی عنوانی با پیشوند `QA-` انتخاب کن تا به‌راحتی پیدایش کنی.
-3. قبل از پایان، کارهای آزمایشی را حذف کن و وضعیت نمونه‌ها را به حالت شروع برگردان.
-4. برای این بررسی، داده‌های مرورگر را پاک نکن؛ این کار می‌تواند اطلاعات ذخیره‌شدهٔ کاربر را حذف کند.
-5. نتیجه، زمان تقریبی، خطا و تصویر مرتبط را برای هر سناریو ثبت کن.
+1. Record the app URL, date, operating system, browser, and viewport.
+2. Use a unique task title with the `QA-` prefix so test data is easy to find.
+3. Remove temporary tasks and restore the sample task state after testing.
+4. Do not clear browser storage as part of routine checks; this can erase the user's saved tasks.
+5. For each scenario, record the actual result, duration, errors, and any useful screenshot.
 
-## سناریوهای اصلی
+## App loading and daily list
 
-### ۱. بارگذاری و وضعیت روز
-
-| شناسه | هدف | مراحل | معیار موفقیت | نتیجهٔ آخرین اجرا |
+| ID | User goal | Steps | Success criteria | Latest result |
 |---|---|---|---|---|
-| APP-01 | دیدن کارهای روز | اپ را باز کن و تاریخ و فهرست را بررسی کن. | کارت‌ها بارگذاری شوند و شمارنده با تعداد کارهای انجام‌شده هماهنگ باشد. | ✅ قبول · حدود ۱ ثانیه · ۴ کار، ۱ انجام‌شده |
+| APP-01 | View today's tasks | Open the app and inspect the date, task cards, and completion count. | The list renders and the completion count matches the visible completed tasks. | **PASS** — about 1 second; 4 sample tasks, 1 completed |
 
-### ۲. ساخت و مدیریت کار
+## Creating and managing tasks
 
-| شناسه | هدف | مراحل | معیار موفقیت | نتیجهٔ آخرین اجرا |
+| ID | User goal | Steps | Success criteria | Latest result |
 |---|---|---|---|---|
-| TASK-01 | جلوگیری از ثبت عنوان خالی | فرم کار جدید را باز کن و بدون عنوان دکمهٔ افزودن را بررسی کن. | دکمه غیرفعال بماند و کار خالی ساخته نشود. | ✅ قبول |
-| TASK-02 | ساخت کار | عنوان `QA-کار آزمایشی` و یک توضیح کوتاه وارد کن و ذخیره کن. | فرم بسته شود و کارت جدید با عنوان و توضیح دیده شود. | ✅ قبول · حدود ۲٫۱ ثانیه · داده پاک شد |
-| TASK-03 | ویرایش کار | کارت آزمایشی را ویرایش کن و عنوان یا توضیح را تغییر بده. | مقدار تازه در کارت نمایش داده شود و مقدار قبلی جایگزین شود. | ✅ قبول · حدود ۱٫۴ ثانیه · داده پاک شد |
-| TASK-04 | انجام‌دادن و بازگرداندن کار | چک‌باکس یک کار را روشن و سپس خاموش کن. | فقط همان کار تغییر کند؛ شمارنده و ظاهر کارت با وضعیتش هماهنگ شوند. | ✅ قبول · شمارنده پس از به‌روزرسانی درست بود |
-| TASK-05 | حذف کار | کار آزمایشی را حذف کن و فهرست را بررسی کن. | کارت حذف شود؛ کارهای دیگر و شمارندهٔ آن‌ها دست‌نخورده بمانند. | ✅ قبول · کنترل حذف با صفحه‌کلید هم فعال شد |
-| TASK-06 | لغو بدون ذخیره | فرم افزودن یا ویرایش را باز کن، مقداری وارد کن و «انصراف» را بزن. | فرم بسته شود و مقدار واردشده ذخیره نشود. | ✅ قبول · حدود ۱ ثانیه |
+| TASK-01 | Prevent an empty task | Open the new-task sheet and leave the title blank. | Add remains disabled and no empty task is created. | **PASS** |
+| TASK-02 | Create a task | Create a task titled `QA-Test task` with a short description. | The sheet closes and the task appears with the entered title and description. | **PASS** — about 2.1 seconds; test task removed |
+| TASK-03 | Edit a task | Edit a temporary task and change its title or description. | The updated value appears and replaces the old value. | **PASS** — about 1.4 seconds; test task removed |
+| TASK-04 | Toggle completion | Toggle one task's checkbox on and off. | Only that task changes; its appearance and the completion count update. | **PASS** — only the selected task changed; count updated |
+| TASK-05 | Delete a task | Delete a temporary task and inspect the list. | The task disappears; other tasks and their states remain unchanged. | **PASS** — delete action was also activated with the keyboard |
+| TASK-06 | Cancel without saving | Open the add or edit sheet, enter a value, then choose Cancel. | The sheet closes and the unsaved value is not retained. | **PASS** — about 1 second |
 
-### ۳. پیدا کردن و فیلترکردن
+## Search and filters
 
-| شناسه | هدف | مراحل | معیار موفقیت | نتیجهٔ آخرین اجرا |
+| ID | User goal | Steps | Success criteria | Latest result |
 |---|---|---|---|---|
-| FIND-01 | پیدا کردن یک کار | بخشی از عنوان یکی از نمونه‌ها را جست‌وجو کن. | فقط نتیجه‌های مرتبط دیده شوند. | ✅ قبول · حدود ۰٫۷ ثانیه |
-| FIND-02 | جست‌وجوی بدون نتیجه | عبارتی ناموجود جست‌وجو کن. | پیام روشنِ نبود نتیجه نشان داده شود؛ صفحه خراب یا خالیِ مبهم نشود. | ✅ قبول |
-| FIND-03 | فیلتر انجام‌شده‌ها | «انجام‌شده» و سپس «همه» را انتخاب کن. | فهرست هر فیلتر درست باشد و بازگشت به «همه» تمام کارهای روز را نشان دهد. | ✅ قبول · ۴ کار، ۱ انجام‌شده |
+| FIND-01 | Find a task | Search for part of a sample task's title. | Only matching tasks are shown. | **PASS** — about 0.7 seconds |
+| FIND-02 | Search for a missing task | Search for a string that does not exist. | A clear no-results state appears without a broken or ambiguous blank screen. | **PASS** |
+| FIND-03 | Filter completed tasks | Select Completed, then select All. | Each filter shows the correct tasks; All restores the full daily list. | **PASS** — 4 tasks total, 1 completed |
 
-### ۴. تاریخ، تکرار و ساعت
+## Dates, recurrence, and time
 
-| شناسه | هدف | مراحل | معیار موفقیت | نتیجهٔ آخرین اجرا |
+| ID | User goal | Steps | Success criteria | Latest result |
 |---|---|---|---|---|
-| DATE-01 | ساخت کار برای فردا | یک کار آزمایشی بساز، تاریخ فردا را انتخاب و ذخیره کن؛ سپس تاریخ روز را دوباره باز کن. | کار زیر تاریخ فردا دیده شود و فهرست روز جاری پس از بازگشت درست باشد. | ✅ قبول · حدود ۱٫۱ ثانیه · داده پاک شد |
-| DATE-02 | تکرار روزانه | هنگام ساخت کار، «هر روز» را فعال کن و ذخیره کن. | برچسب تکرار روزانه برای کار نمایش داده شود. | ✅ قبول · با کار آزمایشی |
-| DATE-03 | جابه‌جایی ماه در تقویم | انتخابگر تاریخ را باز کن، ماه بعد و ماه قبل را بزن. | عنوان ماه و روزهای تقویم با هر جابه‌جایی عوض شوند و انتخاب قبلی ناخواسته تغییر نکند. | ⚠️ ناقص · دکمه‌ها فشرده شدند، عنوان ماه به‌طور قطعی ثبت نشد |
-| TIME-01 | انتخاب یک زمان | در فرم کار، «یک زمان» را انتخاب کن و ساعت `13:30` را ذخیره کن. | زمان روی کارت کار نمایش داده شود. | ✅ قبول · با کار آزمایشی |
-| TIME-02 | بازهٔ معتبر | حالت «بازهٔ زمانی» را انتخاب و زمان شروع و پایان معتبر وارد کن. | هر دو زمان پذیرفته شوند و بازه در کارت نمایش داده شود. | ✅ قبول · کنترل‌های شروع و پایان نمایش داده شدند |
-| TIME-03 | جلوگیری از بازهٔ نامعتبر | زمان پایان را زودتر از زمان شروع قرار بده. | ذخیره مسدود شود و پیام خطای قابل‌فهم نمایش داده شود. | ✅ قبول · پیام خطا در کمتر از ۱ ثانیه دیده شد |
+| DATE-01 | Schedule a task for tomorrow | Create a temporary task, choose tomorrow, save, then revisit today's list. | The task is associated with tomorrow and today's list is correct when revisited. | **PASS** — about 1.1 seconds; test task removed |
+| DATE-02 | Repeat a task daily | Enable Every day while creating a temporary task. | The saved task shows the daily recurrence setting. | **PASS** — checked with a temporary task |
+| DATE-03 | Navigate calendar months | Open the date picker, move to the next month, then back to the previous month. | The month title changes in both directions and returning restores the original month. | **PASS** — observed Aban 1405 → Azar 1405 → Aban 1405 |
+| TIME-01 | Set a single time | Choose Single time and set a temporary task to 13:30. | The selected time is accepted and appears on the task. | **PASS** — checked with a temporary task |
+| TIME-02 | Set a valid time range | Choose Time range and set a start and a later end time; save the task. | Both times are accepted and the saved task displays the range. | **PARTIAL** — start/end controls appeared; a saved valid range was not confirmed |
+| TIME-03 | Reject an invalid time range | Set the end time earlier than the start time. | Saving is blocked and a clear validation message appears. | **PASS** — validation message appeared in under 1 second |
 
-### ۵. منو و ناوبری
+## Navigation and panels
 
-| شناسه | هدف | مراحل | معیار موفقیت | نتیجهٔ آخرین اجرا |
+| ID | User goal | Steps | Success criteria | Latest result |
 |---|---|---|---|---|
-| NAV-01 | منو و تنظیمات حساب | منو را باز کن، پنل حساب را باز کن و انصراف بده. | پنل درست باز شود؛ انصراف پنل را ببندد و داده‌ای ناخواسته ذخیره نشود. | ✅ قبول |
-| NAV-02 | اعلان‌ها | پنل اعلان‌ها را باز و ببند. | پنل باز شود، حالت خالی درست نمایش داده شود و بستن آن ممکن باشد. | ✅ قبول |
-| NAV-03 | دکمهٔ تقویم و بازگشت به خانه | دکمهٔ دوم نوار پایین را بزن و سپس به خانه برگرد. | مقصد باز شود و بازگشت به خانه کار کند. متن مقصد در نسخهٔ آنلاین هنگام آزمون جای‌نگهدار بود. | ✅ ناوبری قبول · مقصد هنوز جای‌نگهدار است |
+| NAV-01 | Open and dismiss the menu/account panel | Open the menu, open the account panel, then cancel or close it. | The expected panel opens and closes without saving unintended changes. | **PASS** |
+| NAV-02 | Check notifications | Open and close the notifications panel. | The panel opens, its empty state is understandable, and it can be dismissed. | **PASS** |
+| NAV-03 | Navigate to Calendar and back Home | Select Calendar in the bottom navigation, then return Home. | The destination opens and Home can be reached again. | **PASS** — navigation works; Calendar content was still a placeholder during the run |
 
-## سناریوهای نیازمند اجرای دوباره
+## Remaining checks and known limits
 
-این موارد در دور قبلی کامل پوشش داده نشدند یا برایشان دستگاه واقعی لازم است:
-
-| شناسه | بررسی | معیار موفقیت | وضعیت |
+| ID | Check | Success criteria | Status / limitation |
 |---|---|---|---|
-| MOB-01 | روی گوشی، کیبورد را در فرم افزودن باز کن و صفحه را اسکرول کن. | فیلد فعال و دکمه‌های «افزودن/انصراف» قابل‌دیدن و قابل‌فشار بمانند. | ⬜ اجرای مجدد پس از تغییر CSS لازم است |
-| MOB-02 | همین بررسی را در فرم ویرایش حساب انجام بده. | دکمه‌های ذخیره و انصراف بالای کیبورد بمانند. | ⬜ گوشی واقعی لازم است |
-| MOB-03 | صفحه‌کلید عددی را برای ساعت تکی و بازهٔ زمانی باز کن. | ورودی‌ها و دکمه‌های تأیید و لغو زیر کیبورد نروند. | ⬜ گوشی واقعی لازم است |
-| DATA-01 | یک کار آزمایشی بساز، صفحه را تازه‌سازی کن و روز را دوباره باز کن. | کار پس از refresh باقی بماند؛ پاک‌سازی داده‌ها انجام نشود. | ⬜ اجرا نشده |
-| A11Y-01 | با Tab و screen reader روی کنترل‌های اصلی حرکت کن. | ترتیب فوکوس منطقی باشد و نام کنترل‌ها قابل‌فهم خوانده شود. | ⬜ اجرا نشده |
-| OFFLINE-01 | پس از بارگذاری، اینترنت را قطع و اپ را دوباره باز کن. | رفتار آفلاین مورد انتظار ثبت شود؛ پشتیبانی فعلی هنوز تأیید نشده است. | ⬜ اجرا نشده |
-| ERR-01 | گردش‌های اصلی را اجرا و کنسول مرورگر را بررسی کن. | خطای JavaScript تازه‌ای ثبت نشود. | ✅ قبول در دور قبلی · خطایی مشاهده نشد |
+| MOB-01 | On a phone, open the keyboard in the Add Task sheet and scroll the form. | The active field and Add/Cancel buttons remain visible and usable above the keyboard. | **BLOCKED** — no phone or mobile viewport control was available in this test environment; re-run on a real phone after the CSS update. |
+| MOB-02 | Repeat the keyboard check in the account edit sheet. | Save and Cancel remain visible and usable above the keyboard. | **BLOCKED** — requires a real phone or mobile browser test. |
+| MOB-03 | Open the numeric keyboard in both Single time and Time range sheets. | Inputs and confirmation/cancel buttons remain visible and usable. | **BLOCKED** — requires a real phone or mobile browser test. |
+| DATA-01 | Create a temporary task, load the same app in a fresh tab, and check the task. | The task remains available after a new page load without clearing storage. | **PASS** — task appeared in a fresh tab; temporary task was deleted afterward. A browser-level hard refresh was not available. |
+| A11Y-01 | Navigate the main controls using Tab and verify names with a screen reader. | Focus order is logical and controls have understandable accessible names. | **PARTIAL** — Tab moved focus through controls, but the complete focus order and screen-reader output were not verified. |
+| OFFLINE-01 | Load the app, disconnect the network, and reopen it. | Record whether the app supports the expected offline behavior. | **BLOCKED** — this browser did not expose network-offline controls; offline support remains unverified. |
+| ERR-01 | Run the main flows and inspect the browser console. | No new JavaScript errors appear. | **PASS** in the previous run; no console errors were observed. |
 
-## فرم ثبت اجرای جدید
+## Reusable run record
 
-این بخش را برای هر دور تازه کپی و پر کن:
+Copy this block for each new test run:
 
 ```text
-تاریخ و ساعت:
-نسخه / commit:
-دستگاه و سیستم‌عامل:
-مرورگر و نسخه:
-اندازهٔ صفحه:
-شناسهٔ سناریو:
-مدت اجرا:
-نتیجه: قبول / رد / مسدود / اجرا نشده
-نتیجهٔ واقعی:
-خطا یا پیام کنسول:
-لینک تصویر یا ایراد:
-پس‌شرط و پاک‌سازی دادهٔ آزمایشی:
+Date and time:
+App URL / version / commit:
+Device and operating system:
+Browser and version:
+Viewport:
+Scenario ID:
+Duration:
+Result: PASS / FAIL / PARTIAL / BLOCKED / NOT RUN
+Observed result:
+Console or validation errors:
+Screenshot or issue link:
+Test data cleanup:
 ```
 
-## یادداشت آخرین اجرای ثبت‌شده
+## Latest run notes
 
-سناریوهای اصلی در ۲۳ اکتبر ۲۰۲۶ روی نسخهٔ منتشرشده در GitHub Pages با مرورگر دسکتاپ اجرا شدند. خطای JavaScript مشاهده نشد و کار آزمایشی باقی نماند. ابزار آن اجرا امکان تعیین اندازهٔ صفحهٔ موبایل نداشت؛ بنابراین ظاهر موبایل و رفتار دکمه‌ها کنار کیبورد تأییدشده محسوب نمی‌شود.
+The main scenarios were run against the published GitHub Pages app on October 23, 2026, in a desktop in-app browser. The month navigation and task persistence in a fresh tab were checked during the follow-up run. No temporary QA task was left behind. The browser did not provide a mobile viewport, a screen reader, or network toggling, so mobile keyboard behavior, full accessibility, and offline support remain unverified.
+
+
