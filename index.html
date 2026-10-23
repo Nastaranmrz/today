@@ -880,7 +880,7 @@
     .chip[aria-pressed="true"] { background: var(--purple-600); border-color: var(--purple-600); color: #fff; font-weight: var(--font-weight-medium); }
     .search-field { border-radius: var(--radius-sm); background: transparent; border-color: var(--mauve-200); }
     .toolbar-actions { display: flex; gap: var(--space-xs); margin-inline-start: auto; }
-    .search-button, .tick-button { width: 32px; height: 32px; margin: 0; flex-shrink: 0; display: grid; place-items: center; border: 1px solid var(--mauve-200); border-radius: var(--radius-xs); background: transparent; color: var(--mauve-600); }
+    .search-button, .tick-button { width: 32px; height: 32px; margin: 0; flex-shrink: 0; display: grid; place-items: center; border: 1px solid var(--mauve-200); border-radius: var(--radius-sm); background: transparent; color: var(--mauve-600); }
     .search-button[aria-pressed="true"] { background: var(--purple-600); border-color: var(--purple-600); color: #fff; }
     .toolbar:has(.search-button[aria-pressed="true"]) .tick-button { display: none; }
 
@@ -1509,7 +1509,7 @@
         width: 100%;
         max-width: none;
         margin: 0;
-        max-height: calc(100dvh - var(--keyboard, 0px) - env(safe-area-inset-top, 0px));
+        max-height: var(--visual-viewport-height, 100dvh);
         border-radius: var(--radius-xl) var(--radius-xl) 0 0;
       }
       #cal-grid, #day-grid {
@@ -1553,18 +1553,14 @@
     }
     @media (max-width: 600px) {
       dialog.sheet .sheet-actions, dialog.sheet .picker-actions, dialog.sheet .date-actions {
-        inset-block-end: calc(-1 * (var(--space-xl) + env(safe-area-inset-bottom, 0px)));
-        padding-block: 22px calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
+        inset-block-end: 0;
+        padding-block: var(--space-sm) calc(var(--space-sm) + env(safe-area-inset-bottom, 0px));
         background: linear-gradient(to bottom, color-mix(in srgb, var(--mauve-50) 0%, transparent), var(--mauve-50) 58%);
       }
-      dialog.sheet .sheet-actions::after, dialog.sheet .picker-actions::after, dialog.sheet .date-actions::after {
-        content: "";
-        position: absolute;
-        inset-inline: calc(-1 * var(--space-xl));
-        inset-block-start: 100%;
-        height: calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
-        background: var(--mauve-50);
-        pointer-events: none;
+      html.keyboard-open dialog.sheet .sheet-actions,
+      html.keyboard-open dialog.sheet .picker-actions,
+      html.keyboard-open dialog.sheet .date-actions {
+        padding-block-end: var(--space-sm);
       }
     }
     @media (max-height: 560px) {
@@ -3237,8 +3233,18 @@
     // بالا آمدن برگه همراه کیبورد
     if (window.visualViewport) {
       const vv = window.visualViewport;
-      const sync = () => root.style.setProperty("--keyboard", `${Math.round(Math.max(0, window.innerHeight - vv.height - vv.offsetTop))}px`);
+      const sync = () => {
+        const keyboard = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        root.style.setProperty("--keyboard", `${Math.round(keyboard)}px`);
+        root.style.setProperty("--visual-viewport-height", `${Math.round(vv.height)}px`);
+        const focusedField = document.activeElement?.matches?.("input, textarea, select") && document.activeElement.type !== "checkbox";
+        root.classList.toggle("keyboard-open", window.matchMedia("(max-width: 600px)").matches && keyboard > 120 && focusedField);
+      };
+      sync();
       vv.addEventListener("resize", sync); vv.addEventListener("scroll", sync);
+      window.addEventListener("resize", sync);
+      document.addEventListener("focusin", sync);
+      document.addEventListener("focusout", () => requestAnimationFrame(sync));
     }
 
 
