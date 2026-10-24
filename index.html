@@ -118,7 +118,7 @@
     --color-text: light-dark(var(--mauve-700), var(--mauve-200));
     --color-text-secondary: light-dark(var(--mauve-600), var(--mauve-300));
     --color-text-muted: light-dark(var(--mauve-500), var(--mauve-400));
-    --color-text-placeholder: light-dark(var(--mauve-500), var(--mauve-400));
+    --color-text-placeholder: light-dark(var(--mauve-400), var(--mauve-500)); /* عمداً کم‌رنگ‌تر از مقدار وارد‌شده تا متن کاربر از راهنما جدا شود */
     --color-text-done: light-dark(var(--mauve-500), var(--mauve-400));
     --color-icon: light-dark(var(--mauve-600), var(--mauve-400));
     --color-icon-muted: light-dark(var(--mauve-500), var(--mauve-500));
@@ -146,6 +146,19 @@
     --color-inverse: light-dark(var(--mauve-900), var(--mauve-100));
     --color-on-inverse: light-dark(var(--mauve-50), var(--mauve-900));
     --color-on-inverse-accent: light-dark(var(--purple-300), var(--purple-700));
+    /* رنگ تصویرسازی‌ها (حالت خالی، بدون نتیجه، در حال طراحی): نردبان قرینه با یک پله روشن‌تر، تا در تم تیره هم روی زمینه بنشینند و دیده شوند */
+    --color-art-mauve-100: light-dark(var(--mauve-100), var(--mauve-800));
+    --color-art-mauve-200: light-dark(var(--mauve-200), var(--mauve-700));
+    --color-art-mauve-300: light-dark(var(--mauve-300), var(--mauve-600));
+    --color-art-mauve-400: light-dark(var(--mauve-400), var(--mauve-500));
+    --color-art-purple-50: light-dark(var(--purple-50), var(--purple-900));
+    --color-art-purple-100: light-dark(var(--purple-100), var(--purple-800));
+    --color-art-purple-200: light-dark(var(--purple-200), var(--purple-700));
+    --color-art-purple-300: light-dark(var(--purple-300), var(--purple-600));
+    --color-art-purple-400: light-dark(var(--purple-400), var(--purple-500));
+    --color-art-purple-500: var(--purple-500);
+    --color-art-purple-600: light-dark(var(--purple-600), var(--purple-400));
+    --color-art-purple-800: light-dark(var(--purple-800), var(--purple-200));
     /* افکت */
     --color-shadow: light-dark(var(--mauve-950), var(--black));
     --color-backdrop: light-dark(color-mix(in srgb, var(--mauve-950) 20%, transparent), color-mix(in srgb, var(--black) 55%, transparent));
@@ -243,7 +256,7 @@
   [hidden]:not([hidden=until-found i]) { display: none !important; }
   /* همه‌ی placeholderها یکسان */
   input::placeholder, textarea::placeholder {
-    font: var(--font-05); font-weight: var(--font-weight-medium); color: var(--color-text-placeholder); opacity: 1;
+    font: var(--font-05); font-weight: var(--font-weight-regular); color: var(--color-text-placeholder); opacity: 1;
   }
   /* رفتار عمومی دکمه‌ها */
   button { transition: background-color var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out); }
@@ -514,6 +527,8 @@
   .empty { flex: 1; justify-content: flex-end; padding-bottom: var(--space-8xl); }
   .no-results { padding-top: var(--space-3xl); }
   .no-results .nr-hint { font: var(--font-04); color: var(--color-text-muted); }
+  /* تصویر «بدون نتیجه» دو نشان دارد؛ فقط نشان مربوط به حالت دیده می‌شود: تیک برای فیلتر «انجام‌شده»، ذره‌بین برای جستجو */
+  .no-results[data-variant="done"] .nr-badge--search, .no-results[data-variant="search"] .nr-badge--done { display: none; }
   /* تصویر «بدون نتیجه» دقیقاً جای تصویر «هیچ کاری نداری» */
   .main-view:has(.no-results:not([hidden])) { flex: 1; display: flex; flex-direction: column; }
   .no-results:not([hidden]) { flex: 1; justify-content: flex-end; padding-top: 0; padding-bottom: calc(var(--space-8xl) + var(--space-2xs)); }
@@ -598,7 +613,7 @@
   }
   .picker-trigger svg { flex-shrink: 0; width: var(--size-lg); height: var(--size-lg); color: var(--color-icon); }
   .picker-trigger .value { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .picker-trigger .value.is-empty { color: var(--color-text-placeholder); }
+  .picker-trigger .value.is-empty { color: var(--color-text-placeholder); font-weight: var(--font-weight-regular); }
 
   /* تکرار روزانه */
   .repeat { display: flex; align-items: center; gap: var(--space-xs); margin-top: var(--space-2xs); font: var(--font-06); color: var(--color-text-secondary); }
@@ -606,7 +621,8 @@
   .repeat-note { min-width: 0; font: var(--font-03); font-weight: var(--font-weight-medium); color: var(--color-text-muted); }
 
   /* انتخابگرها (ساعت و تاریخ) */
-  .picker { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-sm); }
+  /* بدون overflow:hidden، تا دکمه‌های انتخابگر مثل دکمه‌های فرم به برگه بچسبند و بالای کیبورد بمانند */
+  .picker { display: flex; flex-direction: column; border-radius: var(--radius-sm); }
   .picker-body { flex: 1; display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-sm); }
   .picker-spacer { flex: 1; }
   .picker-area { height: var(--picker-height-date); display: flex; flex-direction: column; gap: var(--space-xs); }
@@ -850,7 +866,7 @@
   .wip-title { font: var(--font-07); font-weight: var(--font-weight-bold); color: var(--color-text); }
   .wip-sub { display: inline-flex; align-items: baseline; font: var(--font-05); color: var(--color-text-muted); }
   .wip-dots { display: inline-flex; gap: var(--space-3xs); margin-inline-start: var(--space-2xs); }
-  .wip-dots i { width: var(--space-2xs); height: var(--space-2xs); border-radius: var(--radius-full); background: var(--purple-500); animation: pw-dotty 1.2s ease-in-out infinite; }
+  .wip-dots i { width: var(--space-2xs); height: var(--space-2xs); border-radius: var(--radius-full); background: var(--color-art-purple-500); animation: pw-dotty 1.2s ease-in-out infinite; }
   .wip-dots i:nth-child(2) { animation-delay: .15s; }
   .wip-dots i:nth-child(3) { animation-delay: .3s; }
   /* تصویر متحرک «در حال طراحی» — هندسه‌ی آرت‌ورک (مختصات SVG) از قاعده‌ی توکن مستثناست */
@@ -1009,10 +1025,10 @@
   @keyframes pw-enter { from { opacity: 0; transform: scale(.85) translateY(10px); } }
 
   /* =====================================================================
-     واکنش‌گرایی — نقطه‌های شکست: 600 (گوشی)، 390 (گوشی کوچک)، 360 (خیلی باریک)، ارتفاع 560
+     واکنش‌گرایی — نقطه‌های شکست: 480 (گوشی: برگه‌ها چسبیده)، 600 (کشوها چسبیده)، 390 (گوشی کوچک)، 360 (خیلی باریک)، ارتفاع 560
      ===================================================================== */
-  @media (max-width: 600px) {
-    /* برگه‌ها به لبه‌ی پایین می‌چسبند */
+  /* گوشی (≤ ۴۸۰): برگه‌ها به لبه‌ی پایین می‌چسبند؛ در همه‌ی اندازه‌های بزرگ‌تر شناورند */
+  @media (max-width: 480px) {
     .sheet {
       inset-block-end: var(--keyboard, 0px); width: 100%; max-width: none; margin: 0;
       max-height: var(--visual-viewport-height, 100dvh);
@@ -1032,6 +1048,8 @@
     .cal-grid { aspect-ratio: 1 / 1; grid-template-rows: repeat(7, minmax(0, 1fr)); }
     .cal-grid .cal-empty, .cal-grid .cal-day { width: 100%; max-width: none; height: 100%; aspect-ratio: 1 / 1; align-self: stretch; }
 
+  }
+  @media (max-width: 600px) {
     /* کشوها به لبه‌ی صفحه می‌چسبند و جمع‌وجورتر می‌شوند */
     .drawer {
       inset-block: 0; inset-inline: 0 auto; width: min(var(--drawer-width-compact), 78vw); height: 100dvh; max-height: 100dvh;
@@ -1127,7 +1145,7 @@
       </div>
       <ul class="tasks" id="tasks"></ul>
       <div class="no-results" id="no-results" data-variant="search" aria-live="polite" hidden>
-        <svg aria-hidden="true" focusable="false" width="117" height="96" viewBox="0 0 117 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M58.2329 88.5333C79.4769 88.5333 96.6986 86.8618 96.6986 84.8C96.6986 82.7381 79.4769 81.0667 58.2329 81.0667C36.9888 81.0667 19.7671 82.7381 19.7671 84.8C19.7671 86.8618 36.9888 88.5333 58.2329 88.5333Z" fill="var(--mauve-200)"/><path d="M58.2329 82.6667C78.2967 82.6667 94.5616 66.4296 94.5616 46.4C94.5616 26.3705 78.2967 10.1334 58.2329 10.1334C38.1691 10.1334 21.9041 26.3705 21.9041 46.4C21.9041 66.4296 38.1691 82.6667 58.2329 82.6667Z" fill="var(--mauve-100)"/><path d="M17.6301 29.8666C18.8104 29.8666 19.7671 28.9115 19.7671 27.7333C19.7671 26.5551 18.8104 25.6 17.6301 25.6C16.4499 25.6 15.4931 26.5551 15.4931 27.7333C15.4931 28.9115 16.4499 29.8666 17.6301 29.8666Z" fill="var(--mauve-300)"/><path d="M97.7671 65.0666C98.6523 65.0666 99.3698 64.3503 99.3698 63.4666C99.3698 62.583 98.6523 61.8666 97.7671 61.8666C96.8819 61.8666 96.1644 62.583 96.1644 63.4666C96.1644 64.3503 96.8819 65.0666 97.7671 65.0666Z" fill="var(--mauve-300)"/><path d="M92.9589 19.7333V26.1333M89.7534 22.9333H96.1644" stroke="var(--mauve-300)" stroke-width="2.5" stroke-linecap="round"/><path d="M27.7808 22.9333C27.7808 19.3778 29.5616 17.6 33.1233 17.6H80.6712C84.2329 17.6 86.0137 19.3778 86.0137 22.9333V75.2C86.0137 78.7555 84.2329 80.5333 80.6712 80.5333H33.1233C29.5616 80.5333 27.7808 78.7555 27.7808 75.2V22.9333Z" fill="var(--mauve-200)"/><path d="M76.9315 14.9333H31.5205C27.9799 14.9333 25.1096 17.7987 25.1096 21.3334V71.4667C25.1096 75.0013 27.9799 77.8667 31.5205 77.8667H76.9315C80.4722 77.8667 83.3425 75.0013 83.3425 71.4667V21.3334C83.3425 17.7987 80.4722 14.9333 76.9315 14.9333Z" fill="var(--color-surface)" stroke="var(--mauve-400)" stroke-width="2"/><path d="M25.6438 31.4667H82.8082" stroke="var(--mauve-300)" stroke-width="2"/><path d="M25.6438 21.3333C25.6438 17.4222 27.6027 15.4667 31.5205 15.4667H76.9315C80.8493 15.4667 82.8082 17.4222 82.8082 21.3333V30.9333H25.6438V21.3333Z" fill="var(--mauve-100)"/><path d="M40.0685 40.5333H36.3288C35.1485 40.5333 34.1918 41.4885 34.1918 42.6667V46.4C34.1918 47.5782 35.1485 48.5333 36.3288 48.5333H40.0685C41.2487 48.5333 42.2055 47.5782 42.2055 46.4V42.6667C42.2055 41.4885 41.2487 40.5333 40.0685 40.5333Z" fill="var(--color-surface)" stroke="var(--mauve-300)" stroke-width="1.5"/><path d="M48.6164 44.2667H72.6575" stroke="var(--mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M40.0685 54.9333H36.3288C35.1485 54.9333 34.1918 55.8885 34.1918 57.0667V60.8C34.1918 61.9782 35.1485 62.9333 36.3288 62.9333H40.0685C41.2487 62.9333 42.2055 61.9782 42.2055 60.8V57.0667C42.2055 55.8885 41.2487 54.9333 40.0685 54.9333Z" fill="var(--color-surface)" stroke="var(--mauve-300)" stroke-width="1.5"/><path d="M48.6164 58.6667H64.1096" stroke="var(--mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M14.9589 64L16.5616 60.8L18.1644 64L21.3699 65.6L18.1644 67.2L16.5616 70.4L14.9589 67.2L11.7534 65.6L14.9589 64Z" fill="var(--mauve-300)"/><rect x="44.2" y="10.5" width="20" height="9" rx="4.5" fill="var(--purple-600)"/><path d="M80.6712 84.8C88.3427 84.8 94.5616 78.5917 94.5616 70.9333C94.5616 63.275 88.3427 57.0667 80.6712 57.0667C72.9998 57.0667 66.7808 63.275 66.7808 70.9333C66.7808 78.5917 72.9998 84.8 80.6712 84.8Z" fill="var(--color-surface)"/><path d="M80.6712 82.6667C87.1625 82.6667 92.4247 77.4135 92.4247 70.9333C92.4247 64.4532 87.1625 59.2 80.6712 59.2C74.18 59.2 68.9178 64.4532 68.9178 70.9333C68.9178 77.4135 74.18 82.6667 80.6712 82.6667Z" fill="var(--purple-600)"/><g class="nr-badge nr-badge--done"><path d="M75.6 71.2l3.6 3.6 7.1-7.4" stroke="var(--color-surface)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g><g class="nr-badge nr-badge--search"><circle cx="79.4" cy="69.6" r="4.6" stroke="var(--color-surface)" stroke-width="2.5" fill="none"/><path d="M82.9 73.2l3.3 3.3" stroke="var(--color-surface)" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+        <svg aria-hidden="true" focusable="false" width="117" height="96" viewBox="0 0 117 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M58.2329 88.5333C79.4769 88.5333 96.6986 86.8618 96.6986 84.8C96.6986 82.7381 79.4769 81.0667 58.2329 81.0667C36.9888 81.0667 19.7671 82.7381 19.7671 84.8C19.7671 86.8618 36.9888 88.5333 58.2329 88.5333Z" fill="var(--color-art-mauve-200)"/><path d="M58.2329 82.6667C78.2967 82.6667 94.5616 66.4296 94.5616 46.4C94.5616 26.3705 78.2967 10.1334 58.2329 10.1334C38.1691 10.1334 21.9041 26.3705 21.9041 46.4C21.9041 66.4296 38.1691 82.6667 58.2329 82.6667Z" fill="var(--color-art-mauve-100)"/><path d="M17.6301 29.8666C18.8104 29.8666 19.7671 28.9115 19.7671 27.7333C19.7671 26.5551 18.8104 25.6 17.6301 25.6C16.4499 25.6 15.4931 26.5551 15.4931 27.7333C15.4931 28.9115 16.4499 29.8666 17.6301 29.8666Z" fill="var(--color-art-mauve-300)"/><path d="M97.7671 65.0666C98.6523 65.0666 99.3698 64.3503 99.3698 63.4666C99.3698 62.583 98.6523 61.8666 97.7671 61.8666C96.8819 61.8666 96.1644 62.583 96.1644 63.4666C96.1644 64.3503 96.8819 65.0666 97.7671 65.0666Z" fill="var(--color-art-mauve-300)"/><path d="M92.9589 19.7333V26.1333M89.7534 22.9333H96.1644" stroke="var(--color-art-mauve-300)" stroke-width="2.5" stroke-linecap="round"/><path d="M27.7808 22.9333C27.7808 19.3778 29.5616 17.6 33.1233 17.6H80.6712C84.2329 17.6 86.0137 19.3778 86.0137 22.9333V75.2C86.0137 78.7555 84.2329 80.5333 80.6712 80.5333H33.1233C29.5616 80.5333 27.7808 78.7555 27.7808 75.2V22.9333Z" fill="var(--color-art-mauve-200)"/><path d="M76.9315 14.9333H31.5205C27.9799 14.9333 25.1096 17.7987 25.1096 21.3334V71.4667C25.1096 75.0013 27.9799 77.8667 31.5205 77.8667H76.9315C80.4722 77.8667 83.3425 75.0013 83.3425 71.4667V21.3334C83.3425 17.7987 80.4722 14.9333 76.9315 14.9333Z" fill="var(--color-surface)" stroke="var(--color-art-mauve-400)" stroke-width="2"/><path d="M25.6438 31.4667H82.8082" stroke="var(--color-art-mauve-300)" stroke-width="2"/><path d="M25.6438 21.3333C25.6438 17.4222 27.6027 15.4667 31.5205 15.4667H76.9315C80.8493 15.4667 82.8082 17.4222 82.8082 21.3333V30.9333H25.6438V21.3333Z" fill="var(--color-art-mauve-100)"/><path d="M40.0685 40.5333H36.3288C35.1485 40.5333 34.1918 41.4885 34.1918 42.6667V46.4C34.1918 47.5782 35.1485 48.5333 36.3288 48.5333H40.0685C41.2487 48.5333 42.2055 47.5782 42.2055 46.4V42.6667C42.2055 41.4885 41.2487 40.5333 40.0685 40.5333Z" fill="var(--color-surface)" stroke="var(--color-art-mauve-300)" stroke-width="1.5"/><path d="M48.6164 44.2667H72.6575" stroke="var(--color-art-mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M40.0685 54.9333H36.3288C35.1485 54.9333 34.1918 55.8885 34.1918 57.0667V60.8C34.1918 61.9782 35.1485 62.9333 36.3288 62.9333H40.0685C41.2487 62.9333 42.2055 61.9782 42.2055 60.8V57.0667C42.2055 55.8885 41.2487 54.9333 40.0685 54.9333Z" fill="var(--color-surface)" stroke="var(--color-art-mauve-300)" stroke-width="1.5"/><path d="M48.6164 58.6667H64.1096" stroke="var(--color-art-mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M14.9589 64L16.5616 60.8L18.1644 64L21.3699 65.6L18.1644 67.2L16.5616 70.4L14.9589 67.2L11.7534 65.6L14.9589 64Z" fill="var(--color-art-mauve-300)"/><rect x="44.2" y="10.5" width="20" height="9" rx="4.5" fill="var(--color-art-purple-600)"/><path d="M80.6712 84.8C88.3427 84.8 94.5616 78.5917 94.5616 70.9333C94.5616 63.275 88.3427 57.0667 80.6712 57.0667C72.9998 57.0667 66.7808 63.275 66.7808 70.9333C66.7808 78.5917 72.9998 84.8 80.6712 84.8Z" fill="var(--color-surface)"/><path d="M80.6712 82.6667C87.1625 82.6667 92.4247 77.4135 92.4247 70.9333C92.4247 64.4532 87.1625 59.2 80.6712 59.2C74.18 59.2 68.9178 64.4532 68.9178 70.9333C68.9178 77.4135 74.18 82.6667 80.6712 82.6667Z" fill="var(--color-art-purple-600)"/><g class="nr-badge nr-badge--done"><path d="M75.6 71.2l3.6 3.6 7.1-7.4" stroke="var(--color-surface)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g><g class="nr-badge nr-badge--search"><circle cx="79.4" cy="69.6" r="4.6" stroke="var(--color-surface)" stroke-width="2.5" fill="none"/><path d="M82.9 73.2l3.3 3.3" stroke="var(--color-surface)" stroke-width="2.5" stroke-linecap="round"/></g></svg>
         <div>
           <p class="nr-title" id="no-results-title"></p>
           <p class="nr-hint" id="no-results-hint"></p>
@@ -1136,7 +1154,7 @@
     </section>
 
     <section class="empty" id="empty" aria-live="polite">
-      <svg aria-hidden="true" focusable="false" width="117" height="96" viewBox="0 0 117 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M58.2329 88.5333C79.4769 88.5333 96.6986 86.8618 96.6986 84.8C96.6986 82.7381 79.4769 81.0667 58.2329 81.0667C36.9888 81.0667 19.7671 82.7381 19.7671 84.8C19.7671 86.8618 36.9888 88.5333 58.2329 88.5333Z" fill="var(--mauve-200)"/><path d="M58.2329 82.6667C78.2967 82.6667 94.5616 66.4296 94.5616 46.4C94.5616 26.3705 78.2967 10.1334 58.2329 10.1334C38.1691 10.1334 21.9041 26.3705 21.9041 46.4C21.9041 66.4296 38.1691 82.6667 58.2329 82.6667Z" fill="var(--mauve-100)"/><path d="M17.6301 29.8666C18.8104 29.8666 19.7671 28.9115 19.7671 27.7333C19.7671 26.5551 18.8104 25.6 17.6301 25.6C16.4499 25.6 15.4931 26.5551 15.4931 27.7333C15.4931 28.9115 16.4499 29.8666 17.6301 29.8666Z" fill="var(--mauve-300)"/><path d="M97.7671 65.0666C98.6523 65.0666 99.3698 64.3503 99.3698 63.4666C99.3698 62.583 98.6523 61.8666 97.7671 61.8666C96.8819 61.8666 96.1644 62.583 96.1644 63.4666C96.1644 64.3503 96.8819 65.0666 97.7671 65.0666Z" fill="var(--mauve-300)"/><path d="M92.9589 19.7333V26.1333M89.7534 22.9333H96.1644" stroke="var(--mauve-300)" stroke-width="2.5" stroke-linecap="round"/><path d="M27.7808 22.9333C27.7808 19.3778 29.5616 17.6 33.1233 17.6H80.6712C84.2329 17.6 86.0137 19.3778 86.0137 22.9333V75.2C86.0137 78.7555 84.2329 80.5333 80.6712 80.5333H33.1233C29.5616 80.5333 27.7808 78.7555 27.7808 75.2V22.9333Z" fill="var(--mauve-200)"/><path d="M76.9315 14.9333H31.5205C27.9799 14.9333 25.1096 17.7987 25.1096 21.3334V71.4667C25.1096 75.0013 27.9799 77.8667 31.5205 77.8667H76.9315C80.4722 77.8667 83.3425 75.0013 83.3425 71.4667V21.3334C83.3425 17.7987 80.4722 14.9333 76.9315 14.9333Z" fill="var(--color-surface)" stroke="var(--mauve-400)" stroke-width="2"/><path d="M25.6438 31.4667H82.8082Z" fill="none"/><path d="M25.6438 31.4667H82.8082" stroke="var(--mauve-300)" stroke-width="2"/><path d="M25.6438 21.3333C25.6438 17.4222 27.6027 15.4667 31.5205 15.4667H76.9315C80.8493 15.4667 82.8082 17.4222 82.8082 21.3333V30.9333H25.6438V21.3333Z" fill="var(--mauve-100)"/><path d="M39.5342 11.2V20.8M68.9178 11.2V20.8" stroke="var(--purple-600)" stroke-width="5" stroke-linecap="round"/><path d="M40.0685 40.5333H36.3288C35.1485 40.5333 34.1918 41.4885 34.1918 42.6667V46.4C34.1918 47.5782 35.1485 48.5333 36.3288 48.5333H40.0685C41.2487 48.5333 42.2055 47.5782 42.2055 46.4V42.6667C42.2055 41.4885 41.2487 40.5333 40.0685 40.5333Z" fill="var(--mauve-100)"/><path d="M48.6164 44.2667H72.6575Z" fill="none"/><path d="M48.6164 44.2667H72.6575" stroke="var(--mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M40.0685 54.9333H36.3288C35.1485 54.9333 34.1918 55.8885 34.1918 57.0667V60.8C34.1918 61.9782 35.1485 62.9333 36.3288 62.9333H40.0685C41.2487 62.9333 42.2055 61.9782 42.2055 60.8V57.0667C42.2055 55.8885 41.2487 54.9333 40.0685 54.9333Z" fill="var(--mauve-100)"/><path d="M48.6164 58.6667H64.1096Z" fill="none"/><path d="M48.6164 58.6667H64.1096" stroke="var(--mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M80.6712 84.8C88.3427 84.8 94.5616 78.5917 94.5616 70.9333C94.5616 63.275 88.3427 57.0667 80.6712 57.0667C72.9998 57.0667 66.7808 63.275 66.7808 70.9333C66.7808 78.5917 72.9998 84.8 80.6712 84.8Z" fill="var(--color-surface)"/><path d="M80.6712 82.6667C87.1625 82.6667 92.4247 77.4135 92.4247 70.9333C92.4247 64.4532 87.1625 59.2 80.6712 59.2C74.18 59.2 68.9178 64.4532 68.9178 70.9333C68.9178 77.4135 74.18 82.6667 80.6712 82.6667Z" fill="var(--purple-600)"/><path d="M80.6712 66.1333V75.7333ZM75.863 70.9333H85.4794Z" fill="none"/><path d="M80.6712 66.1333V75.7333M75.863 70.9333H85.4794" stroke="var(--color-surface)" stroke-width="3" stroke-linecap="round"/><path d="M14.9589 64L16.5616 60.8L18.1644 64L21.3699 65.6L18.1644 67.2L16.5616 70.4L14.9589 67.2L11.7534 65.6L14.9589 64Z" fill="var(--mauve-300)"/></svg>
+      <svg aria-hidden="true" focusable="false" width="117" height="96" viewBox="0 0 117 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M58.2329 88.5333C79.4769 88.5333 96.6986 86.8618 96.6986 84.8C96.6986 82.7381 79.4769 81.0667 58.2329 81.0667C36.9888 81.0667 19.7671 82.7381 19.7671 84.8C19.7671 86.8618 36.9888 88.5333 58.2329 88.5333Z" fill="var(--color-art-mauve-200)"/><path d="M58.2329 82.6667C78.2967 82.6667 94.5616 66.4296 94.5616 46.4C94.5616 26.3705 78.2967 10.1334 58.2329 10.1334C38.1691 10.1334 21.9041 26.3705 21.9041 46.4C21.9041 66.4296 38.1691 82.6667 58.2329 82.6667Z" fill="var(--color-art-mauve-100)"/><path d="M17.6301 29.8666C18.8104 29.8666 19.7671 28.9115 19.7671 27.7333C19.7671 26.5551 18.8104 25.6 17.6301 25.6C16.4499 25.6 15.4931 26.5551 15.4931 27.7333C15.4931 28.9115 16.4499 29.8666 17.6301 29.8666Z" fill="var(--color-art-mauve-300)"/><path d="M97.7671 65.0666C98.6523 65.0666 99.3698 64.3503 99.3698 63.4666C99.3698 62.583 98.6523 61.8666 97.7671 61.8666C96.8819 61.8666 96.1644 62.583 96.1644 63.4666C96.1644 64.3503 96.8819 65.0666 97.7671 65.0666Z" fill="var(--color-art-mauve-300)"/><path d="M92.9589 19.7333V26.1333M89.7534 22.9333H96.1644" stroke="var(--color-art-mauve-300)" stroke-width="2.5" stroke-linecap="round"/><path d="M27.7808 22.9333C27.7808 19.3778 29.5616 17.6 33.1233 17.6H80.6712C84.2329 17.6 86.0137 19.3778 86.0137 22.9333V75.2C86.0137 78.7555 84.2329 80.5333 80.6712 80.5333H33.1233C29.5616 80.5333 27.7808 78.7555 27.7808 75.2V22.9333Z" fill="var(--color-art-mauve-200)"/><path d="M76.9315 14.9333H31.5205C27.9799 14.9333 25.1096 17.7987 25.1096 21.3334V71.4667C25.1096 75.0013 27.9799 77.8667 31.5205 77.8667H76.9315C80.4722 77.8667 83.3425 75.0013 83.3425 71.4667V21.3334C83.3425 17.7987 80.4722 14.9333 76.9315 14.9333Z" fill="var(--color-surface)" stroke="var(--color-art-mauve-400)" stroke-width="2"/><path d="M25.6438 31.4667H82.8082Z" fill="none"/><path d="M25.6438 31.4667H82.8082" stroke="var(--color-art-mauve-300)" stroke-width="2"/><path d="M25.6438 21.3333C25.6438 17.4222 27.6027 15.4667 31.5205 15.4667H76.9315C80.8493 15.4667 82.8082 17.4222 82.8082 21.3333V30.9333H25.6438V21.3333Z" fill="var(--color-art-mauve-100)"/><path d="M39.5342 11.2V20.8M68.9178 11.2V20.8" stroke="var(--color-art-purple-600)" stroke-width="5" stroke-linecap="round"/><path d="M40.0685 40.5333H36.3288C35.1485 40.5333 34.1918 41.4885 34.1918 42.6667V46.4C34.1918 47.5782 35.1485 48.5333 36.3288 48.5333H40.0685C41.2487 48.5333 42.2055 47.5782 42.2055 46.4V42.6667C42.2055 41.4885 41.2487 40.5333 40.0685 40.5333Z" fill="var(--color-art-mauve-100)"/><path d="M48.6164 44.2667H72.6575Z" fill="none"/><path d="M48.6164 44.2667H72.6575" stroke="var(--color-art-mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M40.0685 54.9333H36.3288C35.1485 54.9333 34.1918 55.8885 34.1918 57.0667V60.8C34.1918 61.9782 35.1485 62.9333 36.3288 62.9333H40.0685C41.2487 62.9333 42.2055 61.9782 42.2055 60.8V57.0667C42.2055 55.8885 41.2487 54.9333 40.0685 54.9333Z" fill="var(--color-art-mauve-100)"/><path d="M48.6164 58.6667H64.1096Z" fill="none"/><path d="M48.6164 58.6667H64.1096" stroke="var(--color-art-mauve-200)" stroke-width="4" stroke-linecap="round"/><path d="M80.6712 84.8C88.3427 84.8 94.5616 78.5917 94.5616 70.9333C94.5616 63.275 88.3427 57.0667 80.6712 57.0667C72.9998 57.0667 66.7808 63.275 66.7808 70.9333C66.7808 78.5917 72.9998 84.8 80.6712 84.8Z" fill="var(--color-surface)"/><path d="M80.6712 82.6667C87.1625 82.6667 92.4247 77.4135 92.4247 70.9333C92.4247 64.4532 87.1625 59.2 80.6712 59.2C74.18 59.2 68.9178 64.4532 68.9178 70.9333C68.9178 77.4135 74.18 82.6667 80.6712 82.6667Z" fill="var(--color-art-purple-600)"/><path d="M80.6712 66.1333V75.7333ZM75.863 70.9333H85.4794Z" fill="none"/><path d="M80.6712 66.1333V75.7333M75.863 70.9333H85.4794" stroke="var(--color-surface)" stroke-width="3" stroke-linecap="round"/><path d="M14.9589 64L16.5616 60.8L18.1644 64L21.3699 65.6L18.1644 67.2L16.5616 70.4L14.9589 67.2L11.7534 65.6L14.9589 64Z" fill="var(--color-art-mauve-300)"/></svg>
       <div>
         <p id="empty-message"></p>
         <p>یه کار جدید اضافه کن.</p>
@@ -1148,35 +1166,35 @@
     <section class="wip-view" id="profile-view" aria-labelledby="wip-title" hidden>
       <svg class="wip-art" aria-hidden="true" focusable="false" viewBox="0 0 280 230" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs><clipPath id="pw-av-clip"><circle cx="140" cy="76" r="17"/></clipPath></defs>
-        <ellipse class="pw-shadow" cx="140" cy="210" rx="66" ry="6" fill="var(--mauve-200)"/>
-        <circle class="pw-glow" cx="140" cy="116" r="88" fill="var(--mauve-100)"/>
-        <circle class="pw-glow pw-glow--2" cx="140" cy="116" r="62" fill="var(--purple-50)" opacity=".7"/>
-        <g class="pw-orbit"><circle cx="140" cy="116" r="104" stroke="var(--mauve-200)" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="140" cy="12" r="4" fill="var(--purple-400)"/><circle cx="244" cy="116" r="2.5" fill="var(--mauve-300)"/></g>
-        <g class="pw-gear pw-gear--a"><path d="M70.00 53.00 L72.34 50.23 L74.59 50.91 L75.00 54.52 L76.36 55.64 L79.98 55.33 L81.09 57.41 L78.83 60.24 L79.00 62.00 L81.77 64.34 L81.09 66.59 L77.48 67.00 L76.36 68.36 L76.67 71.98 L74.59 73.09 L71.76 70.83 L70.00 71.00 L67.66 73.77 L65.41 73.09 L65.00 69.48 L63.64 68.36 L60.02 68.67 L58.91 66.59 L61.17 63.76 L61.00 62.00 L58.23 59.66 L58.91 57.41 L62.52 57.00 L63.64 55.64 L63.33 52.02 L65.41 50.91 L68.24 53.17ZM73.60 62a3.6 3.6 0 1 0 -7.2 0a3.6 3.6 0 1 0 7.2 0Z" fill="var(--purple-300)" fill-rule="evenodd"/></g>
-        <g class="pw-gear pw-gear--b"><path d="M52.00 73.80 L54.20 71.79 L56.25 72.64 L56.38 75.62 L57.37 76.90 L60.21 77.80 L60.50 80.00 L57.99 81.60 L57.37 83.10 L58.01 86.01 L56.25 87.36 L53.60 85.99 L52.00 86.20 L49.80 88.21 L47.75 87.36 L47.62 84.38 L46.63 83.10 L43.79 82.20 L43.50 80.00 L46.01 78.40 L46.63 76.90 L45.99 73.99 L47.75 72.64 L50.40 74.01ZM54.40 80a2.4 2.4 0 1 0 -4.8 0a2.4 2.4 0 1 0 4.8 0Z" fill="var(--mauve-300)" fill-rule="evenodd"/></g>
+        <ellipse class="pw-shadow" cx="140" cy="210" rx="66" ry="6" fill="var(--color-art-mauve-200)"/>
+        <circle class="pw-glow" cx="140" cy="116" r="88" fill="var(--color-art-mauve-100)"/>
+        <circle class="pw-glow pw-glow--2" cx="140" cy="116" r="62" fill="var(--color-art-purple-50)" opacity=".7"/>
+        <g class="pw-orbit"><circle cx="140" cy="116" r="104" stroke="var(--color-art-mauve-200)" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/><circle cx="140" cy="12" r="4" fill="var(--color-art-purple-400)"/><circle cx="244" cy="116" r="2.5" fill="var(--color-art-mauve-300)"/></g>
+        <g class="pw-gear pw-gear--a"><path d="M70.00 53.00 L72.34 50.23 L74.59 50.91 L75.00 54.52 L76.36 55.64 L79.98 55.33 L81.09 57.41 L78.83 60.24 L79.00 62.00 L81.77 64.34 L81.09 66.59 L77.48 67.00 L76.36 68.36 L76.67 71.98 L74.59 73.09 L71.76 70.83 L70.00 71.00 L67.66 73.77 L65.41 73.09 L65.00 69.48 L63.64 68.36 L60.02 68.67 L58.91 66.59 L61.17 63.76 L61.00 62.00 L58.23 59.66 L58.91 57.41 L62.52 57.00 L63.64 55.64 L63.33 52.02 L65.41 50.91 L68.24 53.17ZM73.60 62a3.6 3.6 0 1 0 -7.2 0a3.6 3.6 0 1 0 7.2 0Z" fill="var(--color-art-purple-300)" fill-rule="evenodd"/></g>
+        <g class="pw-gear pw-gear--b"><path d="M52.00 73.80 L54.20 71.79 L56.25 72.64 L56.38 75.62 L57.37 76.90 L60.21 77.80 L60.50 80.00 L57.99 81.60 L57.37 83.10 L58.01 86.01 L56.25 87.36 L53.60 85.99 L52.00 86.20 L49.80 88.21 L47.75 87.36 L47.62 84.38 L46.63 83.10 L43.79 82.20 L43.50 80.00 L46.01 78.40 L46.63 76.90 L45.99 73.99 L47.75 72.64 L50.40 74.01ZM54.40 80a2.4 2.4 0 1 0 -4.8 0a2.4 2.4 0 1 0 4.8 0Z" fill="var(--color-art-mauve-300)" fill-rule="evenodd"/></g>
         <g class="pw-card">
-          <rect x="90" y="40" width="100" height="152" rx="18" fill="var(--mauve-200)" transform="translate(4 5)"/>
-          <rect x="90" y="40" width="100" height="152" rx="18" fill="var(--color-surface)" stroke="var(--mauve-400)" stroke-width="2"/>
-          <path d="M91 58a17 17 0 0 1 17-17h64a17 17 0 0 1 17 17v18H91Z" fill="var(--purple-100)"/>
+          <rect x="90" y="40" width="100" height="152" rx="18" fill="var(--color-art-mauve-200)" transform="translate(4 5)"/>
+          <rect x="90" y="40" width="100" height="152" rx="18" fill="var(--color-surface)" stroke="var(--color-art-mauve-400)" stroke-width="2"/>
+          <path d="M91 58a17 17 0 0 1 17-17h64a17 17 0 0 1 17 17v18H91Z" fill="var(--color-art-purple-100)"/>
           <circle cx="140" cy="76" r="21" fill="var(--color-surface)"/>
-          <circle cx="140" cy="76" r="17" fill="var(--mauve-100)"/>
-          <g class="pw-person" clip-path="url(#pw-av-clip)"><circle cx="140" cy="71" r="6.5" fill="var(--purple-400)"/><path d="M126 94c1.5-8 7-12 14-12s12.5 4 14 12Z" fill="var(--purple-400)"/></g>
-          <circle class="pw-ring" cx="140" cy="76" r="21" stroke="var(--purple-600)" stroke-width="3" stroke-linecap="round" stroke-dasharray="132" pathLength="132"/>
-          <path class="pw-line pw-line--1" d="M166 114H114" stroke="var(--mauve-300)" stroke-width="6" stroke-linecap="round"/>
-          <path class="pw-line pw-line--2" d="M156 128H124" stroke="var(--mauve-200)" stroke-width="5" stroke-linecap="round"/>
-          <rect class="pw-chip pw-chip--1" x="153" y="140" width="24" height="18" rx="6" fill="var(--purple-50)" stroke="var(--purple-200)"/>
-          <rect class="pw-chip pw-chip--2" x="128" y="140" width="24" height="18" rx="6" fill="var(--purple-50)" stroke="var(--purple-200)"/>
-          <rect class="pw-chip pw-chip--3" x="103" y="140" width="24" height="18" rx="6" fill="var(--purple-50)" stroke="var(--purple-200)"/>
-          <path class="pw-line pw-line--btn" d="M172 174H108" stroke="var(--purple-600)" stroke-width="10" stroke-linecap="round"/>
+          <circle cx="140" cy="76" r="17" fill="var(--color-art-mauve-100)"/>
+          <g class="pw-person" clip-path="url(#pw-av-clip)"><circle cx="140" cy="71" r="6.5" fill="var(--color-art-purple-400)"/><path d="M126 94c1.5-8 7-12 14-12s12.5 4 14 12Z" fill="var(--color-art-purple-400)"/></g>
+          <circle class="pw-ring" cx="140" cy="76" r="21" stroke="var(--color-art-purple-600)" stroke-width="3" stroke-linecap="round" stroke-dasharray="132" pathLength="132"/>
+          <path class="pw-line pw-line--1" d="M166 114H114" stroke="var(--color-art-mauve-300)" stroke-width="6" stroke-linecap="round"/>
+          <path class="pw-line pw-line--2" d="M156 128H124" stroke="var(--color-art-mauve-200)" stroke-width="5" stroke-linecap="round"/>
+          <rect class="pw-chip pw-chip--1" x="153" y="140" width="24" height="18" rx="6" fill="var(--color-art-purple-50)" stroke="var(--color-art-purple-200)"/>
+          <rect class="pw-chip pw-chip--2" x="128" y="140" width="24" height="18" rx="6" fill="var(--color-art-purple-50)" stroke="var(--color-art-purple-200)"/>
+          <rect class="pw-chip pw-chip--3" x="103" y="140" width="24" height="18" rx="6" fill="var(--color-art-purple-50)" stroke="var(--color-art-purple-200)"/>
+          <path class="pw-line pw-line--btn" d="M172 174H108" stroke="var(--color-art-purple-600)" stroke-width="10" stroke-linecap="round"/>
         </g>
-        <g class="pw-badge"><circle cx="190" cy="182" r="14" fill="var(--purple-600)" stroke="var(--color-page)" stroke-width="3"/><path d="M184 182.5l4 4 8-8.5" stroke="var(--color-page)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
-        <g class="pw-pencil"><g transform="rotate(0)"><path d="M0 0l2-10.5 8.5 8.5Z" fill="var(--mauve-200)"/><path d="M0 0l.9-4.6 3.7 3.7Z" fill="var(--purple-800)"/><path d="M2-10.5l20-20 8.5 8.5-20 20Z" fill="var(--purple-500)"/><path d="M6.3-14.8l20-20" stroke="var(--purple-300)" stroke-width="1.6"/><path d="M22-30.5l4-4a3 3 0 0 1 4.2 0l4.3 4.3a3 3 0 0 1 0 4.2l-4 4Z" fill="var(--purple-200)"/></g></g>
-        <path class="pw-spark pw-spark--1" d="M40 132l2.6-6.4 2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6Z" fill="var(--purple-300)"/>
-        <path class="pw-spark pw-spark--2" d="M226 54l2-5 2 5 5 2-5 2-2 5-2-5-5-2Z" fill="var(--mauve-300)"/>
-        <path class="pw-spark pw-spark--3" d="M232 144l1.6-4 1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6Z" fill="var(--purple-400)"/>
-        <circle class="pw-dot pw-dot--1" cx="60" cy="176" r="3" fill="var(--purple-200)"/>
-        <circle class="pw-dot pw-dot--2" cx="218" cy="190" r="2.5" fill="var(--mauve-300)"/>
-        <circle class="pw-dot pw-dot--3" cx="76" cy="196" r="2" fill="var(--purple-300)"/>
+        <g class="pw-badge"><circle cx="190" cy="182" r="14" fill="var(--color-art-purple-600)" stroke="var(--color-page)" stroke-width="3"/><path d="M184 182.5l4 4 8-8.5" stroke="var(--color-page)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g class="pw-pencil"><g transform="rotate(0)"><path d="M0 0l2-10.5 8.5 8.5Z" fill="var(--color-art-mauve-200)"/><path d="M0 0l.9-4.6 3.7 3.7Z" fill="var(--color-art-purple-800)"/><path d="M2-10.5l20-20 8.5 8.5-20 20Z" fill="var(--color-art-purple-500)"/><path d="M6.3-14.8l20-20" stroke="var(--color-art-purple-300)" stroke-width="1.6"/><path d="M22-30.5l4-4a3 3 0 0 1 4.2 0l4.3 4.3a3 3 0 0 1 0 4.2l-4 4Z" fill="var(--color-art-purple-200)"/></g></g>
+        <path class="pw-spark pw-spark--1" d="M40 132l2.6-6.4 2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6Z" fill="var(--color-art-purple-300)"/>
+        <path class="pw-spark pw-spark--2" d="M226 54l2-5 2 5 5 2-5 2-2 5-2-5-5-2Z" fill="var(--color-art-mauve-300)"/>
+        <path class="pw-spark pw-spark--3" d="M232 144l1.6-4 1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6Z" fill="var(--color-art-purple-400)"/>
+        <circle class="pw-dot pw-dot--1" cx="60" cy="176" r="3" fill="var(--color-art-purple-200)"/>
+        <circle class="pw-dot pw-dot--2" cx="218" cy="190" r="2.5" fill="var(--color-art-mauve-300)"/>
+        <circle class="pw-dot pw-dot--3" cx="76" cy="196" r="2" fill="var(--color-art-purple-300)"/>
       </svg>
       <div class="wip-text">
         <h2 class="wip-title" id="wip-title">در حال طراحی</h2>
@@ -1256,8 +1274,8 @@
       <p class="field-error" id="phone-error" role="alert"></p>
       <p class="menu-hint" id="phone-hint">با این شماره وارد می‌شی؛ اگه عوضش کنی، دفعه‌ی بعد با شماره‌ی جدید وارد شو.</p>
       <div class="sheet-actions">
-        <button class="btn btn--secondary" type="button" id="account-cancel">انصراف</button>
         <button class="btn btn--primary" type="button" id="account-save">ذخیره</button>
+        <button class="btn btn--secondary" type="button" id="account-cancel">انصراف</button>
       </div>
     </div>
   </dialog>
@@ -1356,8 +1374,8 @@
         <p class="time-error" id="time-error" role="alert"></p>
         <div class="picker-spacer"></div>
         <div class="picker-actions">
-          <button class="btn btn--secondary" type="button" id="time-cancel">بدون ساعت</button>
           <button class="btn btn--primary" type="button" id="time-done">تأیید</button>
+          <button class="btn btn--secondary" type="button" id="time-cancel">بدون ساعت</button>
         </div>
         </div>
       </div>
@@ -1375,8 +1393,8 @@
         </div>
       </div>
         <div class="picker-actions date-actions">
-          <button class="btn btn--secondary" type="button" id="date-cancel">انصراف</button>
           <button class="btn btn--primary" type="button" id="date-done">تأیید</button>
+          <button class="btn btn--secondary" type="button" id="date-cancel">انصراف</button>
         </div>
       </div>
 
@@ -1390,8 +1408,8 @@
       </div>
 
       <div class="sheet-actions">
-        <button class="btn btn--secondary" type="button" id="sheet-cancel">انصراف</button>
         <button class="btn btn--primary" id="save-task" type="button" disabled>افزودن</button>
+        <button class="btn btn--secondary" type="button" id="sheet-cancel">انصراف</button>
       </div>
     </form>
   </dialog>
@@ -2761,7 +2779,7 @@
         root.style.setProperty("--keyboard", `${Math.round(keyboard)}px`);
         root.style.setProperty("--visual-viewport-height", `${Math.round(vv.height)}px`);
         const focusedField = document.activeElement?.matches?.("input, textarea, select") && document.activeElement.type !== "checkbox";
-        root.classList.toggle("keyboard-open", window.matchMedia("(max-width: 600px)").matches && keyboard > 120 && focusedField);
+        root.classList.toggle("keyboard-open", window.matchMedia("(max-width: 480px)").matches && keyboard > 120 && focusedField);
       };
       sync();
       vv.addEventListener("resize", sync); vv.addEventListener("scroll", sync);
